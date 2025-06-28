@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Warehousing System - AI Assistant</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/chatbot.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="chatbot-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-warehouse"></i> Smart WMS</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item active">
+                        <a href="/chatbot" class="nav-link">
+                            <i class="fas fa-robot"></i>
+                            AI Assistant
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+            <!-- Chat Header -->
+            <header class="chat-header">
+                <div class="chat-header-info">
+                    <div class="bot-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="bot-info">
+                        <h2>Smart Warehouse Assistant</h2>
+                        <p class="bot-status">
+                            <span class="status-indicator online"></span>
+                            Online - Ready to help
+                        </p>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="btn btn-secondary" onclick="clearChat()">
+                        <i class="fas fa-trash"></i> Clear Chat
+                    </button>
+                    <button class="btn btn-primary" onclick="showHelpModal()">
+                        <i class="fas fa-question-circle"></i> Help
+                    </button>
+                </div>
+            </header>
+
+            <!-- Chat Messages Area -->
+            <div class="chat-messages" id="chat-messages">
+                <!-- Welcome Message -->
+                <div class="message bot-message">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Hello! I'm your Smart Warehouse Assistant. I can help you with:</p>
+                            <ul>
+                                <li>Check inventory and stock levels</li>
+                                <li>Process inbound deliveries and gate-ins</li>
+                                <li>Manage outbound orders and dispatches</li>
+                                <li>Update stock quantities</li>
+                                <li>Monitor low stock alerts</li>
+                            </ul>
+                            <p>Just type your request naturally, like "Check stock for SKU ABC123" or "Gate in shipment SH001"</p>
+                        </div>
+                        <div class="message-time">
+                            <span id="welcome-time"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h4>Quick Actions:</h4>
+                <div class="quick-buttons">
+                    <button class="quick-btn" onclick="sendQuickMessage('Check inventory summary')">
+                        <i class="fas fa-boxes"></i>
+                        Inventory Summary
+                    </button>
+                    <button class="quick-btn" onclick="sendQuickMessage('Show low stock alerts')">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Low Stock Alerts
+                    </button>
+                    <button class="quick-btn" onclick="sendQuickMessage('Show pending orders')">
+                        <i class="fas fa-shipping-fast"></i>
+                        Pending Orders
+                    </button>
+                    <button class="quick-btn" onclick="sendQuickMessage('Help')">
+                        <i class="fas fa-question-circle"></i>
+                        Help
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input-container">
+                <div class="chat-input-wrapper">
+                    <input 
+                        type="text" 
+                        id="chat-input" 
+                        class="chat-input" 
+                        placeholder="Type your message here... (e.g., 'Check stock SKU: ABC123')"
+                        maxlength="500"
+                    >
+                    <button id="send-button" class="send-button" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="input-info">
+                    <span class="typing-indicator" id="typing-indicator" style="display: none;">
+                        <i class="fas fa-robot"></i> Assistant is typing...
+                    </span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Chat Info Panel (Optional) -->
+        <aside class="chat-info" id="chat-info">
+            <div class="info-header">
+                <h3>Session Info</h3>
+                <button class="close-info" onclick="toggleInfoPanel()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="info-content">
+                <div class="info-item">
+                    <label>Session ID:</label>
+                    <span id="session-id">-</span>
+                </div>
+                <div class="info-item">
+                    <label>Messages:</label>
+                    <span id="message-count">0</span>
+                </div>
+                <div class="info-item">
+                    <label>Started:</label>
+                    <span id="session-start">-</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Processing your request...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Smart Warehouse Assistant Help</h3>
+                <button class="close-modal" onclick="closeHelpModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h4>What I can help you with:</h4>
+                
+                <div class="help-section">
+                    <h5>Inventory Management</h5>
+                    <ul>
+                        <li>"Check stock SKU: PROD001"</li>
+                        <li>"Inventory summary"</li>
+                        <li>"Low stock alerts"</li>
+                        <li>"Add 50 units SKU: PROD001"</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h5>Inbound Operations</h5>
+                    <ul>
+                        <li>"Gate in shipment SH001"</li>
+                        <li>"Delivery arrived for shipment SH001"</li>
+                        <li>"Shipment SH001 status"</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h5>Outbound Operations</h5>
+                    <ul>
+                        <li>"Dispatch order ORD001"</li>
+                        <li>"Check order status ORD001"</li>
+                        <li>"Ship order ORD001"</li>
+                    </ul>
+                </div>
+
+                <div class="help-section">
+                    <h5>Stock Updates</h5>
+                    <ul>
+                        <li>"Update stock SKU: PROD001 quantity 25"</li>
+                        <li>"Received 100 units of SKU: PROD001"</li>
+                        <li>"Stock adjustment for SKU: PROD001"</li>
+                    </ul>
+                </div>
+
+                <p><strong>Tips:</strong> Just type naturally! I understand conversational language and can help with most warehouse operations.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/chatbot.js"></script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Warehousing System - Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-warehouse"></i> Smart WMS</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active">
+                        <a href="/" class="nav-link">
+                            <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/chatbot" class="nav-link">
+                            <i class="fas fa-robot"></i>
+                            AI Assistant
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showSection('inventory')">
+                            <i class="fas fa-boxes"></i>
+                            Inventory
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showSection('inbound')">
+                            <i class="fas fa-truck-loading"></i>
+                            Inbound
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="showSection('outbound')">
+                            <i class="fas fa-shipping-fast"></i>
+                            Outbound
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard Overview</h1>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="btn btn-primary" onclick="refreshData()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                        <button class="btn btn-secondary" onclick="window.location.href='/chatbot'">
+                            <i class="fas fa-robot"></i> AI Assistant
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Overview Section -->
+            <section id="dashboard-section" class="content-section active">
+                <!-- Metrics Cards -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="total-products">-</h3>
+                            <p>Total Products</p>
+                        </div>
+                    </div>
+                    <div class="metric-card warning">
+                        <div class="metric-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="low-stock-items">-</h3>
+                            <p>Low Stock Items</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="pending-inbound">-</h3>
+                            <p>Pending Inbound</p>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="pending-outbound">-</h3>
+                            <p>Pending Outbound</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerts Section -->
+                <div class="alerts-section">
+                    <h3><i class="fas fa-bell"></i> Alerts & Notifications</h3>
+                    <div id="alerts-container" class="alerts-container">
+                        <!-- Alerts will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-section">
+                    <h3><i class="fas fa-history"></i> Recent Activity</h3>
+                    <div id="activity-container" class="activity-container">
+                        <!-- Recent activity will be populated here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inventory Section -->
+            <section id="inventory-section" class="content-section">
+                <div class="section-header">
+                    <h2>Inventory Management</h2>
+                    <button class="btn btn-primary" onclick="showAddProductModal()">
+                        <i class="fas fa-plus"></i> Add Product
+                    </button>
+                </div>
+                
+                <div class="inventory-summary" id="inventory-summary">
+                    <!-- Inventory summary will be populated here -->
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Available</th>
+                                <th>Reserved</th>
+                                <th>Total</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Inventory data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Inbound Section -->
+            <section id="inbound-section" class="content-section">
+                <div class="section-header">
+                    <h2>Inbound Shipments</h2>
+                    <button class="btn btn-primary" onclick="showCreateShipmentModal()">
+                        <i class="fas fa-plus"></i> New Shipment
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="inbound-table">
+                        <thead>
+                            <tr>
+                                <th>Shipment #</th>
+                                <th>Vendor</th>
+                                <th>Expected Date</th>
+                                <th>Arrival Date</th>
+                                <th>Status</th>
+                                <th>Items</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Inbound data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Outbound Section -->
+            <section id="outbound-section" class="content-section">
+                <div class="section-header">
+                    <h2>Outbound Orders</h2>
+                    <button class="btn btn-primary" onclick="showCreateOrderModal()">
+                        <i class="fas fa-plus"></i> New Order
+                    </button>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table" id="outbound-table">
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Customer</th>
+                                <th>Order Date</th>
+                                <th>Expected Dispatch</th>
+                                <th>Status</th>
+                                <th>Items</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Outbound data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Modals will be added here -->
+    
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
