@@ -3,11 +3,344 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Warehousing System - AI Assistant</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/chatbot.css">
+    <title>Smart Warehouse System - AI Assistant</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .chatbot-container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: #1e293b;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .sidebar-nav {
+            flex: 1;
+        }
+        
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-item {
+            border-bottom: 1px solid #334155;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover, .nav-item.active .nav-link {
+            background: #334155;
+            color: white;
+        }
+        
+        .nav-link i {
+            margin-right: 0.75rem;
+            width: 20px;
+        }
+        
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: white;
+        }
+        
+        .chat-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .bot-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+        
+        .bot-info h2 {
+            margin: 0;
+            color: #1e293b;
+            font-size: 1.5rem;
+        }
+        
+        .bot-status {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 0.25rem 0 0 0;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .status-indicator.online {
+            background: #10b981;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+        
+        .message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+        
+        .message.user {
+            flex-direction: row-reverse;
+        }
+        
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            color: white;
+        }
+        
+        .message.user .message-avatar {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 1rem 1.25rem;
+            border-radius: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .message.bot .message-content {
+            background: white;
+            border-bottom-left-radius: 8px;
+        }
+        
+        .message.user .message-content {
+            background: #4f46e5;
+            color: white;
+            border-bottom-right-radius: 8px;
+        }
+        
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+        
+        .typing-indicator {
+            display: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .typing-dots {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 1rem 1.25rem;
+            background: white;
+            border-radius: 20px;
+            border-bottom-left-radius: 8px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.7;
+            }
+            30% {
+                transform: translateY(-10px);
+                opacity: 1;
+            }
+        }
+        
+        .chat-input {
+            padding: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            background: white;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+        
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+        }
+        
+        .chat-textarea {
+            width: 100%;
+            min-height: 50px;
+            max-height: 120px;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 25px;
+            font-family: inherit;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .chat-textarea:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .send-button {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: #4f46e5;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        
+        .send-button:hover {
+            background: #4338ca;
+            transform: scale(1.05);
+        }
+        
+        .send-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .quick-actions {
+            padding: 0 1.5rem 1.5rem;
+            background: white;
+        }
+        
+        .quick-actions-title {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-bottom: 0.75rem;
+        }
+        
+        .quick-actions-grid {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .quick-action {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            background: white;
+            color: #64748b;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quick-action:hover {
+            border-color: #4f46e5;
+            color: #4f46e5;
+            background: #f8fafc;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            
+            .chatbot-container {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="chatbot-container">
@@ -19,15 +352,27 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li class="nav-item">
-                        <a href="/" class="nav-link">
+                        <a href="dashboard.html" class="nav-link">
                             <i class="fas fa-tachometer-alt"></i>
                             Dashboard
                         </a>
                     </li>
                     <li class="nav-item active">
-                        <a href="/chatbot" class="nav-link">
+                        <a href="chatbot.html" class="nav-link">
                             <i class="fas fa-robot"></i>
                             AI Assistant
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="analytics.html" class="nav-link">
+                            <i class="fas fa-chart-bar"></i>
+                            Analytics
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            Back to Home
                         </a>
                     </li>
                 </ul>
@@ -38,16 +383,290 @@
         <main class="chat-main">
             <!-- Chat Header -->
             <header class="chat-header">
-                <div class="chat-header-info">
-                    <div class="bot-avatar">
+                <div class="bot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="bot-info">
+                    <h2>Smart Warehouse Assistant</h2>
+                    <p class="bot-status">
+                        <span class="status-indicator online"></span>
+                        Online - Ready to help
+                    </p>
+                </div>
+            </header>
+
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chat-messages">
+                <div class="message bot">
+                    <div class="message-avatar">
                         <i class="fas fa-robot"></i>
                     </div>
-                    <div class="bot-info">
-                        <h2>Smart Warehouse Assistant</h2>
-                        <p class="bot-status">
-                            <span class="status-indicator online"></span>
-                            Online - Ready to help
-                        </p>
+                    <div class="message-content">
+                        <p>Hello! I'm your Smart Warehouse Assistant. I can help you with:</p>
+                        <ul style="margin: 0.5rem 0; padding-left: 1rem;">
+                            <li>Inventory queries and management</li>
+                            <li>Shipment tracking and status updates</li>
+                            <li>Space optimization recommendations</li>
+                            <li>Performance analytics and reports</li>
+                            <li>General warehouse operations</li>
+                        </ul>
+                        <p>How can I assist you today?</p>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Typing Indicator -->
+            <div class="typing-indicator" id="typing-indicator">
+                <div class="message bot">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <div class="quick-actions-title">Quick Actions:</div>
+                <div class="quick-actions-grid">
+                    <div class="quick-action" onclick="sendQuickMessage('Show inventory status')">📦 Inventory Status</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Check low stock items')">⚠️ Low Stock Items</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Show pending shipments')">🚚 Pending Shipments</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Generate daily report')">📊 Daily Report</div>
+                    <div class="quick-action" onclick="sendQuickMessage('Optimize warehouse layout')">🎯 Space Optimization</div>
+                </div>
+            </div>
+
+            <!-- Chat Input -->
+            <div class="chat-input">
+                <div class="input-container">
+                    <div class="input-wrapper">
+                        <textarea 
+                            class="chat-textarea" 
+                            id="chat-input"
+                            placeholder="Ask me anything about your warehouse..."
+                            rows="1"
+                        ></textarea>
+                    </div>
+                    <button class="send-button" id="send-button" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Chatbot functionality
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+        const typingIndicator = document.getElementById('typing-indicator');
+
+        // Auto-resize textarea
+        chatInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send message on Enter (but not Shift+Enter)
+        chatInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            chatInput.value = '';
+            chatInput.style.height = 'auto';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Simulate bot response
+            setTimeout(() => {
+                hideTypingIndicator();
+                const response = generateBotResponse(message);
+                addMessage(response, 'bot');
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function sendQuickMessage(message) {
+            chatInput.value = message;
+            sendMessage();
+        }
+
+        function addMessage(content, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.innerHTML = sender === 'bot' ? '<i class="fas fa-robot"></i>' : '<i class="fas fa-user"></i>';
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            
+            if (typeof content === 'string') {
+                messageContent.innerHTML = `<p>${content}</p><div class="message-time">${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>`;
+            } else {
+                messageContent.appendChild(content);
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                messageContent.appendChild(timeDiv);
+            }
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+            
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function showTypingIndicator() {
+            typingIndicator.style.display = 'block';
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function generateBotResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // Sample responses based on keywords
+            if (message.includes('inventory') || message.includes('stock')) {
+                return `📦 <strong>Current Inventory Status:</strong><br><br>
+                • Total Products: 1,247<br>
+                • In Stock: 1,201 items<br>
+                • Low Stock: 23 items<br>
+                • Out of Stock: 23 items<br><br>
+                Items needing attention:<br>
+                • Gaming Mouse (8 units remaining)<br>
+                • Mechanical Keyboard (0 units)<br>
+                • USB-C Hub (5 units)<br><br>
+                Would you like me to generate reorder recommendations?`;
+            }
+            
+            else if (message.includes('low stock')) {
+                return `⚠️ <strong>Low Stock Alert:</strong><br><br>
+                The following items are running low:<br><br>
+                1. <strong>Gaming Mouse</strong> - 8 units (Reorder: 50 units)<br>
+                2. <strong>USB-C Hub</strong> - 5 units (Reorder: 25 units)<br>
+                3. <strong>Wireless Charger</strong> - 12 units (Reorder: 40 units)<br>
+                4. <strong>Phone Stand</strong> - 7 units (Reorder: 30 units)<br><br>
+                📋 Suggested action: Place reorder for all items to maintain optimal stock levels.`;
+            }
+            
+            else if (message.includes('shipment') || message.includes('shipping')) {
+                return `🚚 <strong>Shipment Overview:</strong><br><br>
+                <strong>Inbound Shipments:</strong><br>
+                • 3 shipments arriving today<br>
+                • 5 shipments in transit<br>
+                • Expected deliveries: 425 units<br><br>
+                <strong>Outbound Orders:</strong><br>
+                • 12 orders shipped today<br>
+                • 8 orders pending pickup<br>
+                • Average delivery time: 2.3 days<br><br>
+                Next shipment: TechCorp delivery at 2:30 PM`;
+            }
+            
+            else if (message.includes('report') || message.includes('analytics')) {
+                return `📊 <strong>Generating Daily Report...</strong><br><br>
+                <strong>Today's Performance:</strong><br>
+                • Total orders processed: 24<br>
+                • Revenue: $15,430<br>
+                • Inventory turnover: 2.1%<br>
+                • Warehouse utilization: 78%<br><br>
+                <strong>Key Insights:</strong><br>
+                • Electronics category up 15%<br>
+                • Space efficiency improved<br>
+                • No critical stock issues<br><br>
+                📁 Full report has been generated and saved to your dashboard.`;
+            }
+            
+            else if (message.includes('optimize') || message.includes('space')) {
+                return `🎯 <strong>Space Optimization Analysis:</strong><br><br>
+                <strong>Current Warehouse Layout:</strong><br>
+                • Total space: 50,000 sq ft<br>
+                • Utilized space: 78%<br>
+                • Available space: 11,000 sq ft<br><br>
+                <strong>Recommendations:</strong><br>
+                1. Relocate fast-moving items to zones A1-A3<br>
+                2. Consolidate slow-moving inventory to zone C<br>
+                3. Implement vertical storage in section B2<br><br>
+                💡 Potential efficiency gain: 15-20%`;
+            }
+            
+            else if (message.includes('help') || message.includes('what can you do')) {
+                return `🤖 <strong>I'm here to help with your warehouse operations!</strong><br><br>
+                I can assist you with:<br><br>
+                📦 <strong>Inventory Management</strong><br>
+                • Stock level checks<br>
+                • Low stock alerts<br>
+                • Product location finder<br><br>
+                🚚 <strong>Shipping & Logistics</strong><br>
+                • Shipment tracking<br>
+                • Delivery scheduling<br>
+                • Route optimization<br><br>
+                📊 <strong>Analytics & Reports</strong><br>
+                • Performance metrics<br>
+                • Trend analysis<br>
+                • Custom reports<br><br>
+                🎯 <strong>Optimization</strong><br>
+                • Space utilization<br>
+                • Workflow improvements<br>
+                • Cost reduction strategies<br><br>
+                Just ask me anything or use the quick actions below!`;
+            }
+            
+            else if (message.includes('hello') || message.includes('hi')) {
+                return `👋 Hello! Great to see you in the warehouse today!<br><br>
+                I've been monitoring your operations and everything looks good:<br>
+                • No critical alerts<br>
+                • All systems operational<br>
+                • Today's efficiency: 94%<br><br>
+                How can I assist you with your warehouse management today?`;
+            }
+            
+            else {
+                // Default responses for unrecognized queries
+                const defaultResponses = [
+                    `I understand you're asking about "${userMessage}". Let me help you with that! Based on our current warehouse data, I can provide specific information about inventory, shipments, or operations. Could you be more specific about what you'd like to know?`,
+                    
+                    `Thanks for your question about "${userMessage}". I'm analyzing our warehouse data to provide you with the most relevant information. Would you like me to check inventory levels, shipment status, or generate a specific report?`,
+                    
+                    `I see you're interested in "${userMessage}". I have access to real-time warehouse data including inventory, shipping, and performance metrics. What specific aspect would you like me to focus on?`
+                ];
+                
+                return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+            }
+        }
+
+        // Initialize chat
+        document.addEventListener('DOMContentLoaded', function() {
+            chatInput.focus();
+        });
+    </script>
+</body>
+</html>
                     </div>
                 </div>
                 <div class="chat-actions">

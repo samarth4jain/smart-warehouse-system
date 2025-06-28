@@ -3,10 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Warehousing System - Dashboard</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Smart Warehouse System - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Dashboard specific styles */
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            background: #f8fafc;
+        }
+        
+        .sidebar {
+            width: 260px;
+            background: #1e293b;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #334155;
+        }
+        
+        .sidebar-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-item {
+            border-bottom: 1px solid #334155;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover, .nav-item.active .nav-link {
+            background: #334155;
+            color: white;
+        }
+        
+        .nav-link i {
+            margin-right: 0.75rem;
+            width: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 2rem;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            color: #1e293b;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e1;
+            transform: translateY(-1px);
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: transform 0.2s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .metric-card.warning {
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .metric-card.success {
+            border-left: 4px solid #10b981;
+        }
+        
+        .metric-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #4f46e5;
+        }
+        
+        .metric-info h3 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+        
+        .metric-info p {
+            margin: 0.25rem 0 0 0;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .inventory-grid, .shipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .inventory-item, .shipment-item {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .inventory-item h4, .shipment-item h4 {
+            margin: 0 0 0.5rem 0;
+            color: #1e293b;
+        }
+        
+        .inventory-item p, .shipment-item p {
+            margin: 0.25rem 0;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+        
+        .status-in-stock {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-low-stock {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-out-of-stock {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .status-delivered {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .status-in-transit {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .header-actions {
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-container">
@@ -18,33 +285,39 @@
             <nav class="sidebar-nav">
                 <ul>
                     <li class="nav-item active">
-                        <a href="/" class="nav-link">
+                        <a href="#" class="nav-link" onclick="showSection('dashboard-section')">
                             <i class="fas fa-tachometer-alt"></i>
                             Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="/chatbot" class="nav-link">
+                        <a href="chatbot.html" class="nav-link">
                             <i class="fas fa-robot"></i>
                             AI Assistant
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showSection('inventory')">
+                        <a href="#" class="nav-link" onclick="showSection('inventory-section')">
                             <i class="fas fa-boxes"></i>
                             Inventory
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showSection('inbound')">
+                        <a href="#" class="nav-link" onclick="showSection('inbound-section')">
                             <i class="fas fa-truck-loading"></i>
                             Inbound
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showSection('outbound')">
+                        <a href="#" class="nav-link" onclick="showSection('outbound-section')">
                             <i class="fas fa-shipping-fast"></i>
                             Outbound
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">
+                            <i class="fas fa-home"></i>
+                            Back to Home
                         </a>
                     </li>
                 </ul>
@@ -63,7 +336,7 @@
                         <button class="btn btn-primary" onclick="refreshData()">
                             <i class="fas fa-sync-alt"></i> Refresh
                         </button>
-                        <button class="btn btn-secondary" onclick="window.location.href='/chatbot'">
+                        <button class="btn btn-secondary" onclick="window.location.href='chatbot.html'">
                             <i class="fas fa-robot"></i> AI Assistant
                         </button>
                     </div>
@@ -79,7 +352,7 @@
                             <i class="fas fa-boxes"></i>
                         </div>
                         <div class="metric-info">
-                            <h3 id="total-products">-</h3>
+                            <h3 id="total-products">1,247</h3>
                             <p>Total Products</p>
                         </div>
                     </div>
@@ -88,7 +361,7 @@
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
                         <div class="metric-info">
-                            <h3 id="low-stock-items">-</h3>
+                            <h3 id="low-stock-items">23</h3>
                             <p>Low Stock Items</p>
                         </div>
                     </div>
@@ -97,7 +370,359 @@
                             <i class="fas fa-truck"></i>
                         </div>
                         <div class="metric-info">
-                            <h3 id="pending-inbound">-</h3>
+                            <h3 id="pending-inbound">8</h3>
+                            <p>Pending Inbound</p>
+                        </div>
+                    </div>
+                    <div class="metric-card success">
+                        <div class="metric-icon">
+                            <i class="fas fa-shipping-fast"></i>
+                        </div>
+                        <div class="metric-info">
+                            <h3 id="total-outbound">156</h3>
+                            <p>Orders Shipped Today</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem;">
+                    <!-- Recent Activity -->
+                    <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <h3 style="margin: 0 0 1rem 0; color: #1e293b;">Recent Activity</h3>
+                        <div id="activity-list">
+                            <div style="padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
+                                <p style="margin: 0; font-weight: 500; color: #1e293b;">📦 Product Added: Wireless Headphones</p>
+                                <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #64748b;">2 minutes ago</p>
+                            </div>
+                            <div style="padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
+                                <p style="margin: 0; font-weight: 500; color: #1e293b;">🚚 Shipment Delivered: Order #1234</p>
+                                <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #64748b;">15 minutes ago</p>
+                            </div>
+                            <div style="padding: 0.75rem 0; border-bottom: 1px solid #e2e8f0;">
+                                <p style="margin: 0; font-weight: 500; color: #1e293b;">⚠️ Low Stock Alert: Gaming Mouse</p>
+                                <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #64748b;">1 hour ago</p>
+                            </div>
+                            <div style="padding: 0.75rem 0;">
+                                <p style="margin: 0; font-weight: 500; color: #1e293b;">📊 Daily Report Generated</p>
+                                <p style="margin: 0.25rem 0 0 0; font-size: 0.875rem; color: #64748b;">2 hours ago</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div style="background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+                        <h3 style="margin: 0 0 1rem 0; color: #1e293b;">Quick Actions</h3>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <button class="btn btn-primary" onclick="showSection('inventory-section')" style="width: 100%; justify-content: center;">
+                                <i class="fas fa-plus"></i> Add Product
+                            </button>
+                            <button class="btn btn-secondary" onclick="showSection('inbound-section')" style="width: 100%; justify-content: center;">
+                                <i class="fas fa-truck"></i> Create Shipment
+                            </button>
+                            <button class="btn btn-secondary" onclick="generateReport()" style="width: 100%; justify-content: center;">
+                                <i class="fas fa-chart-bar"></i> Generate Report
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inventory Section -->
+            <section id="inventory-section" class="content-section">
+                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1.5rem;">
+                    <div>
+                        <input type="text" placeholder="Search products..." id="product-search" style="padding: 0.75rem; border: 1px solid #d1d5db; border-radius: 8px; width: 300px;">
+                        <button class="btn btn-primary" onclick="searchProducts()" style="margin-left: 1rem;">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                    <button class="btn btn-primary" onclick="addProduct()">
+                        <i class="fas fa-plus"></i> Add New Product
+                    </button>
+                </div>
+
+                <div class="inventory-grid" id="inventory-grid">
+                    <div class="inventory-item">
+                        <h4>Wireless Headphones</h4>
+                        <p>SKU: WH-001</p>
+                        <p>Stock: 45 units</p>
+                        <p>Location: A1-B2</p>
+                        <span class="status-badge status-in-stock">In Stock</span>
+                    </div>
+                    <div class="inventory-item">
+                        <h4>Gaming Mouse</h4>
+                        <p>SKU: GM-002</p>
+                        <p>Stock: 8 units</p>
+                        <p>Location: A2-C1</p>
+                        <span class="status-badge status-low-stock">Low Stock</span>
+                    </div>
+                    <div class="inventory-item">
+                        <h4>Mechanical Keyboard</h4>
+                        <p>SKU: MK-003</p>
+                        <p>Stock: 0 units</p>
+                        <p>Location: A3-D2</p>
+                        <span class="status-badge status-out-of-stock">Out of Stock</span>
+                    </div>
+                    <div class="inventory-item">
+                        <h4>USB-C Cable</h4>
+                        <p>SKU: UC-004</p>
+                        <p>Stock: 234 units</p>
+                        <p>Location: B1-A3</p>
+                        <span class="status-badge status-in-stock">In Stock</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inbound Section -->
+            <section id="inbound-section" class="content-section">
+                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0; color: #1e293b;">Inbound Shipments</h3>
+                    <button class="btn btn-primary" onclick="createInboundShipment()">
+                        <i class="fas fa-plus"></i> Create Shipment
+                    </button>
+                </div>
+
+                <div class="shipment-grid" id="inbound-grid">
+                    <div class="shipment-item">
+                        <h4>Shipment #INB-001</h4>
+                        <p>Supplier: TechCorp Industries</p>
+                        <p>Expected: Dec 28, 2025</p>
+                        <p>Items: 150 units</p>
+                        <span class="status-badge status-pending">Pending</span>
+                    </div>
+                    <div class="shipment-item">
+                        <h4>Shipment #INB-002</h4>
+                        <p>Supplier: Electronics Plus</p>
+                        <p>Expected: Dec 29, 2025</p>
+                        <p>Items: 75 units</p>
+                        <span class="status-badge status-in-transit">In Transit</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Outbound Section -->
+            <section id="outbound-section" class="content-section">
+                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0; color: #1e293b;">Outbound Orders</h3>
+                    <button class="btn btn-primary" onclick="createOutboundOrder()">
+                        <i class="fas fa-plus"></i> Create Order
+                    </button>
+                </div>
+
+                <div class="shipment-grid" id="outbound-grid">
+                    <div class="shipment-item">
+                        <h4>Order #ORD-1001</h4>
+                        <p>Customer: John Smith</p>
+                        <p>Ship Date: Dec 28, 2025</p>
+                        <p>Items: 3 units</p>
+                        <span class="status-badge status-delivered">Delivered</span>
+                    </div>
+                    <div class="shipment-item">
+                        <h4>Order #ORD-1002</h4>
+                        <p>Customer: Sarah Johnson</p>
+                        <p>Ship Date: Dec 28, 2025</p>
+                        <p>Items: 1 unit</p>
+                        <span class="status-badge status-in-transit">In Transit</span>
+                    </div>
+                    <div class="shipment-item">
+                        <h4>Order #ORD-1003</h4>
+                        <p>Customer: Mike Brown</p>
+                        <p>Ship Date: Dec 29, 2025</p>
+                        <p>Items: 2 units</p>
+                        <span class="status-badge status-pending">Pending</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Dashboard functionality
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Update page title
+            const titles = {
+                'dashboard-section': 'Dashboard Overview',
+                'inventory-section': 'Inventory Management',
+                'inbound-section': 'Inbound Shipments',
+                'outbound-section': 'Outbound Orders'
+            };
+            
+            document.getElementById('page-title').textContent = titles[sectionId] || 'Dashboard';
+        }
+
+        function refreshData() {
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Refreshing...';
+            btn.disabled = true;
+            
+            // Simulate data refresh
+            setTimeout(() => {
+                // Update some random numbers
+                const metrics = {
+                    'total-products': Math.floor(Math.random() * 200) + 1200,
+                    'low-stock-items': Math.floor(Math.random() * 30) + 15,
+                    'pending-inbound': Math.floor(Math.random() * 10) + 5,
+                    'total-outbound': Math.floor(Math.random() * 50) + 120
+                };
+                
+                Object.entries(metrics).forEach(([id, value]) => {
+                    document.getElementById(id).textContent = value;
+                });
+                
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                
+                showNotification('Data refreshed successfully!', 'success');
+            }, 1500);
+        }
+
+        function searchProducts() {
+            const searchTerm = document.getElementById('product-search').value.toLowerCase();
+            const items = document.querySelectorAll('.inventory-item');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm) || searchTerm === '') {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            showNotification(`Searching for "${searchTerm}"...`, 'info');
+        }
+
+        function addProduct() {
+            const productName = prompt('Enter product name:');
+            if (productName) {
+                const sku = 'SKU-' + Math.floor(Math.random() * 1000);
+                const stock = Math.floor(Math.random() * 100) + 10;
+                const location = 'A' + Math.floor(Math.random() * 5 + 1) + '-B' + Math.floor(Math.random() * 5 + 1);
+                const status = stock > 20 ? 'in-stock' : stock > 5 ? 'low-stock' : 'out-of-stock';
+                const statusText = stock > 20 ? 'In Stock' : stock > 5 ? 'Low Stock' : 'Out of Stock';
+                
+                const newItem = document.createElement('div');
+                newItem.className = 'inventory-item';
+                newItem.innerHTML = `
+                    <h4>${productName}</h4>
+                    <p>SKU: ${sku}</p>
+                    <p>Stock: ${stock} units</p>
+                    <p>Location: ${location}</p>
+                    <span class="status-badge status-${status}">${statusText}</span>
+                `;
+                
+                document.getElementById('inventory-grid').prepend(newItem);
+                showNotification(`Product "${productName}" added successfully!`, 'success');
+            }
+        }
+
+        function createInboundShipment() {
+            const supplier = prompt('Enter supplier name:');
+            if (supplier) {
+                const shipmentId = 'INB-' + String(Math.floor(Math.random() * 1000)).padStart(3, '0');
+                const items = Math.floor(Math.random() * 200) + 50;
+                const date = new Date();
+                date.setDate(date.getDate() + Math.floor(Math.random() * 7) + 1);
+                
+                const newShipment = document.createElement('div');
+                newShipment.className = 'shipment-item';
+                newShipment.innerHTML = `
+                    <h4>Shipment #${shipmentId}</h4>
+                    <p>Supplier: ${supplier}</p>
+                    <p>Expected: ${date.toLocaleDateString()}</p>
+                    <p>Items: ${items} units</p>
+                    <span class="status-badge status-pending">Pending</span>
+                `;
+                
+                document.getElementById('inbound-grid').prepend(newShipment);
+                showNotification(`Inbound shipment ${shipmentId} created!`, 'success');
+            }
+        }
+
+        function createOutboundOrder() {
+            const customer = prompt('Enter customer name:');
+            if (customer) {
+                const orderId = 'ORD-' + String(Math.floor(Math.random() * 9000) + 1000);
+                const items = Math.floor(Math.random() * 5) + 1;
+                const date = new Date().toLocaleDateString();
+                
+                const newOrder = document.createElement('div');
+                newOrder.className = 'shipment-item';
+                newOrder.innerHTML = `
+                    <h4>Order #${orderId}</h4>
+                    <p>Customer: ${customer}</p>
+                    <p>Ship Date: ${date}</p>
+                    <p>Items: ${items} units</p>
+                    <span class="status-badge status-pending">Pending</span>
+                `;
+                
+                document.getElementById('outbound-grid').prepend(newOrder);
+                showNotification(`Order ${orderId} created for ${customer}!`, 'success');
+            }
+        }
+
+        function generateReport() {
+            showNotification('Generating comprehensive warehouse report...', 'info');
+            setTimeout(() => {
+                showNotification('Report generated! Check your downloads folder.', 'success');
+            }, 2000);
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 1rem 1.5rem;
+                background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 10000;
+                font-weight: 500;
+                max-width: 300px;
+                word-wrap: break-word;
+            `;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set active nav item based on current section
+            const activeSection = document.querySelector('.content-section.active');
+            if (activeSection) {
+                const sectionId = activeSection.id;
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    if (link.getAttribute('onclick') && link.getAttribute('onclick').includes(sectionId)) {
+                        link.closest('.nav-item').classList.add('active');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
                             <p>Pending Inbound</p>
                         </div>
                     </div>
