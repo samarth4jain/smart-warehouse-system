@@ -2,6 +2,16 @@
 
 A comprehensive AI-powered warehouse management system built with FastAPI, React-like frontend, and advanced analytics capabilities.
 
+## 🌐 Live Demo
+
+**Try the live demo**: [https://samarth4jain.github.io/smart-warehouse-system/](https://samarth4jain.github.io/smart-warehouse-system/)
+
+The demo includes:
+- Interactive dashboard with real-time inventory tracking
+- AI-powered chatbot for warehouse assistance
+- Analytics and forecasting visualizations
+- Complete API documentation
+
 ## 🚀 Features
 
 - **Real-time Inventory Management**: Track stock levels, manage products, and monitor warehouse operations
