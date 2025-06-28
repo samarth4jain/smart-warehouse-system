@@ -22,7 +22,7 @@ body {
 /* Sidebar */
 .sidebar {
     width: 260px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
     color: white;
     display: flex;
     flex-direction: column;
@@ -75,7 +75,7 @@ body {
 .nav-item.active .nav-link {
     background: rgba(255, 255, 255, 0.15);
     color: white;
-    border-right: 3px solid #ffd700;
+    border-right: 3px solid #f59e0b;
 }
 
 /* Main Content */
@@ -143,31 +143,31 @@ body {
 }
 
 .btn-primary {
-    background: #667eea;
+    background: #0891b2;
     color: white;
 }
 
 .btn-primary:hover {
-    background: #5a67d8;
+    background: #0e7490;
     transform: translateY(-1px);
 }
 
 .btn-secondary {
-    background: #718096;
+    background: #64748b;
     color: white;
 }
 
 .btn-secondary:hover {
-    background: #4a5568;
+    background: #475569;
 }
 
 .btn-success {
-    background: #48bb78;
+    background: #10b981;
     color: white;
 }
 
 .btn-warning {
-    background: #ed8936;
+    background: #f59e0b;
     color: white;
 }
 
@@ -201,30 +201,30 @@ body {
 }
 
 .metric-card.warning {
-    border-left: 4px solid #ed8936;
+    border-left: 4px solid #f59e0b;
 }
 
 .metric-icon {
     width: 3rem;
     height: 3rem;
-    background: #f7fafc;
+    background: #f0f9ff;
     border-radius: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    color: #667eea;
+    color: #0891b2;
 }
 
 .metric-card.warning .metric-icon {
-    background: #fed7cc;
-    color: #ed8936;
+    background: #fef3c7;
+    color: #f59e0b;
 }
 
 .metric-info h3 {
     font-size: 2rem;
     font-weight: 700;
-    color: #2d3748;
+    color: #0f172a;
     margin-bottom: 0.25rem;
 }
 
@@ -374,23 +374,23 @@ body {
 }
 
 .status-badge.success {
-    background: #c6f6d5;
-    color: #22543d;
+    background: #d1fae5;
+    color: #065f46;
 }
 
 .status-badge.warning {
-    background: #fed7cc;
-    color: #9c4221;
+    background: #fef3c7;
+    color: #92400e;
 }
 
 .status-badge.danger {
-    background: #fed7d7;
-    color: #822727;
+    background: #fee2e2;
+    color: #991b1b;
 }
 
 .status-badge.info {
-    background: #bee3f8;
-    color: #2c5282;
+    background: #e0f2fe;
+    color: #0c4a6e;
 }
 
 /* Section Headers */

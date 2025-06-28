@@ -28,7 +28,7 @@
         
         .sidebar {
             width: 260px;
-            background: #1e293b;
+            background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
             color: white;
             display: flex;
             flex-direction: column;
@@ -36,7 +36,7 @@
         
         .sidebar-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .sidebar-header h2 {
@@ -56,7 +56,7 @@
         }
         
         .nav-item {
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         .nav-link {
@@ -69,7 +69,7 @@
         }
         
         .nav-link:hover, .nav-item.active .nav-link {
-            background: #334155;
+            background: rgba(255, 255, 255, 0.1);
             color: white;
         }
         
@@ -98,7 +98,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            background: linear-gradient(135deg, #0891b2, #0e7490);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -160,7 +160,7 @@
         }
         
         .message.bot .message-avatar {
-            background: linear-gradient(135deg, #4f46e5, #7c3aed);
+            background: linear-gradient(135deg, #0891b2, #0e7490);
             color: white;
         }
         
@@ -182,7 +182,7 @@
         }
         
         .message.user .message-content {
-            background: #4f46e5;
+            background: #0891b2;
             color: white;
             border-bottom-right-radius: 8px;
         }
@@ -267,8 +267,8 @@
         }
         
         .chat-textarea:focus {
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            border-color: #0891b2;
+            box-shadow: 0 0 0 3px rgba(8, 145, 178, 0.1);
         }
         
         .send-button {
@@ -276,7 +276,7 @@
             height: 50px;
             border: none;
             border-radius: 50%;
-            background: #4f46e5;
+            background: #0891b2;
             color: white;
             cursor: pointer;
             display: flex;
@@ -287,7 +287,7 @@
         }
         
         .send-button:hover {
-            background: #4338ca;
+            background: #0e7490;
             transform: scale(1.05);
         }
         
@@ -326,9 +326,9 @@
         }
         
         .quick-action:hover {
-            border-color: #4f46e5;
-            color: #4f46e5;
-            background: #f8fafc;
+            border-color: #0891b2;
+            color: #0891b2;
+            background: #f0f9ff;
         }
         
         @media (max-width: 768px) {

@@ -20,7 +20,7 @@ body {
 
 /* Header and Navigation */
 .hero {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0891b2 0%, #0e7490 50%, #8b5cf6 100%);
     color: white;
     min-height: 100vh;
     display: flex;
@@ -48,7 +48,7 @@ body {
 }
 
 .nav-logo h2 {
-    color: #4f46e5;
+    color: #0891b2;
     font-weight: 600;
 }
 
@@ -60,13 +60,13 @@ body {
 
 .nav-menu a {
     text-decoration: none;
-    color: #4b5563;
+    color: #334155;
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 .nav-menu a:hover {
-    color: #4f46e5;
+    color: #0891b2;
 }
 
 /* Hero Section */
@@ -115,12 +115,13 @@ body {
 
 .btn-primary {
     background: white;
-    color: #4f46e5;
+    color: #0891b2;
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 25px rgba(8, 145, 178, 0.3);
+    background: #f0f9ff;
 }
 
 .btn-secondary {
@@ -131,7 +132,7 @@ body {
 
 .btn-secondary:hover {
     background: white;
-    color: #4f46e5;
+    color: #0891b2;
 }
 
 /* Hero Image */
@@ -166,7 +167,7 @@ body {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 3rem;
-    color: #1e293b;
+    color: #0f172a;
 }
 
 .features-grid {
@@ -193,12 +194,13 @@ body {
 .feature-icon {
     font-size: 3rem;
     margin-bottom: 1rem;
+    color: #0891b2;
 }
 
 .feature-card h3 {
     font-size: 1.5rem;
     margin-bottom: 1rem;
-    color: #1e293b;
+    color: #0f172a;
 }
 
 .feature-card p {
@@ -216,7 +218,7 @@ body {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 1rem;
-    color: #1e293b;
+    color: #0f172a;
 }
 
 .demo-subtitle {
@@ -234,7 +236,7 @@ body {
 }
 
 .demo-card {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    background: linear-gradient(135deg, #0891b2 0%, #8b5cf6 100%);
     color: white;
     padding: 2rem;
     border-radius: 12px;
@@ -259,7 +261,7 @@ body {
 .demo-link {
     display: inline-block;
     background: white;
-    color: #4f46e5;
+    color: #0891b2;
     padding: 0.75rem 1.5rem;
     border-radius: 6px;
     text-decoration: none;
@@ -279,12 +281,13 @@ body {
     padding: 1rem;
     text-align: center;
     margin-top: 2rem;
+    color: #92400e;
 }
 
 /* Tech Stack Section */
 .tech-stack {
     padding: 6rem 0;
-    background: #1e293b;
+    background: #0f172a;
     color: white;
 }
 
