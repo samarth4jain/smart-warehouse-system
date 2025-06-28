@@ -1,0 +1,33 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+sqlalchemy==2.0.23
+psycopg2-binary==2.9.9
+alembic==1.12.1
+pydantic==2.5.0
+python-multipart==0.0.6
+python-dotenv==1.0.0
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+httpx==0.25.2
+jinja2==3.1.2
+aiofiles==23.2.1
+pandas==2.1.3
+numpy>=1.24.0
+scikit-learn==1.3.2
+requests==2.31.0
+
+# LLM and RAG Dependencies
+langchain==0.1.0
+langchain-community==0.0.10
+langchain-core==0.1.10
+langgraph==0.0.20
+transformers==4.36.0
+torch>=2.0.0
+sentence-transformers==2.2.2
+chromadb==0.4.22
+huggingface_hub>=0.20.0
+# faiss-cpu==1.7.4  # Removed due to SWIG dependency issues on macOS
+tokenizers==0.15.0
+accelerate==0.25.0
+bitsandbytes==0.42.0
+protobuf==4.25.0
