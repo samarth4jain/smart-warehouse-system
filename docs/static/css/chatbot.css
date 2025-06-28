@@ -32,7 +32,7 @@
 .bot-avatar {
     width: 3rem;
     height: 3rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -109,7 +109,7 @@
 }
 
 .bot-message .message-avatar {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
     color: white;
 }
 
@@ -138,7 +138,7 @@
 }
 
 .user-message .message-bubble {
-    background: #667eea;
+    background: #0891b2;
     color: white;
 }
 
@@ -163,7 +163,7 @@
     height: 0;
     border-top: 0.5rem solid transparent;
     border-bottom: 0.5rem solid transparent;
-    border-left: 0.5rem solid #667eea;
+    border-left: 0.5rem solid #0891b2;
 }
 
 .message-bubble p {
@@ -269,7 +269,7 @@
     width: 2.5rem;
     height: 2.5rem;
     border: none;
-    background: #667eea;
+    background: #0891b2;
     color: white;
     border-radius: 50%;
     cursor: pointer;
@@ -280,7 +280,7 @@
 }
 
 .send-button:hover {
-    background: #5a67d8;
+    background: #0e7490;
     transform: scale(1.05);
 }
 
@@ -297,7 +297,7 @@
 
 .typing-indicator {
     font-size: 0.8rem;
-    color: #667eea;
+    color: #0891b2;
     display: flex;
     align-items: center;
     justify-content: center;
