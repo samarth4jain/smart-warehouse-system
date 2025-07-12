@@ -8,7 +8,7 @@ import time
 import asyncio
 from functools import lru_cache
 from .database import engine, Base
-from .routers import inventory, inbound, outbound, chatbot, dashboard, forecasting
+from .routers import inventory, inbound, outbound, chatbot, dashboard, forecasting, enhanced_dashboard, ultra_analytics
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -40,6 +40,8 @@ app.include_router(outbound.router, prefix="/api/outbound", tags=["Outbound"])
 app.include_router(chatbot.router, prefix="/api/chat", tags=["Chatbot"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
 app.include_router(forecasting.router, prefix="/api/phase3", tags=["Phase 3: Forecasting & Space Planning"])
+app.include_router(enhanced_dashboard.router, prefix="/api/enhanced-dashboard", tags=["Enhanced Analytics"])
+app.include_router(ultra_analytics.router, prefix="/api", tags=["Ultra Analytics"])
 
 # Mount static files
 frontend_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "frontend")
@@ -84,6 +86,26 @@ async def enterprise_dashboard():
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         return HTMLResponse(content="<h1>Enterprise Dashboard Not Found</h1><p>Please ensure the enterprise dashboard file exists.</p>")
+
+@app.get("/enterprise-analytics", response_class=HTMLResponse)
+async def enterprise_analytics_dashboard():
+    """Serve the enhanced enterprise analytics dashboard"""
+    html_file = os.path.join(frontend_path, "enterprise_analytics_dashboard.html")
+    try:
+        with open(html_file, "r") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Enterprise Analytics Dashboard Not Found</h1><p>Please ensure the enhanced dashboard file exists.</p>")
+
+@app.get("/enhanced-chatbot", response_class=HTMLResponse)
+async def enhanced_chatbot():
+    """Serve the enhanced chatbot interface"""
+    html_file = os.path.join(frontend_path, "enhanced_chatbot.html")
+    try:
+        with open(html_file, "r") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Enhanced Chatbot Not Found</h1><p>Please ensure the enhanced chatbot file exists.</p>")
 
 @app.get("/health")
 async def health_check():

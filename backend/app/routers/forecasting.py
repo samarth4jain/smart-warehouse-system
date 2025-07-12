@@ -8,6 +8,7 @@ import json
 from ..database import get_db
 from ..services.simple_forecasting_service import SimpleForecastingService
 from ..services.simple_space_optimization_service import SimpleSpaceOptimizationService
+from ..services.ultra_enhanced_analytics_service import UltraEnhancedAnalyticsService
 
 router = APIRouter()
 
@@ -49,9 +50,33 @@ class SpaceOptimizationResponse(BaseModel):
     recommendations: List[dict]
     current_layout_efficiency: str
 
+# Ultra-Enhanced Analytics Response Models
+class UltraAnalyticsResponse(BaseModel):
+    success: bool
+    analysis_type: str
+    insights: dict
+    recommendations: List[dict]
+    confidence_score: float
+    generated_at: str
+
+class CognitiveInsightsResponse(BaseModel):
+    success: bool
+    cognitive_analysis: dict
+    strategic_insights: List[dict]
+    innovation_opportunities: List[dict]
+    risk_assessment: dict
+
+class PredictiveAnalyticsResponse(BaseModel):
+    success: bool
+    predictions: dict
+    trends: List[dict]
+    market_intelligence: dict
+    business_impact: dict
+
 # Initialize services
 forecasting_service = SimpleForecastingService()
 space_service = SimpleSpaceOptimizationService()
+ultra_analytics_service = UltraEnhancedAnalyticsService()
 
 # Forecasting endpoints
 @router.post("/forecast/ingest-sales", summary="Ingest Sales Data")
@@ -318,6 +343,106 @@ async def generate_comprehensive_plan(db: Session = Depends(get_db)):
             
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error generating comprehensive plan: {str(e)}")
+
+# Ultra-Enhanced Analytics Endpoints
+@router.get("/analytics/ultra/multi-dimensional", response_model=UltraAnalyticsResponse, 
+           summary="Multi-Dimensional Business Intelligence")
+async def get_multi_dimensional_analytics(
+    analysis_type: str = "comprehensive",
+    db: Session = Depends(get_db)
+):
+    """
+    Get revolutionary multi-dimensional business intelligence analysis
+    """
+    try:
+        result = ultra_analytics_service.multi_dimensional_analysis(db, analysis_type)
+        return UltraAnalyticsResponse(**result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in multi-dimensional analysis: {str(e)}")
+
+@router.get("/analytics/ultra/predictive", response_model=PredictiveAnalyticsResponse, 
+           summary="Predictive Business Intelligence")
+async def get_predictive_analytics(
+    horizon: int = 12,
+    db: Session = Depends(get_db)
+):
+    """
+    Get advanced predictive analytics with market intelligence
+    """
+    try:
+        result = ultra_analytics_service.predictive_intelligence(db, horizon)
+        return PredictiveAnalyticsResponse(**result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in predictive analytics: {str(e)}")
+
+@router.get("/analytics/ultra/cognitive", response_model=CognitiveInsightsResponse, 
+           summary="Cognitive Business Insights")
+async def get_cognitive_insights(
+    focus_area: str = "strategic",
+    db: Session = Depends(get_db)
+):
+    """
+    Get cognitive insights and strategic business intelligence
+    """
+    try:
+        result = ultra_analytics_service.cognitive_insights(db, focus_area)
+        return CognitiveInsightsResponse(**result)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in cognitive analysis: {str(e)}")
+
+@router.get("/analytics/ultra/optimization-engine", summary="AI Optimization Engine")
+async def get_optimization_recommendations(
+    scope: str = "full_warehouse",
+    db: Session = Depends(get_db)
+):
+    """
+    Get AI-powered optimization engine recommendations
+    """
+    try:
+        result = ultra_analytics_service.optimization_engine(db, scope)
+        return {
+            "success": True,
+            "optimization_scope": scope,
+            "recommendations": result.get("recommendations", []),
+            "impact_analysis": result.get("impact_analysis", {}),
+            "implementation_roadmap": result.get("roadmap", []),
+            "roi_projections": result.get("roi", {})
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error in optimization engine: {str(e)}")
+
+@router.get("/analytics/ultra/strategic-dashboard", summary="Strategic Intelligence Dashboard")
+async def get_strategic_dashboard(
+    db: Session = Depends(get_db)
+):
+    """
+    Get comprehensive strategic intelligence for executive dashboard
+    """
+    try:
+        # Get all types of ultra analytics
+        multi_dim = ultra_analytics_service.multi_dimensional_analysis(db, "strategic")
+        predictive = ultra_analytics_service.predictive_intelligence(db, 6)
+        cognitive = ultra_analytics_service.cognitive_insights(db, "strategic")
+        optimization = ultra_analytics_service.optimization_engine(db, "strategic")
+        
+        return {
+            "success": True,
+            "dashboard_type": "strategic_intelligence",
+            "executive_summary": {
+                "business_health_score": multi_dim.get("insights", {}).get("health_score", 85),
+                "growth_trajectory": predictive.get("predictions", {}).get("growth_rate", 12.5),
+                "innovation_index": cognitive.get("innovation_opportunities", []),
+                "optimization_potential": optimization.get("impact_analysis", {}).get("efficiency_gain", 18.7)
+            },
+            "key_insights": multi_dim.get("insights", {}),
+            "strategic_recommendations": cognitive.get("strategic_insights", []),
+            "predictive_trends": predictive.get("trends", []),
+            "optimization_priorities": optimization.get("recommendations", [])[:5],
+            "risk_assessment": cognitive.get("risk_assessment", {}),
+            "generated_at": datetime.now().isoformat()
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error generating strategic dashboard: {str(e)}")
 
 # Dashboard endpoints
 @router.get("/dashboard/overview", summary="Phase 3 Dashboard Overview")
