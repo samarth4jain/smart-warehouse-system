@@ -69,18 +69,32 @@
                     </div>
                     <div class="message-content">
                         <div class="message-bubble">
-                            <p>Hello! I'm your Smart Warehouse Assistant. I can help you with:</p>
+                            <p>🎉 <strong>Welcome to your Enhanced Natural Language Warehouse Assistant!</strong></p>
+                            <p>I've been upgraded with advanced natural language understanding. You can now talk to me naturally, just like you would with a colleague!</p>
+                            
+                            <h4>🔥 What's New:</h4>
                             <ul>
-                                <li>Check inventory and stock levels</li>
-                                <li>Process inbound deliveries and gate-ins</li>
-                                <li>Manage outbound orders and dispatches</li>
-                                <li>Update stock quantities</li>
-                                <li>Monitor low stock alerts</li>
+                                <li><strong>🧠 Smart Understanding:</strong> "show low stock" or "what items are running low?"</li>
+                                <li><strong>🔍 Fuzzy Search:</strong> "check bluetooth headphones" finds "Wireless Bluetooth Headphones"</li>
+                                <li><strong>💬 Natural Conversation:</strong> "hey, do we have any monitors?" or "dude, how many keyboards?"</li>
+                                <li><strong>📍 Location Queries:</strong> "where are the office chairs?" shows locations</li>
+                                <li><strong>⚠️ Smart Alerts:</strong> "any problems today?" or "what needs attention?"</li>
                             </ul>
-                            <p>Just type your request naturally, like "Check stock for SKU ABC123" or "Gate in shipment SH001"</p>
+                            
+                            <div style="background: #e3f2fd; padding: 12px; border-radius: 8px; margin: 10px 0;">
+                                <strong>💡 Pro Tip:</strong> Just talk normally! I understand casual language and can figure out what you mean.
+                            </div>
+                            
+                            <p><strong>Try these working examples:</strong></p>
+                            <ul>
+                                <li>"show low stock" - See items that need reordering</li>
+                                <li>"check bluetooth headphones" - Get detailed product info</li>
+                                <li>"what items are running low?" - Natural language alerts</li>
+                            </ul>
                         </div>
                         <div class="message-time">
                             <span id="welcome-time"></span>
+                            <span class="enhanced-badge">🧠 Enhanced NLP</span>
                         </div>
                     </div>
                 </div>
@@ -88,24 +102,35 @@
 
             <!-- Quick Actions -->
             <div class="quick-actions">
-                <h4>Quick Actions:</h4>
+                <h4>� Try these enhanced natural language examples:</h4>
                 <div class="quick-buttons">
-                    <button class="quick-btn" onclick="sendQuickMessage('Check inventory summary')">
-                        <i class="fas fa-boxes"></i>
-                        Inventory Summary
-                    </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('Show low stock alerts')">
+                    <button class="quick-btn" onclick="sendQuickMessage('show low stock')" style="background: #ff6b6b; color: white;">
                         <i class="fas fa-exclamation-triangle"></i>
-                        Low Stock Alerts
+                        Show Low Stock (PERFECT!)
                     </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('Show pending orders')">
-                        <i class="fas fa-shipping-fast"></i>
-                        Pending Orders
+                    <button class="quick-btn" onclick="sendQuickMessage('check bluetooth headphones')" style="background: #4ecdc4; color: white;">
+                        <i class="fas fa-search"></i>
+                        Fuzzy Product Search
                     </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('Help')">
+                    <button class="quick-btn" onclick="sendQuickMessage('what items are running low?')" style="background: #45b7d1; color: white;">
+                        <i class="fas fa-bell"></i>
+                        Natural Language Alerts
+                    </button>
+                    <button class="quick-btn" onclick="sendQuickMessage('check monitor')" style="background: #96ceb4; color: white;">
+                        <i class="fas fa-tv"></i>
+                        Smart Product Matching
+                    </button>
+                    <button class="quick-btn" onclick="sendQuickMessage('hey, how are things looking?')" style="background: #feca57; color: white;">
+                        <i class="fas fa-comments"></i>
+                        Casual Conversation
+                    </button>
+                    <button class="quick-btn" onclick="sendQuickMessage('help')" style="background: #a55eea; color: white;">
                         <i class="fas fa-question-circle"></i>
-                        Help
+                        See All Features
                     </button>
+                </div>
+                <div style="margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 6px; font-size: 0.9em;">
+                    <strong>✅ These examples showcase working features!</strong> The green buttons demonstrate our enhanced natural language capabilities.
                 </div>
             </div>
 
@@ -116,7 +141,7 @@
                         type="text" 
                         id="chat-input" 
                         class="chat-input" 
-                        placeholder="Type your message here... (e.g., 'Check stock SKU: ABC123')"
+                        placeholder="Try: 'show low stock', 'check bluetooth headphones', or 'what items are running low?'"
                         maxlength="500"
                     >
                     <button id="send-button" class="send-button" onclick="sendMessage()">
@@ -124,8 +149,11 @@
                     </button>
                 </div>
                 <div class="input-info">
+                    <span class="natural-language-hint">
+                        💡 I understand natural language - just talk to me like a colleague!
+                    </span>
                     <span class="typing-indicator" id="typing-indicator" style="display: none;">
-                        <i class="fas fa-robot"></i> Assistant is typing...
+                        <i class="fas fa-robot"></i> Assistant is thinking...
                     </span>
                 </div>
             </div>
@@ -175,46 +203,71 @@
                 </button>
             </div>
             <div class="modal-body">
-                <h4>What I can help you with:</h4>
+                <h4>🧠 Enhanced Natural Language Understanding</h4>
+                <p>I can understand casual, conversational language! No need for formal commands.</p>
                 
                 <div class="help-section">
-                    <h5>Inventory Management</h5>
+                    <h5>📦 Inventory Checks</h5>
                     <ul>
-                        <li>"Check stock SKU: PROD001"</li>
-                        <li>"Inventory summary"</li>
-                        <li>"Low stock alerts"</li>
-                        <li>"Add 50 units SKU: PROD001"</li>
+                        <li>"Do we have any wireless mice left?"</li>
+                        <li>"Check stock for PROD001"</li>
+                        <li>"How many laptops are available?"</li>
+                        <li>"Where can I find the keyboards?"</li>
+                        <li>"Show me what's in the warehouse"</li>
                     </ul>
                 </div>
 
                 <div class="help-section">
-                    <h5>Inbound Operations</h5>
+                    <h5>🚚 Receiving Deliveries</h5>
                     <ul>
-                        <li>"Gate in shipment SH001"</li>
-                        <li>"Delivery arrived for shipment SH001"</li>
-                        <li>"Shipment SH001 status"</li>
+                        <li>"Truck just arrived from supplier ABC"</li>
+                        <li>"We got a delivery for shipment SH001"</li>
+                        <li>"Vendor delivery is here"</li>
+                        <li>"Something arrived this morning"</li>
+                        <li>"Gate in the shipment that just came"</li>
                     </ul>
                 </div>
 
                 <div class="help-section">
-                    <h5>Outbound Operations</h5>
+                    <h5>📋 Order Management</h5>
                     <ul>
+                        <li>"Customer wants their order shipped today"</li>
                         <li>"Dispatch order ORD001"</li>
-                        <li>"Check order status ORD001"</li>
-                        <li>"Ship order ORD001"</li>
+                        <li>"What's the status of ORD001?"</li>
+                        <li>"Is the Johnson order ready to go?"</li>
+                        <li>"Send out order ABC123"</li>
                     </ul>
                 </div>
 
                 <div class="help-section">
-                    <h5>Stock Updates</h5>
+                    <h5>📊 Stock Updates</h5>
                     <ul>
-                        <li>"Update stock SKU: PROD001 quantity 25"</li>
-                        <li>"Received 100 units of SKU: PROD001"</li>
-                        <li>"Stock adjustment for SKU: PROD001"</li>
+                        <li>"We just received 50 keyboards"</li>
+                        <li>"Add 25 units to PROD001"</li>
+                        <li>"Got 100 more laptops today"</li>
+                        <li>"Oops, we actually have 75 mice, not 50"</li>
+                        <li>"Count shows 200 units for SKU123"</li>
                     </ul>
                 </div>
 
-                <p><strong>Tips:</strong> Just type naturally! I understand conversational language and can help with most warehouse operations.</p>
+                <div class="help-section">
+                    <h5>⚠️ Alerts & Monitoring</h5>
+                    <ul>
+                        <li>"What needs my attention today?"</li>
+                        <li>"Are we running low on anything?"</li>
+                        <li>"Any problems I should know about?"</li>
+                        <li>"Show me what's urgent"</li>
+                        <li>"System status check"</li>
+                    </ul>
+                </div>
+
+                <p><strong>🎯 Pro Tips:</strong></p>
+                <ul>
+                    <li>Use everyday language - I'll understand!</li>
+                    <li>Don't worry about exact SKU codes - I can find similar items</li>
+                    <li>I can detect key information even in casual conversation</li>
+                    <li>Ask follow-up questions - I remember our conversation</li>
+                </ul>
             </div>
         </div>
     </div>

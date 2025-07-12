@@ -150,8 +150,29 @@ class ChatbotManager {
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message bot-message';
 
-        // Format message content
+        // Format message content with enhanced formatting
         let messageContent = this.formatBotMessage(response.message);
+        
+        // Add confidence indicator if available
+        let confidenceIndicator = '';
+        if (response.confidence !== undefined) {
+            const confidencePercent = Math.round(response.confidence * 100);
+            const confidenceClass = confidencePercent > 70 ? 'high' : confidencePercent > 40 ? 'medium' : 'low';
+            confidenceIndicator = `<div class="confidence-indicator ${confidenceClass}">Confidence: ${confidencePercent}%</div>`;
+        }
+        
+        // Add entity display if available
+        let entityDisplay = '';
+        if (response.entities && Object.keys(response.entities).length > 0) {
+            entityDisplay = '<div class="entities-detected">';
+            entityDisplay += '<small>🔍 Detected: ';
+            const entityTexts = [];
+            for (const [type, value] of Object.entries(response.entities)) {
+                entityTexts.push(`${type}: ${value}`);
+            }
+            entityDisplay += entityTexts.join(', ');
+            entityDisplay += '</small></div>';
+        }
         
         // Add action buttons if any
         let actionButtons = '';
@@ -167,10 +188,28 @@ class ChatbotManager {
                 </div>
             `;
         }
+        
+        // Add suggestion buttons
+        let suggestionButtons = '';
+        if (response.suggestions && response.suggestions.length > 0) {
+            suggestionButtons = `
+                <div class="suggestion-buttons">
+                    <small>💡 Suggestions:</small>
+                    <div class="suggestion-list">
+                        ${response.suggestions.slice(0, 3).map(suggestion => `
+                            <button class="suggestion-btn" onclick="chatbot.sendQuickMessage('${suggestion}')">
+                                ${suggestion}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
 
-        // Status indicator
+        // Status indicator with enhanced mode display
         const statusClass = response.success ? 'success' : 'error';
         const statusIcon = response.success ? 'fa-check' : 'fa-exclamation-triangle';
+        const enhancedBadge = response.enhanced_mode ? '<span class="enhanced-badge">🧠 Enhanced</span>' : '';
 
         messageDiv.innerHTML = `
             <div class="message-avatar">
@@ -179,13 +218,17 @@ class ChatbotManager {
             <div class="message-content">
                 <div class="message-bubble">
                     ${messageContent}
+                    ${confidenceIndicator}
+                    ${entityDisplay}
                     ${actionButtons}
+                    ${suggestionButtons}
                 </div>
                 <div class="message-time">
                     ${new Date().toLocaleTimeString()}
                     <span class="message-status ${statusClass}">
                         <i class="fas ${statusIcon}"></i>
                     </span>
+                    ${enhancedBadge}
                 </div>
             </div>
         `;
