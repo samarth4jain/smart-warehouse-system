@@ -473,7 +473,7 @@ Hey! I'm your warehouse assistant and I'm here to make things easy! 😊
 • "Dispatch order ORD001"
 • "Is order ready to go out?"
 
-📊 **Stock Updates**
+**Stock Updates**
 • "We just got 50 more widgets"
 • "Add 25 units to inventory"
 • "Fix the count for PROD001"
@@ -483,7 +483,7 @@ Hey! I'm your warehouse assistant and I'm here to make things easy! 😊
 • "Any low stock items?"
 • "Show me problems"
 
-Just talk to me naturally - I understand casual language! 💬
+Just talk to me naturally - I understand casual language!
             """
         elif response_style == "urgent":
             help_text = """
@@ -631,7 +631,7 @@ Start with "URGENT:", "ASAP:", or "PRIORITY:"
                     })
             
             if not low_stock_products:
-                response_msg = f"{greeting}Great news! Everything looks good in the warehouse! 🎉\n\n" \
+                response_msg = f"{greeting}Great news! Everything looks good in the warehouse!\n\n" \
                               f"✅ **All products are well-stocked**\n" \
                               f"📈 **No low stock alerts**\n" \
                               f"🔄 **All systems running smoothly**\n\n" \
@@ -723,7 +723,7 @@ Start with "URGENT:", "ASAP:", or "PRIORITY:"
                 StockMovement.created_at >= week_ago
             ).scalar()
             
-            response_msg = f"{greeting}Here's how things are looking in our warehouse! 📊\n\n"
+            response_msg = f"{greeting}Here's how things are looking in our warehouse!\n\n"
             response_msg += f"📦 **Inventory Overview:**\n"
             response_msg += f"• Total Products: {inventory_summary['total_products']}\n"
             response_msg += f"• Total Value: ${total_value:,.2f}\n"

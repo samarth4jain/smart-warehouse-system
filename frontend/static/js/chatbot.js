@@ -194,7 +194,7 @@ class ChatbotManager {
         if (response.suggestions && response.suggestions.length > 0) {
             suggestionButtons = `
                 <div class="suggestion-buttons">
-                    <small>💡 Suggestions:</small>
+                    <small>Suggestions:</small>
                     <div class="suggestion-list">
                         ${response.suggestions.slice(0, 3).map(suggestion => `
                             <button class="suggestion-btn" onclick="chatbot.sendQuickMessage('${suggestion}')">
