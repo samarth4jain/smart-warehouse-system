@@ -223,7 +223,31 @@
 
         .chart-container {
             height: 300px;
+            max-height: 300px;
             position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-container[style*="height: 400px"] {
+            height: 400px !important;
+            max-height: 400px !important;
+        }
+        
+        .js-plotly-plot {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+        }
+        
+        .js-plotly-plot .plotly .main-svg {
+            max-width: 100% !important;
+            max-height: 100% !important;
+        }
+        
+        .plotly-graph-div {
+            width: 100% !important;
+            height: 100% !important;
         }
 
         .full-width-chart {

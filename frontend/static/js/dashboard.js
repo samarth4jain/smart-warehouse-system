@@ -504,7 +504,79 @@ function refreshData() {
 }
 
 function showAddProductModal() {
-    dashboard.showToast('Add product feature coming soon', 'info');
+    const modal = document.getElementById('add-product-modal');
+    if (modal) {
+        modal.style.display = 'block';
+        // Reset form
+        document.getElementById('add-product-form').reset();
+    }
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'none';
+    }
+}
+
+function submitAddProduct(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(event.target);
+    const productData = {
+        sku: formData.get('sku'),
+        name: formData.get('name'),
+        category: formData.get('category'),
+        location: formData.get('location'),
+        quantity: parseInt(formData.get('quantity')),
+        unit_price: parseFloat(formData.get('unit_price')) || 0,
+        supplier: formData.get('supplier') || '',
+        reorder_level: parseInt(formData.get('reorder_level')) || 0,
+        description: formData.get('description') || ''
+    };
+    
+    // Validate required fields
+    if (!productData.sku || !productData.name || !productData.category || !productData.location || productData.quantity < 0) {
+        dashboard.showToast('Please fill in all required fields correctly', 'error');
+        return;
+    }
+    
+    // Show loading
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+    
+    // Submit to API
+    fetch('/api/inventory', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        dashboard.showToast('Product added successfully', 'success');
+        closeModal('add-product-modal');
+        // Refresh inventory data
+        if (dashboard.loadInventory) {
+            dashboard.loadInventory();
+        }
+    })
+    .catch(error => {
+        console.error('Error adding product:', error);
+        dashboard.showToast('Error adding product. Please try again.', 'error');
+    })
+    .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+    });
 }
 
 function showCreateShipmentModal() {
