@@ -23,14 +23,43 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS middleware
+# CORS middleware with explicit headers
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
+
+# Add gzip compression
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+
+# Global exception handler for better error handling
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=404,
+        content={
+            "error": "Endpoint not found",
+            "message": f"The requested endpoint '{request.url.path}' does not exist",
+            "status_code": 404,
+            "timestamp": datetime.now().isoformat()
+        }
+    )
+
+@app.exception_handler(500)
+async def custom_500_handler(request: Request, exc: HTTPException):
+    return JSONResponse(
+        status_code=500,
+        content={
+            "error": "Internal server error",
+            "message": "An unexpected error occurred",
+            "status_code": 500,
+            "timestamp": datetime.now().isoformat()
+        }
+    )
 
 # Include routers
 app.include_router(inventory.router, prefix="/api/inventory", tags=["Inventory"])
