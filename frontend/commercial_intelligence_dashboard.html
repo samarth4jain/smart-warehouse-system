@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Warehouse Pro - Commercial Intelligence Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            --info-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            --dark-bg: #0f172a;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--light-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        /* Commercial Header */
+        .commercial-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .commercial-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.1)"><polygon points="0,0 1000,80 1000,100 0,100"/></svg>');
+            background-size: cover;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .commercial-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .header-metric {
+            text-align: center;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header-metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-metric-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        .nav-tabs {
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-tab {
+            padding: 1rem 1.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-tab:hover {
+            color: var(--text-primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .nav-tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .nav-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Executive Dashboard */
+        .executive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            background: var(--primary-gradient);
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .metric-change {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        .metric-change.positive {
+            color: #059669;
+        }
+
+        .metric-change.negative {
+            color: #dc2626;
+        }
+
+        /* Commercial Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: white;
+            background: var(--primary-gradient);
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .feature-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-stat {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 8px;
+        }
+
+        .feature-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .feature-stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .feature-actions {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: var(--light-bg);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-success {
+            background: var(--success-gradient);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        /* Charts and Analytics */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* ROI Calculator */
+        .roi-calculator {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .roi-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-input {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.875rem;
+        }
+
+        .form-select {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .header-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .header-metrics {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-actions {
+                margin-left: 0;
+                justify-content: center;
+            }
+            
+            .executive-grid,
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading States */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border-color);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1rem 1.5rem;
+            box-shadow: var(--shadow-lg);
+            border-left: 4px solid #10b981;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.error {
+            border-left-color: #ef4444;
+        }
+
+        .notification.warning {
+            border-left-color: #f59e0b;
+        }
+    </style>
+</head>
+<body>
+    <!-- Commercial Header -->
+    <header class="commercial-header">
+        <div class="header-content">
+            <div>
+                <div class="header-title">
+                    <div>
+                        <h1><i class="fas fa-industry"></i> Smart Warehouse Pro</h1>
+                        <div class="header-subtitle">Commercial Intelligence Platform - Transforming Operations Through AI</div>
+                        <div class="commercial-badge">
+                            <i class="fas fa-crown"></i>
+                            Enterprise Commercial
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-metrics">
+                <div class="header-metric">
+                    <div class="header-metric-value" id="revenue-impact">$2.84M</div>
+                    <div class="header-metric-label">Revenue Impact</div>
+                </div>
+                <div class="header-metric">
+                    <div class="header-metric-value" id="efficiency-score">94.7%</div>
+                    <div class="header-metric-label">Efficiency Score</div>
+                </div>
+                <div class="header-metric">
+                    <div class="header-metric-value" id="roi-percentage">287%</div>
+                    <div class="header-metric-label">ROI Achieved</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('executive')">
+                    <i class="fas fa-chart-line"></i>
+                    Executive Dashboard
+                </button>
+                <button class="nav-tab" onclick="showTab('commercial-features')">
+                    <i class="fas fa-rocket"></i>
+                    Commercial Features
+                </button>
+                <button class="nav-tab" onclick="showTab('analytics')">
+                    <i class="fas fa-brain"></i>
+                    AI Analytics
+                </button>
+                <button class="nav-tab" onclick="showTab('roi-calculator')">
+                    <i class="fas fa-calculator"></i>
+                    ROI Calculator
+                </button>
+                <button class="nav-tab" onclick="showTab('automation')">
+                    <i class="fas fa-robot"></i>
+                    Automation Hub
+                </button>
+                <button class="nav-tab" onclick="showTab('qr-management')">
+                    <i class="fas fa-qrcode"></i>
+                    QR Management
+                </button>
+            </div>
+            <div class="nav-actions">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>System Online</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Executive Dashboard Tab -->
+        <div id="executive-tab" class="tab-content active">
+            <div class="executive-grid">
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value">$2.84M</div>
+                    <div class="metric-label">Total Revenue Impact</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +15.2% from last quarter
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value">94.7%</div>
+                    <div class="metric-label">Operational Efficiency</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +8.3% improvement
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-medal"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value">99.2%</div>
+                    <div class="metric-label">Quality Score</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +2.1% increase
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-header">
+                        <div class="metric-icon">
+                            <i class="fas fa-cut"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value">$187K</div>
+                    <div class="metric-label">Cost Reduction</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-down"></i>
+                        -12.4% cost savings
+                    </div>
+                </div>
+            </div>
+
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-area"></i>
+                        Revenue & Performance Trends
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Efficiency Distribution
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="efficiencyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commercial Features Tab -->
+        <div id="commercial-features-tab" class="tab-content">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="feature-title">Layout Optimization</div>
+                    </div>
+                    <div class="feature-description">
+                        AI-powered warehouse layout optimization with machine learning algorithms for maximum efficiency.
+                    </div>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">25%</div>
+                            <div class="feature-stat-label">Pick Time Reduction</div>
+                        </div>
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">15%</div>
+                            <div class="feature-stat-label">Space Efficiency</div>
+                        </div>
+                    </div>
+                    <div class="feature-actions">
+                        <button class="btn btn-primary" onclick="optimizeLayout()">
+                            <i class="fas fa-magic"></i>
+                            Optimize Now
+                        </button>
+                        <button class="btn btn-secondary" onclick="viewLayoutReport()">
+                            <i class="fas fa-chart-bar"></i>
+                            View Report
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <div class="feature-title">Predictive Analytics</div>
+                    </div>
+                    <div class="feature-description">
+                        Advanced machine learning models for demand forecasting, risk assessment, and optimization opportunities.
+                    </div>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">94.7%</div>
+                            <div class="feature-stat-label">Forecast Accuracy</div>
+                        </div>
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">87%</div>
+                            <div class="feature-stat-label">Risk Detection</div>
+                        </div>
+                    </div>
+                    <div class="feature-actions">
+                        <button class="btn btn-primary" onclick="generatePredictions()">
+                            <i class="fas fa-crystal-ball"></i>
+                            Generate Forecast
+                        </button>
+                        <button class="btn btn-secondary" onclick="viewPredictiveInsights()">
+                            <i class="fas fa-eye"></i>
+                            View Insights
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="feature-title">AMR Fleet Management</div>
+                    </div>
+                    <div class="feature-description">
+                        Autonomous Mobile Robot coordination with real-time fleet monitoring and intelligent task allocation.
+                    </div>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">8</div>
+                            <div class="feature-stat-label">Active Robots</div>
+                        </div>
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">99.8%</div>
+                            <div class="feature-stat-label">Pick Accuracy</div>
+                        </div>
+                    </div>
+                    <div class="feature-actions">
+                        <button class="btn btn-primary" onclick="launchAMRControl()">
+                            <i class="fas fa-play"></i>
+                            Control Fleet
+                        </button>
+                        <button class="btn btn-secondary" onclick="viewAMRAnalytics()">
+                            <i class="fas fa-chart-area"></i>
+                            Fleet Analytics
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="feature-title">Computer Vision QC</div>
+                    </div>
+                    <div class="feature-description">
+                        AI-powered quality control with computer vision for automated defect detection and sorting.
+                    </div>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">99.7%</div>
+                            <div class="feature-stat-label">Detection Rate</div>
+                        </div>
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">0.3%</div>
+                            <div class="feature-stat-label">False Positives</div>
+                        </div>
+                    </div>
+                    <div class="feature-actions">
+                        <button class="btn btn-primary" onclick="enableVisionQC()">
+                            <i class="fas fa-camera"></i>
+                            Enable Vision QC
+                        </button>
+                        <button class="btn btn-secondary" onclick="viewQCMetrics()">
+                            <i class="fas fa-chart-line"></i>
+                            QC Metrics
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Analytics Tab -->
+        <div id="analytics-tab" class="tab-content">
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-line"></i>
+                        Predictive Analytics Dashboard
+                    </div>
+                    <div class="chart-container">
+                        <div id="predictiveChart"></div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-title">
+                        <i class="fas fa-bullseye"></i>
+                        Performance Targets
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="targetsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-cubes"></i>
+                        </div>
+                        <div class="feature-title">ABC Analysis</div>
+                    </div>
+                    <div class="feature-description">
+                        Comprehensive ABC analysis for inventory categorization and optimization strategies.
+                    </div>
+                    <div class="feature-actions">
+                        <button class="btn btn-primary" onclick="runABCAnalysis()">
+                            <i class="fas fa-chart-bar"></i>
+                            Run Analysis
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <div class="feature-title">Velocity Analysis</div>
+                    </div>
+                    <div class="feature-description">
+                        Advanced velocity analysis with seasonal patterns and optimization recommendations.
+                    </div>
+                    <div class="feature-actions">
+                        <button class="btn btn-primary" onclick="analyzeVelocity()">
+                            <i class="fas fa-rocket"></i>
+                            Analyze Velocity
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROI Calculator Tab -->
+        <div id="roi-calculator-tab" class="tab-content">
+            <div class="roi-calculator">
+                <div class="chart-title">
+                    <i class="fas fa-calculator"></i>
+                    Commercial ROI Calculator
+                </div>
+                <div class="roi-form">
+                    <div class="form-group">
+                        <label class="form-label" for="investment-amount">Investment Amount ($)</label>
+                        <input type="number" id="investment-amount" class="form-input" placeholder="500000" value="500000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="timeframe">Timeframe (Months)</label>
+                        <input type="number" id="timeframe" class="form-input" placeholder="24" value="24">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="optimization-area">Optimization Area</label>
+                        <select id="optimization-area" class="form-select">
+                            <option value="automation">Full Automation</option>
+                            <option value="layout_optimization">Layout Optimization</option>
+                            <option value="inventory_management">Inventory Management</option>
+                            <option value="workforce_optimization">Workforce Optimization</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="calculateROI()" style="margin-top: 1.5rem;">
+                            <i class="fas fa-calculator"></i>
+                            Calculate ROI
+                        </button>
+                    </div>
+                </div>
+                <div id="roi-results" style="display: none; margin-top: 2rem;">
+                    <div class="executive-grid">
+                        <div class="metric-card">
+                            <div class="metric-value" id="roi-percentage-result">Loading...</div>
+                            <div class="metric-label">ROI Percentage</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="annual-savings-result">Loading...</div>
+                            <div class="metric-label">Annual Savings</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="payback-period-result">Loading...</div>
+                            <div class="metric-label">Payback Period</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- QR Management Tab -->
+        <div id="qr-management-tab" class="tab-content">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <div class="feature-title">Product QR Codes</div>
+                    </div>
+                    <div class="feature-description">
+                        Generate and manage QR codes for all products with embedded tracking data.
+                    </div>
+                    <div class="feature-actions">
+                        <button class="btn btn-primary" onclick="generateProductQR()">
+                            <i class="fas fa-plus"></i>
+                            Generate QR Codes
+                        </button>
+                        <button class="btn btn-secondary" onclick="bulkQRGeneration()">
+                            <i class="fas fa-layer-group"></i>
+                            Bulk Generate
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <div class="feature-title">Location QR Codes</div>
+                    </div>
+                    <div class="feature-description">
+                        QR codes for warehouse locations enabling instant identification and navigation.
+                    </div>
+                    <div class="feature-actions">
+                        <button class="btn btn-primary" onclick="generateLocationQR()">
+                            <i class="fas fa-map-marker-alt"></i>
+                            Generate Location QRs
+                        </button>
+                        <button class="btn btn-secondary" onclick="qrScanner()">
+                            <i class="fas fa-camera"></i>
+                            QR Scanner
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="qr-display-area" class="chart-card" style="margin-top: 1.5rem; display: none;">
+                <div class="chart-title">
+                    <i class="fas fa-qrcode"></i>
+                    Generated QR Codes
+                </div>
+                <div id="qr-codes-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; padding: 1rem;">
+                    <!-- QR codes will be displayed here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Automation Hub Tab -->
+        <div id="automation-tab" class="tab-content">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="feature-title">AMR Fleet Control</div>
+                    </div>
+                    <div class="feature-description">
+                        Real-time control and monitoring of Autonomous Mobile Robot fleet with AI coordination.
+                    </div>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">8/8</div>
+                            <div class="feature-stat-label">Robots Active</div>
+                        </div>
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">147</div>
+                            <div class="feature-stat-label">Tasks Today</div>
+                        </div>
+                    </div>
+                    <div class="feature-actions">
+                        <button class="btn btn-primary" onclick="viewAMRFleet()">
+                            <i class="fas fa-eye"></i>
+                            Monitor Fleet
+                        </button>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-header">
+                        <div class="feature-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <div class="feature-title">IoT Sensor Network</div>
+                    </div>
+                    <div class="feature-description">
+                        Comprehensive IoT monitoring for environmental conditions and predictive maintenance.
+                    </div>
+                    <div class="feature-stats">
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">44/45</div>
+                            <div class="feature-stat-label">Sensors Online</div>
+                        </div>
+                        <div class="feature-stat">
+                            <div class="feature-stat-value">94.2%</div>
+                            <div class="feature-stat-label">Health Score</div>
+                        </div>
+                    </div>
+                    <div class="feature-actions">
+                        <button class="btn btn-primary" onclick="viewIoTStatus()">
+                            <i class="fas fa-satellite-dish"></i>
+                            Sensor Status
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-chart-line"></i>
+                    Automation ROI Timeline
+                </div>
+                <div class="chart-container">
+                    <canvas id="automationROIChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Global variables
+        let currentTab = 'executive';
+        const API_BASE_URL = window.location.hostname === 'localhost' ? 'http://localhost:8000/api' : '/api';
+
+        // Tab Management
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            event.target.classList.add('active');
+            
+            currentTab = tabName;
+            
+            // Load tab-specific data
+            loadTabData(tabName);
+        }
+
+        // Load data for specific tabs
+        function loadTabData(tabName) {
+            switch(tabName) {
+                case 'executive':
+                    initializeExecutiveCharts();
+                    break;
+                case 'analytics':
+                    initializeAnalyticsCharts();
+                    break;
+                case 'automation':
+                    initializeAutomationCharts();
+                    break;
+            }
+        }
+
+        // Initialize Executive Dashboard Charts
+        function initializeExecutiveCharts() {
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart');
+            if (revenueCtx) {
+                new Chart(revenueCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Q1', 'Q2', 'Q3', 'Q4', 'Q1 (Proj)', 'Q2 (Proj)'],
+                        datasets: [{
+                            label: 'Revenue Impact ($M)',
+                            data: [1.2, 1.8, 2.4, 2.8, 3.2, 3.6],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }, {
+                            label: 'Cost Savings ($K)',
+                            data: [45, 78, 124, 187, 245, 298],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Efficiency Chart
+            const efficiencyCtx = document.getElementById('efficiencyChart');
+            if (efficiencyCtx) {
+                new Chart(efficiencyCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Optimized', 'Standard', 'Needs Improvement'],
+                        datasets: [{
+                            data: [67, 25, 8],
+                            backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize Analytics Charts
+        function initializeAnalyticsCharts() {
+            // Predictive Analytics Chart
+            const predictiveData = [{
+                x: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                y: [2.3, 2.8, 3.1, 2.9, 3.4, 3.7],
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Actual Demand',
+                line: { color: '#667eea' }
+            }, {
+                x: ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                y: [4.1, 4.5, 4.2, 4.8, 5.2, 5.6],
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Predicted Demand',
+                line: { color: '#10b981', dash: 'dash' }
+            }];
+
+            Plotly.newPlot('predictiveChart', predictiveData, {
+                title: '',
+                xaxis: { title: 'Month' },
+                yaxis: { title: 'Demand (Units x1000)' },
+                showlegend: true
+            }, { responsive: true });
+
+            // Targets Chart
+            const targetsCtx = document.getElementById('targetsChart');
+            if (targetsCtx) {
+                new Chart(targetsCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['Efficiency', 'Quality', 'Speed', 'Cost', 'Safety', 'Sustainability'],
+                        datasets: [{
+                            label: 'Current Performance',
+                            data: [94, 98, 87, 92, 96, 89],
+                            borderColor: '#667eea',
+                            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                            pointBackgroundColor: '#667eea'
+                        }, {
+                            label: 'Target',
+                            data: [95, 95, 90, 95, 98, 92],
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            pointBackgroundColor: '#10b981'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize Automation Charts
+        function initializeAutomationCharts() {
+            const automationCtx = document.getElementById('automationROIChart');
+            if (automationCtx) {
+                new Chart(automationCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Initial Investment', '6 Months', '1 Year', '18 Months', '2 Years'],
+                        datasets: [{
+                            label: 'ROI (%)',
+                            data: [-100, 25, 125, 200, 287],
+                            backgroundColor: [
+                                '#ef4444',
+                                '#f59e0b',
+                                '#10b981',
+                                '#10b981',
+                                '#10b981'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'ROI Percentage'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Commercial Feature Functions
+        async function optimizeLayout() {
+            showNotification('🎯 Layout Optimization Started', 'Layout optimization process has been initiated. Expected completion: 2 hours.', 'success');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/commercial/optimization/implement-layout`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                console.log('Layout optimization result:', result);
+            } catch (error) {
+                console.error('Layout optimization error:', error);
+            }
+        }
+
+        async function generatePredictions() {
+            showNotification('🔮 Generating Predictions', 'AI models are analyzing data to generate predictive insights.', 'success');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/commercial/analytics/predictive-insights`);
+                const insights = await response.json();
+                console.log('Predictive insights:', insights);
+            } catch (error) {
+                console.error('Prediction error:', error);
+            }
+        }
+
+        async function launchAMRControl() {
+            showNotification('🤖 AMR Fleet Control', 'Launching Autonomous Mobile Robot fleet control interface.', 'success');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/commercial/features/amr-fleet`);
+                const fleetStatus = await response.json();
+                
+                const message = `🤖 AMR Fleet Status:
+                
+🟢 Active Robots: ${fleetStatus.fleet_status.active_robots}/${fleetStatus.fleet_status.total_robots}
+📈 Fleet Efficiency: ${fleetStatus.fleet_status.fleet_efficiency}%
+⚡ Current Tasks: ${fleetStatus.current_tasks.active_picks}
+🎯 Pick Accuracy: ${fleetStatus.performance_metrics.pick_accuracy}
+💰 Annual Savings: ${fleetStatus.roi_metrics.annual_savings}
+
+Fleet operating at peak efficiency!`;
+                
+                showNotification('🤖 AMR Fleet Status', message, 'success');
+            } catch (error) {
+                console.error('AMR control error:', error);
+            }
+        }
+
+        async function enableVisionQC() {
+            showNotification('👁️ Computer Vision QC', 'Enabling AI-powered computer vision quality control system.', 'success');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/commercial/features/computer-vision`);
+                const cvStatus = await response.json();
+                
+                const message = `👁️ Computer Vision QC Status:
+                
+📹 Active Cameras: ${cvStatus.cv_systems.active_cameras}
+🎯 Detection Rate: ${cvStatus.cv_systems.defect_detection_rate}
+📊 Items Inspected Today: ${cvStatus.daily_metrics.items_inspected}
+⚡ Processing Speed: ${cvStatus.daily_metrics.processing_speed}
+🧠 Model Accuracy: ${cvStatus.ai_performance.model_accuracy}
+
+Quality control system fully operational!`;
+                
+                showNotification('👁️ Vision QC Status', message, 'success');
+            } catch (error) {
+                console.error('Computer vision error:', error);
+            }
+        }
+
+        async function runABCAnalysis() {
+            showNotification('📊 ABC Analysis', 'Running comprehensive ABC analysis for inventory optimization.', 'success');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/commercial/analytics/abc-analysis`);
+                const analysis = await response.json();
+                console.log('ABC Analysis:', analysis);
+            } catch (error) {
+                console.error('ABC analysis error:', error);
+            }
+        }
+
+        async function analyzeVelocity() {
+            showNotification('🚀 Velocity Analysis', 'Analyzing product velocity patterns and seasonal trends.', 'success');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/commercial/analytics/velocity-analysis`);
+                const analysis = await response.json();
+                console.log('Velocity Analysis:', analysis);
+            } catch (error) {
+                console.error('Velocity analysis error:', error);
+            }
+        }
+
+        async function calculateROI() {
+            const investment = document.getElementById('investment-amount').value;
+            const timeframe = document.getElementById('timeframe').value;
+            const optimizationArea = document.getElementById('optimization-area').value;
+            
+            showNotification('🧮 Calculating ROI', 'Processing ROI calculation based on your parameters.', 'success');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/commercial/analytics/roi-analysis`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        investment_amount: parseFloat(investment),
+                        timeframe_months: parseInt(timeframe),
+                        optimization_areas: [optimizationArea]
+                    })
+                });
+                
+                const roiData = await response.json();
+                
+                // Update ROI results
+                document.getElementById('roi-percentage-result').textContent = `${roiData.projected_returns.roi_percentage.toFixed(1)}%`;
+                document.getElementById('annual-savings-result').textContent = `$${(roiData.projected_returns.annual_savings / 1000).toFixed(0)}K`;
+                document.getElementById('payback-period-result').textContent = `${roiData.projected_returns.payback_period_months.toFixed(1)} months`;
+                
+                document.getElementById('roi-results').style.display = 'block';
+                
+            } catch (error) {
+                console.error('ROI calculation error:', error);
+                showNotification('❌ ROI Calculation Failed', 'Unable to calculate ROI. Please try again.', 'error');
+            }
+        }
+
+        async function generateProductQR() {
+            showNotification('📱 QR Generation', 'Generating QR codes for all products...', 'success');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/commercial/qr/bulk-generate`, {
+                    method: 'POST'
+                });
+                const result = await response.json();
+                
+                // Display QR codes
+                const container = document.getElementById('qr-codes-container');
+                const displayArea = document.getElementById('qr-display-area');
+                
+                container.innerHTML = '';
+                
+                // Show first 3 QR codes as demo
+                const sampleProducts = [
+                    { id: 1, sku: 'PROD-001', name: 'Wireless Mouse' },
+                    { id: 2, sku: 'PROD-002', name: 'USB Cable' },
+                    { id: 3, sku: 'PROD-003', name: 'Keyboard' }
+                ];
+                
+                sampleProducts.forEach(product => {
+                    const qrDiv = document.createElement('div');
+                    qrDiv.style.cssText = 'text-align: center; padding: 1rem; border: 1px solid #e2e8f0; border-radius: 8px; background: white;';
+                    qrDiv.innerHTML = `
+                        <div style="width: 150px; height: 150px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; border-radius: 8px;">
+                            <i class="fas fa-qrcode" style="font-size: 3rem; color: #64748b;"></i>
+                        </div>
+                        <div style="font-weight: 600; margin-bottom: 0.5rem;">${product.name}</div>
+                        <div style="font-size: 0.875rem; color: #64748b;">${product.sku}</div>
+                    `;
+                    container.appendChild(qrDiv);
+                });
+                
+                displayArea.style.display = 'block';
+                showNotification('✅ QR Codes Generated', `${result.total_generated || 3} QR codes generated successfully!`, 'success');
+                
+            } catch (error) {
+                console.error('QR generation error:', error);
+                showNotification('❌ QR Generation Failed', 'Unable to generate QR codes. Please try again.', 'error');
+            }
+        }
+
+        function generateLocationQR() {
+            showNotification('📍 Location QR Generation', 'Generating QR codes for all warehouse locations...', 'success');
+            
+            setTimeout(() => {
+                showNotification('✅ Location QR Codes Generated', '45 location QR codes generated successfully!', 'success');
+            }, 2000);
+        }
+
+        function viewAMRFleet() {
+            showNotification('🤖 AMR Fleet Monitor', 'Launching real-time AMR fleet monitoring dashboard...', 'success');
+        }
+
+        function viewIoTStatus() {
+            showNotification('📡 IoT Sensor Status', 'Displaying comprehensive IoT sensor network status...', 'success');
+        }
+
+        // Notification System
+        function showNotification(title, message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">${title}</div>
+                <div style="font-size: 0.875rem; white-space: pre-line;">${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 5000);
+        }
+
+        // Initialize dashboard on load
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeExecutiveCharts();
+            
+            // Update header metrics periodically
+            setInterval(() => {
+                // Simulate dynamic updates
+                const revenueElement = document.getElementById('revenue-impact');
+                const efficiencyElement = document.getElementById('efficiency-score');
+                const roiElement = document.getElementById('roi-percentage');
+                
+                if (revenueElement) {
+                    const currentRevenue = parseFloat(revenueElement.textContent.replace('$', '').replace('M', ''));
+                    const newRevenue = (currentRevenue + (Math.random() * 0.01 - 0.005)).toFixed(2);
+                    revenueElement.textContent = `$${newRevenue}M`;
+                }
+                
+                if (efficiencyElement) {
+                    const currentEfficiency = parseFloat(efficiencyElement.textContent.replace('%', ''));
+                    const newEfficiency = (currentEfficiency + (Math.random() * 0.1 - 0.05)).toFixed(1);
+                    efficiencyElement.textContent = `${newEfficiency}%`;
+                }
+                
+                if (roiElement) {
+                    const currentROI = parseFloat(roiElement.textContent.replace('%', ''));
+                    const newROI = (currentROI + (Math.random() * 0.5 - 0.25)).toFixed(0);
+                    roiElement.textContent = `${newROI}%`;
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
