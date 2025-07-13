@@ -9,7 +9,7 @@ import asyncio
 from datetime import datetime
 from functools import lru_cache
 from .database import engine, Base
-from .routers import inventory, inbound, outbound, dashboard, commercial_features
+from .routers import inventory, inbound, outbound, dashboard, chatbot, commercial_features
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -37,6 +37,7 @@ app.include_router(inventory.router, prefix="/api/inventory", tags=["Inventory"]
 app.include_router(inbound.router, prefix="/api/inbound", tags=["Inbound"])
 app.include_router(outbound.router, prefix="/api/outbound", tags=["Outbound"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
+app.include_router(chatbot.router, prefix="/api/chat", tags=["Chatbot"])
 app.include_router(commercial_features.router, prefix="/api", tags=["Commercial Features"])
 
 # Mount static files

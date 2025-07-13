@@ -78,21 +78,99 @@ class DashboardManager {
         this.showLoading();
         
         try {
-            const [overview, alerts, activity] = await Promise.all([
-                this.apiCall('/api/dashboard/overview'),
-                this.apiCall('/api/dashboard/inventory-alerts'),
-                this.apiCall('/api/dashboard/recent-activity')
+            // Enhanced API calls with timeout and retry logic
+            const timeoutPromise = new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('Request timeout')), 15000)
+            );
+            
+            const apiCalls = Promise.all([
+                this.apiCallWithRetry('/api/dashboard/overview'),
+                this.apiCallWithRetry('/api/dashboard/inventory-alerts'),
+                this.apiCallWithRetry('/api/dashboard/recent-activity')
             ]);
+
+            const [overview, alerts, activity] = await Promise.race([apiCalls, timeoutPromise]);
 
             this.updateMetrics(overview);
             this.updateAlerts(alerts);
             this.updateActivity(activity);
+            
+            // Show success indicator
+            this.showToast('Dashboard data loaded successfully', 'success');
+            
         } catch (error) {
-            this.showToast('Error loading dashboard data', 'error');
+            // Enhanced error handling with fallback data
             console.error('Dashboard load error:', error);
+            
+            // Try to load fallback/cached data
+            const fallbackData = this.getFallbackDashboardData();
+            this.updateMetrics(fallbackData.overview);
+            this.updateAlerts(fallbackData.alerts);
+            this.updateActivity(fallbackData.activity);
+            
+            this.showToast('Using cached data - refresh to retry live connection', 'warning');
         } finally {
             this.hideLoading();
         }
+    }
+
+    // Enhanced API call with retry logic
+    async apiCallWithRetry(endpoint, maxRetries = 3) {
+        for (let i = 0; i < maxRetries; i++) {
+            try {
+                return await this.apiCall(endpoint);
+            } catch (error) {
+                console.warn(`API call attempt ${i + 1} failed for ${endpoint}:`, error.message);
+                
+                if (i === maxRetries - 1) {
+                    throw error;
+                }
+                
+                // Wait before retrying (exponential backoff)
+                await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+            }
+        }
+    }
+
+    // Generate fallback data when API is unavailable
+    getFallbackDashboardData() {
+        const currentTime = new Date().toLocaleString();
+        
+        return {
+            overview: {
+                total_products: "N/A (Offline)",
+                total_inventory_value: "N/A (Offline)",
+                low_stock_items: "N/A (Offline)",
+                pending_orders: "N/A (Offline)",
+                system_status: "Offline Mode",
+                last_updated: currentTime
+            },
+            alerts: [
+                {
+                    id: 'offline_1',
+                    type: 'warning',
+                    message: 'Dashboard is currently in offline mode. Live data unavailable.',
+                    priority: 'medium',
+                    timestamp: currentTime
+                },
+                {
+                    id: 'offline_2', 
+                    type: 'info',
+                    message: 'Refresh the page to attempt reconnection to the warehouse system.',
+                    priority: 'low',
+                    timestamp: currentTime
+                }
+            ],
+            activity: [
+                {
+                    id: 'offline_activity',
+                    description: 'System running in offline mode',
+                    timestamp: currentTime,
+                    type: 'system',
+                    status: 'offline'
+                }
+            ]
+        };
     }
 
     async loadSectionData(sectionName) {

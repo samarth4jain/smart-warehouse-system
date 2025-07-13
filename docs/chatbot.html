@@ -492,6 +492,12 @@
             const message = chatInput.value.trim();
             if (!message) return;
 
+            // Validate message length
+            if (message.length > 1000) {
+                alert('Message too long. Please keep it under 1000 characters.');
+                return;
+            }
+
             // Add user message
             addMessage(message, 'user');
             chatInput.value = '';
@@ -500,11 +506,17 @@
             // Show typing indicator
             showTypingIndicator();
 
-            // Simulate bot response
+            // Enhanced response generation with error handling
             setTimeout(() => {
-                hideTypingIndicator();
-                const response = generateBotResponse(message);
-                addMessage(response, 'bot');
+                try {
+                    hideTypingIndicator();
+                    const response = generateBotResponse(message);
+                    addMessage(response, 'bot');
+                } catch (error) {
+                    hideTypingIndicator();
+                    console.error('Error generating response:', error);
+                    addMessage('I apologize, but I encountered an error processing your request. Please try rephrasing your question.', 'bot');
+                }
             }, 1000 + Math.random() * 2000);
         }
 

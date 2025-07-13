@@ -5,7 +5,7 @@
     "passed": 9,
     "failed": 0,
     "success_rate": "100.0%",
-    "test_date": "2025-07-13T18:52:47.868116"
+    "test_date": "2025-07-13T20:14:32.390699"
   },
   "detailed_results": [
     {
@@ -15,14 +15,14 @@
         "status_code": 200,
         "content_checks": {
           "Page loads successfully": true,
-          "Ultra Intelligence demo card": true,
-          "Experience Ultra AI link": true,
+          "Ultra Intelligence demo card": false,
+          "Experience Ultra AI link": false,
           "Modern interface": true,
-          "Navigation menu": true
+          "Navigation menu": false
         },
-        "content_size": "11706 characters"
+        "content_size": "12077 characters"
       },
-      "timestamp": "2025-07-13T18:52:32.057246"
+      "timestamp": "2025-07-13T20:14:19.453874"
     },
     {
       "test": "Ultra Intelligence Dashboard",
@@ -30,10 +30,10 @@
       "details": {
         "status_code": 200,
         "component_checks": "12/12 passed",
-        "content_size": "43260 characters",
+        "content_size": "43250 characters",
         "demo_mode": true
       },
-      "timestamp": "2025-07-13T18:52:33.645144"
+      "timestamp": "2025-07-13T20:14:20.874207"
     },
     {
       "test": "Navigation Integration",
@@ -60,7 +60,7 @@
           "status": "\u2705"
         }
       },
-      "timestamp": "2025-07-13T18:52:39.035412"
+      "timestamp": "2025-07-13T20:14:23.651564"
     },
     {
       "test": "Dashboard Integration",
@@ -75,7 +75,7 @@
           "Interactive features": true
         }
       },
-      "timestamp": "2025-07-13T18:52:40.416119"
+      "timestamp": "2025-07-13T20:14:24.887802"
     },
     {
       "test": "Analytics Integration",
@@ -86,7 +86,7 @@
         "brain_icon": true,
         "integration_status": "\u2705 Integrated"
       },
-      "timestamp": "2025-07-13T18:52:41.633579"
+      "timestamp": "2025-07-13T20:14:26.160772"
     },
     {
       "test": "Chatbot Integration",
@@ -96,7 +96,7 @@
         "ultra_navigation": true,
         "integration_status": "\u2705 Integrated"
       },
-      "timestamp": "2025-07-13T18:52:42.875797"
+      "timestamp": "2025-07-13T20:14:27.384655"
     },
     {
       "test": "API Docs Integration",
@@ -106,7 +106,7 @@
         "ultra_navigation": true,
         "integration_status": "\u2705 Integrated"
       },
-      "timestamp": "2025-07-13T18:52:44.247327"
+      "timestamp": "2025-07-13T20:14:28.666986"
     },
     {
       "test": "Mobile Responsiveness",
@@ -116,7 +116,7 @@
         "responsive_design": true,
         "mobile_optimized": "\u2705 Yes"
       },
-      "timestamp": "2025-07-13T18:52:45.465096"
+      "timestamp": "2025-07-13T20:14:30.006562"
     },
     {
       "test": "Demo Data Functionality",
@@ -126,7 +126,7 @@
         "demo_mode_ready": true,
         "functionality_status": "\u2705 Fully functional"
       },
-      "timestamp": "2025-07-13T18:52:46.862054"
+      "timestamp": "2025-07-13T20:14:31.383269"
     }
   ]
 }

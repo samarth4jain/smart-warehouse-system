@@ -1,10 +1,11 @@
 import re
 from typing import Dict, List, Tuple, Optional, Any
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from datetime import datetime, timedelta
 from ..models.database_models import (
     Product, Inventory, InboundShipment, InboundItem, 
-    OutboundOrder, OutboundItem, Vendor, Customer, ChatMessage
+    OutboundOrder, OutboundItem, Vendor, Customer, ChatMessage, StockMovement
 )
 from .inventory_service import InventoryService
 from .inbound_service import InboundService
@@ -40,20 +41,54 @@ class ConversationalChatbotService:
         """Process user message with enhanced natural language understanding for layman queries"""
         original_message = user_message.strip()
         
-        # Use enhanced NLP for better layman language understanding
-        nlp_result = self.enhanced_nlp.process_layman_query(user_message)
+        # Enhanced error handling and validation
+        if not original_message:
+            return {
+                "message": "I didn't receive a message. Please try asking me something about your warehouse operations.",
+                "intent": "empty_input",
+                "confidence": 1.0,
+                "entities": {},
+                "context": {},
+                "success": False,
+                "suggestions": ["Check inventory", "View alerts", "Get help", "System status"]
+            }
         
-        intent = nlp_result["intent"]
-        confidence = nlp_result["confidence"]
-        entities = nlp_result["entities"]
-        context = nlp_result["context"]
-        response_style = nlp_result["response_style"]
+        # Enhanced message preprocessing
+        processed_message = self._preprocess_message(original_message)
         
-        # Fallback to original NLP if confidence is low
-        if confidence < 0.5:
-            intent, confidence, entities = self.nlp.classify_intent_enhanced(user_message)
-            context = self.nlp.extract_conversational_context(user_message)
-            response_style = "casual" if context.get("formality") != "formal" else "formal"
+        try:
+            # Use enhanced NLP for better layman language understanding
+            nlp_result = self.enhanced_nlp.process_layman_query(processed_message)
+            
+            intent = nlp_result["intent"]
+            confidence = nlp_result["confidence"]
+            entities = nlp_result["entities"]
+            context = nlp_result["context"]
+            response_style = nlp_result["response_style"]
+            
+            # Fallback to original NLP if confidence is low or enhanced NLP fails
+            if confidence < 0.4:
+                try:
+                    intent, confidence, entities = self.nlp.classify_intent_enhanced(processed_message)
+                    context = self.nlp.extract_conversational_context(processed_message)
+                    response_style = "casual" if context.get("formality") != "formal" else "formal"
+                    
+                    # Boost confidence if we found good entities
+                    if entities and len(entities) > 0:
+                        confidence = min(0.8, confidence + 0.2)
+                        
+                except Exception as nlp_error:
+                    # Fallback to basic pattern matching
+                    intent, confidence, entities = self._basic_pattern_matching(processed_message)
+                    context = {"formality": "casual", "urgency": "normal"}
+                    response_style = "casual"
+            
+        except Exception as e:
+            # Robust error handling - don't let NLP errors break the chatbot
+            print(f"Warning: NLP processing failed: {e}")
+            intent, confidence, entities = self._basic_pattern_matching(processed_message)
+            context = {"formality": "casual", "urgency": "normal"}
+            response_style = "casual"
         
         # Process based on enhanced intent with context awareness
         response_data = self._process_enhanced_intent_with_context(
@@ -63,7 +98,11 @@ class ConversationalChatbotService:
         # Add conversational elements based on context
         response_data = self._enhance_response_with_personality(response_data, context, response_style)
         
-        # Save chat message
+        # Enhanced response validation
+        if not response_data or not response_data.get("message"):
+            response_data = self._generate_fallback_response(original_message, intent)
+        
+        # Save chat message with enhanced error handling
         try:
             chat_message = ChatMessage(
                 user_message=original_message,
@@ -77,10 +116,12 @@ class ConversationalChatbotService:
             self.db.add(chat_message)
             self.db.commit()
         except Exception as db_error:
-            # If database save fails, just log it but don't break the response
+            # If database save fails, log it but don't break the response
             print(f"Warning: Could not save chat message to database: {db_error}")
-            # Rollback to prevent transaction issues
-            self.db.rollback()
+            try:
+                self.db.rollback()
+            except:
+                pass  # Even rollback might fail in some cases
         
         return {
             "message": response_data["message"],
@@ -91,7 +132,128 @@ class ConversationalChatbotService:
             "data": response_data.get("data"),
             "actions": response_data.get("actions", []),
             "suggestions": response_data.get("suggestions", []),
-            "success": response_data.get("success", True)
+            "success": response_data.get("success", True),
+            "enhanced_mode": True,
+            "response_time": datetime.now().isoformat()
+        }
+
+    def _preprocess_message(self, message: str) -> str:
+        """Enhanced message preprocessing"""
+        # Remove extra whitespace
+        message = ' '.join(message.split())
+        
+        # Fix common typos and expand contractions
+        contractions = {
+            "whats": "what is",
+            "wheres": "where is",
+            "hows": "how is", 
+            "cant": "cannot",
+            "dont": "do not",
+            "wont": "will not",
+            "shouldnt": "should not",
+            "couldnt": "could not",
+            "wouldnt": "would not",
+            "thats": "that is",
+            "theres": "there is",
+            "theyre": "they are",
+            "youre": "you are",
+            "im": "i am",
+            "ive": "i have",
+            "weve": "we have"
+        }
+        
+        for contraction, expansion in contractions.items():
+            message = message.replace(contraction, expansion)
+        
+        return message.strip()
+
+    def _basic_pattern_matching(self, message: str) -> Tuple[str, float, Dict]:
+        """Basic pattern matching fallback when NLP fails"""
+        message_lower = message.lower()
+        
+        # Basic intent patterns
+        patterns = {
+            "inventory_check": [
+                r"(?:check|show|get|find|display|list).*(?:inventory|stock|level|quantity)",
+                r"(?:how many|how much|what.*quantity).*(?:do we have|in stock|available)",
+                r"(?:stock|inventory).*(?:level|status|check|information)"
+            ],
+            "low_stock_alert": [
+                r"(?:low|running low|empty|out).*(?:stock|inventory)",
+                r"(?:what|which|any).*(?:items|products).*(?:low|running low|need reorder)",
+                r"(?:show|display|list).*(?:low stock|reorder)"
+            ],
+            "product_search": [
+                r"(?:find|search|locate|where).*(?:product|item)",
+                r"(?:where|location).*(?:of|for|is)",
+                r"(?:search|find|lookup|check).*(?:[A-Z]{2,}[0-9]{2,})"  # SKU pattern
+            ],
+            "help": [
+                r"(?:help|what.*do|how.*work|what.*can)",
+                r"(?:support|assistance|guide|tutorial)",
+                r"(?:how.*use|instructions)"
+            ],
+            "status": [
+                r"(?:status|health|how.*things|everything.*ok)",
+                r"(?:system.*status|overall.*status)",
+                r"(?:any.*problems|any.*issues|any.*alerts)"
+            ]
+        }
+        
+        best_intent = "general_query"
+        best_confidence = 0.3
+        
+        for intent, pattern_list in patterns.items():
+            for pattern in pattern_list:
+                if re.search(pattern, message_lower):
+                    confidence = 0.7 if intent == "help" else 0.6
+                    if confidence > best_confidence:
+                        best_intent = intent
+                        best_confidence = confidence
+                        break
+        
+        # Extract basic entities
+        entities = {}
+        
+        # SKU extraction
+        sku_match = re.search(r"([A-Z]{2,}[0-9]{2,})", message, re.IGNORECASE)
+        if sku_match:
+            entities["sku"] = sku_match.group(1).upper()
+        
+        # Product name extraction
+        product_keywords = ["mouse", "keyboard", "laptop", "monitor", "headphone", "tablet", "cable", "charger"]
+        for keyword in product_keywords:
+            if keyword in message_lower:
+                entities["product_type"] = keyword
+                break
+        
+        return best_intent, best_confidence, entities
+
+    def _generate_fallback_response(self, message: str, intent: str) -> Dict:
+        """Generate a helpful fallback response when processing fails"""
+        return {
+            "message": f"""I understand you're asking about "{message}". While I'm processing your request, here's what I can help you with:
+
+**Warehouse Operations I Support:**
+• **Inventory Management** - Check stock levels, find products, monitor alerts
+• **Order Processing** - Track shipments, manage deliveries, update status
+• **Analytics & Reports** - Performance metrics, trends, insights
+• **System Monitoring** - Alerts, health checks, operational status
+
+**Try These Examples:**
+• "Show low stock items"
+• "Check laptop inventory" 
+• "What needs attention today?"
+• "Generate performance report"
+
+**Natural Language Support:**
+Feel free to ask in your own words - I understand conversational language and can help with complex warehouse management tasks.
+
+What specific area would you like me to help you with?""",
+            "success": True,
+            "action_taken": "provided_help_and_examples",
+            "data": None,
+            "suggestions": ["Check inventory", "View alerts", "Generate reports", "Get system status"]
         }
 
     def _process_enhanced_intent_with_context(self, intent: str, message: str, entities: Dict, context: Dict, response_style: str) -> Dict:
