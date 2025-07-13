@@ -597,12 +597,12 @@
     <div class="chat-container">
         <div class="sidebar">
             <div class="sidebar-header">
-                <h1><i class="fas fa-robot"></i> AI Assistant</h1>
-                <p>Smart Warehouse Intelligence</p>
+                <h1><i class="fas fa-robot"></i> Intelligence Assistant</h1>
+                <p>Smart Warehouse Operations</p>
             </div>
             
             <div class="quick-actions">
-                <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+                <h3><i class="fas fa-bolt"></i> Quick Operations</h3>
                 
                 <button class="action-button" onclick="sendQuickMessage('Show me inventory alerts')">
                     <div class="action-icon">
@@ -649,14 +649,14 @@
                         <i class="fas fa-lightbulb"></i>
                     </div>
                     <div>
-                        <div style="font-weight: 600;">AI Recommendations</div>
-                        <div style="font-size: 0.75rem; opacity: 0.7;">Get optimization tips</div>
+                        <div style="font-weight: 600;">System Recommendations</div>
+                        <div style="font-size: 0.75rem; opacity: 0.7;">Get optimization insights</div>
                     </div>
                 </button>
             </div>
             
             <div class="suggestions">
-                <h3><i class="fas fa-magic"></i> Try These</h3>
+                <h3><i class="fas fa-list"></i> Query Examples</h3>
                 
                 <div class="suggestion-item" onclick="sendQuickMessage('Check bluetooth headphones stock')">
                     "Check bluetooth headphones stock"
@@ -690,12 +690,11 @@
                     <div class="bot-avatar">
                         <i class="fas fa-brain"></i>
                     </div>
-                    <div class="bot-info">
-                        <h2>Warehouse AI Assistant</h2>
-                        <div class="bot-status">
-                            <div class="status-dot"></div>
-                            Online & Ready to Help
-                        </div>
+                    <div class="bot-info">                    <h2>Warehouse Intelligence Assistant</h2>
+                    <div class="bot-status">
+                        <div class="status-dot"></div>
+                        System Online
+                    </div>
                     </div>
                 </div>
                 
@@ -717,8 +716,8 @@
                     <div class="welcome-icon">
                         <i class="fas fa-robot"></i>
                     </div>
-                    <h3>Welcome to Your Smart Warehouse AI Assistant!</h3>
-                    <p>I'm here to help you manage your warehouse operations with natural language. Ask me anything about inventory, orders, analytics, or get recommendations for optimization.</p>
+                    <h3>Welcome to Smart Warehouse Intelligence Assistant</h3>
+                    <p>Professional warehouse operations management interface with advanced natural language processing. Access inventory data, analytics, and operational insights through conversational queries.</p>
                     
                     <div class="welcome-examples">
                         <div class="example-card" onclick="sendQuickMessage('Show low stock items')">
@@ -941,21 +940,21 @@ Would you like me to help you create reorder requests or analyze specific produc
             if (lowerMessage.includes('performance') || lowerMessage.includes('analytics') || lowerMessage.includes('report')) {
                 return {
                     success: true,
-                    message: `📊 **Warehouse Performance Analytics**
+                    message: `**Warehouse Performance Analytics**
 
 **Key Performance Indicators (Last 30 Days):**
 
-🔄 **Operational Efficiency**
+**Operational Efficiency**
 • Inventory Turnover: 4.2x (Good performance)
 • Order Fulfillment Rate: 97.8% (Excellent)
 • Average Processing Time: 2.3 hours (Within target)
 
-📈 **Growth Metrics**
+**Growth Metrics**
 • Order Volume: +12.5% vs last month
 • Automation Usage: 78% of operations
 • Customer Satisfaction: 94.2% (High)
 
-⚡ **Efficiency Insights**
+**Efficiency Insights**
 • Peak Activity: Tuesday-Thursday (plan accordingly)
 • Fastest Moving: Electronics category
 • Space Utilization: 76.8% (Optimal range)
@@ -979,44 +978,44 @@ Would you like deeper analysis on any specific metric?`,
             if (lowerMessage.includes('help') || lowerMessage.includes('optimize') || lowerMessage.includes('improve')) {
                 return {
                     success: true,
-                    message: `🤖 **Smart Warehouse AI Assistant - Advanced Help**
+                    message: `**Smart Warehouse Assistant - System Capabilities**
 
-**What I Can Do For You:**
+**Available Operations:**
 
-📦 **Inventory Management**
+**Inventory Management**
 • Real-time stock level monitoring
 • Automated low stock alerts
 • Product location tracking
 • Demand forecasting insights
 
-📊 **Analytics & Reporting**
+**Analytics and Reporting**
 • Performance dashboards
 • Trend analysis and predictions
 • Custom report generation
 • ROI calculations
 
-🔧 **Optimization Recommendations**
-• AI-powered layout suggestions
+**Optimization Services**
+• Layout optimization suggestions
 • Process improvement opportunities
 • Cost reduction strategies
-• Efficiency enhancement tips
+• Efficiency enhancement analysis
 
-🚀 **Advanced Features**
-• Natural language queries (ask me anything!)
+**Advanced Features**
+• Natural language query processing
 • Predictive analytics
 • Risk assessment
 • Executive summaries
 
-**Try These Commands:**
-• "Show me what needs attention"
+**Sample Commands:**
+• "Show items requiring attention"
 • "Generate executive summary"
-• "What's our best performing product?"
-• "How can I reduce costs?"
+• "What is our best performing product?"
+• "How can operational costs be reduced?"
 • "Analyze seasonal trends"
 
-**Pro Tip:** I understand casual language! Just ask naturally like you would a colleague.
+**Usage:** Use natural language for all warehouse operations and management queries.
 
-What would you like to explore first?`,
+What operation would you like to perform?`,
                     suggestions: ['Start with analytics', 'Check alerts', 'Get recommendations', 'Learn more features']
                 };
             }
