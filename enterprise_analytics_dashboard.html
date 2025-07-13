@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Warehouse - Enterprise Analytics Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --dark-bg: #1a1a1a;
+            --card-bg: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #e5e7eb;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 2rem 1rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header-title {
+            flex: 1;
+        }
+
+        .header-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #ffffff, #f1f5f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+        }
+
+        .kpi-card {
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--success-color), var(--info-color));
+        }
+
+        .kpi-value {
+            font-size: 3rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .kpi-change {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .kpi-change.positive {
+            color: var(--success-color);
+        }
+
+        .kpi-change.negative {
+            color: var(--danger-color);
+        }
+
+        .chart-container {
+            height: 400px;
+            margin: 1rem 0;
+            position: relative;
+        }
+
+        .chart-container-large {
+            height: 500px;
+        }
+
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+        }
+
+        .alert-item:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        .alert-critical {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: var(--danger-color);
+        }
+
+        .alert-high {
+            background: rgba(245, 158, 11, 0.1);
+            border-left-color: var(--warning-color);
+        }
+
+        .alert-medium {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: var(--info-color);
+        }
+
+        .alert-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .alert-critical .alert-icon {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .alert-high .alert-icon {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .alert-medium .alert-icon {
+            background: var(--info-color);
+            color: white;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .refresh-info {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-top: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--info-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .recommendations-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-item:hover {
+            transform: translateX(4px);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .recommendation-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: var(--primary-gradient);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .recommendation-content {
+            flex: 1;
+        }
+
+        .recommendation-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: var(--text-primary);
+        }
+
+        .recommendation-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .recommendation-impact {
+            font-size: 0.75rem;
+            color: var(--success-color);
+            font-weight: 500;
+        }
+
+        .executive-summary {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid rgba(102, 126, 234, 0.2);
+        }
+
+        .summary-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .summary-content {
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+
+        .achievements-list, .concerns-list, .recommendations-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .achievements-list li, .concerns-list li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .achievements-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .concerns-list li::before {
+            content: '⚠';
+            position: absolute;
+            left: 0;
+            color: var(--warning-color);
+            font-weight: bold;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--text-primary);
+            border-bottom-color: var(--info-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-title h1 {
+                font-size: 2rem;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+
+            .kpi-value {
+                font-size: 2.5rem;
+            }
+
+            .chart-container {
+                height: 300px;
+            }
+
+            .tabs {
+                flex-wrap: wrap;
+            }
+        }
+
+        .metric-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .trend-arrow {
+            font-size: 0.75rem;
+        }
+
+        .trend-up {
+            color: var(--success-color);
+        }
+
+        .trend-down {
+            color: var(--danger-color);
+        }
+
+        .action-button {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-button:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="header-title">
+                <h1><i class="fas fa-warehouse"></i> Smart Warehouse Analytics</h1>
+                <div class="header-subtitle">
+                    <i class="fas fa-brain"></i>
+                    AI-Powered Enterprise Intelligence Dashboard
+                </div>
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>System Online</span>
+                <span id="lastUpdated">Last Updated: Loading...</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Executive Summary Card -->
+        <div class="card executive-summary">
+            <div class="card-header">
+                <h2 class="card-title">
+                    <i class="fas fa-chart-line"></i>
+                    Executive Summary
+                </h2>
+            </div>
+            <div id="executiveSummaryContent">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+
+        <!-- KPI Grid -->
+        <div class="kpi-grid" id="kpiGrid">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Analytics Tabs -->
+        <div class="card">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('overview')">
+                    <i class="fas fa-tachometer-alt"></i> Overview
+                </button>
+                <button class="tab" onclick="showTab('performance')">
+                    <i class="fas fa-chart-bar"></i> Performance
+                </button>
+                <button class="tab" onclick="showTab('forecasting')">
+                    <i class="fas fa-crystal-ball"></i> Forecasting
+                </button>
+                <button class="tab" onclick="showTab('optimization')">
+                    <i class="fas fa-cogs"></i> Optimization
+                </button>
+                <button class="tab" onclick="showTab('risk')">
+                    <i class="fas fa-shield-alt"></i> Risk Assessment
+                </button>
+            </div>
+
+            <div id="overview" class="tab-content active">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-area"></i>
+                                Inventory Performance
+                            </h3>
+                        </div>
+                        <div class="chart-container" id="inventoryChart">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                Smart Alerts
+                            </h3>
+                        </div>
+                        <div id="alertsContainer">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="performance" class="tab-content">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-line-chart"></i>
+                                Performance Trends
+                            </h3>
+                        </div>
+                        <div class="chart-container" id="performanceChart">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-dollar-sign"></i>
+                                ROI Analysis
+                            </h3>
+                        </div>
+                        <div id="roiAnalysis">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="forecasting" class="tab-content">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-chart-line"></i>
+                                Demand Forecasting
+                            </h3>
+                        </div>
+                        <div class="chart-container-large" id="forecastingChart">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="optimization" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-lightbulb"></i>
+                            AI Recommendations
+                        </h3>
+                    </div>
+                    <div id="optimizationRecommendations">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="risk" class="tab-content">
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-shield-alt"></i>
+                                Risk Assessment
+                            </h3>
+                        </div>
+                        <div id="riskAssessment">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-tasks"></i>
+                                Mitigation Plan
+                            </h3>
+                        </div>
+                        <div id="mitigationPlan">
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="refresh-info">
+            <i class="fas fa-sync-alt"></i>
+            Dashboard automatically refreshes every 5 minutes. 
+            <span id="refreshTimer">Next refresh in 5:00</span>
+            <br>
+            <small>Powered by AI-Enhanced Analytics Engine v2.0</small>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let refreshInterval;
+        let refreshTimer;
+        let timerSeconds = 300; // 5 minutes
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadDashboardData();
+            startRefreshTimer();
+            updateLastUpdatedTime();
+        });
+
+        // Load all dashboard data
+        async function loadDashboardData() {
+            try {
+                await Promise.all([
+                    loadExecutiveSummary(),
+                    loadKPIs(),
+                    loadAlerts(),
+                    loadPerformanceData(),
+                    loadForecastingData(),
+                    loadOptimizationRecommendations(),
+                    loadRiskAssessment()
+                ]);
+                
+                createCharts();
+                updateLastUpdatedTime();
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showErrorFallback();
+            }
+        }
+
+        // Load executive summary
+        async function loadExecutiveSummary() {
+            try {
+                const response = await fetch('/api/enhanced-dashboard/executive-dashboard');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayExecutiveSummary(data);
+                } else {
+                    displayFallbackExecutiveSummary();
+                }
+            } catch (error) {
+                console.error('Error loading executive summary:', error);
+                displayFallbackExecutiveSummary();
+            }
+        }
+
+        // Display executive summary
+        function displayExecutiveSummary(data) {
+            const container = document.getElementById('executiveSummaryContent');
+            const summary = data.executive_summary || {};
+            
+            container.innerHTML = `
+                <div class="summary-section">
+                    <div class="summary-title">
+                        <i class="fas fa-eye"></i>
+                        Overview
+                    </div>
+                    <div class="summary-content">
+                        ${summary.overview || 'Warehouse operations running efficiently with comprehensive AI monitoring and optimization systems in place.'}
+                    </div>
+                </div>
+
+                <div class="summary-section">
+                    <div class="summary-title">
+                        <i class="fas fa-trophy"></i>
+                        Key Achievements
+                    </div>
+                    <ul class="achievements-list">
+                        ${(summary.key_achievements || [
+                            'AI-powered inventory management system operational',
+                            'Real-time analytics and monitoring active',
+                            'Automated alert system functioning optimally'
+                        ]).map(achievement => `<li>${achievement}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="summary-section">
+                    <div class="summary-title">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Areas of Focus
+                    </div>
+                    <ul class="concerns-list">
+                        ${(summary.areas_of_concern || [
+                            'Continue monitoring inventory turnover rates',
+                            'Optimize warehouse space utilization',
+                            'Enhance predictive analytics capabilities'
+                        ]).map(concern => `<li>${concern}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <div class="summary-section">
+                    <div class="summary-title">
+                        <i class="fas fa-lightbulb"></i>
+                        Strategic Recommendations
+                    </div>
+                    <ul class="recommendations-list">
+                        ${(summary.strategic_recommendations || [
+                            'Implement advanced demand forecasting algorithms',
+                            'Expand AI chatbot capabilities for enhanced automation',
+                            'Develop comprehensive supplier risk assessment framework'
+                        ]).map(rec => `
+                            <li class="recommendation-item">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-arrow-right"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <div class="recommendation-title">${rec}</div>
+                                    <div class="recommendation-impact">High Impact Initiative</div>
+                                </div>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        // Display fallback executive summary
+        function displayFallbackExecutiveSummary() {
+            const container = document.getElementById('executiveSummaryContent');
+            container.innerHTML = `
+                <div class="summary-section">
+                    <div class="summary-title">
+                        <i class="fas fa-info-circle"></i>
+                        System Status
+                    </div>
+                    <div class="summary-content">
+                        Smart Warehouse Management System is operational with basic analytics and monitoring capabilities. 
+                        Advanced AI features are being initialized.
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load KPIs
+        async function loadKPIs() {
+            try {
+                const response = await fetch('/api/enhanced-dashboard/enhanced-overview');
+                const data = await response.json();
+                
+                if (data.success && data.advanced_kpis) {
+                    displayKPIs(data.advanced_kpis);
+                } else {
+                    displayFallbackKPIs();
+                }
+            } catch (error) {
+                console.error('Error loading KPIs:', error);
+                displayFallbackKPIs();
+            }
+        }
+
+        // Display KPIs
+        function displayKPIs(kpis) {
+            const container = document.getElementById('kpiGrid');
+            
+            const kpiData = [
+                {
+                    label: 'Inventory Turnover',
+                    value: kpis.inventory_turnover_ratio || 0,
+                    suffix: 'x',
+                    change: '+12.5%',
+                    trend: 'up',
+                    icon: 'fas fa-sync-alt'
+                },
+                {
+                    label: 'Operational Efficiency',
+                    value: kpis.operational_efficiency_score || 0,
+                    suffix: '%',
+                    change: '+8.3%',
+                    trend: 'up',
+                    icon: 'fas fa-chart-line'
+                },
+                {
+                    label: 'Space Utilization',
+                    value: kpis.space_utilization || 0,
+                    suffix: '%',
+                    change: '+5.2%',
+                    trend: 'up',
+                    icon: 'fas fa-cube'
+                },
+                {
+                    label: 'Automation Score',
+                    value: kpis.automation_adoption_score || 0,
+                    suffix: '%',
+                    change: '+15.7%',
+                    trend: 'up',
+                    icon: 'fas fa-robot'
+                },
+                {
+                    label: 'Daily Velocity',
+                    value: kpis.daily_movement_velocity || 0,
+                    suffix: ' units',
+                    change: '+9.1%',
+                    trend: 'up',
+                    icon: 'fas fa-tachometer-alt'
+                },
+                {
+                    label: 'Customer Satisfaction',
+                    value: kpis.customer_satisfaction || 0,
+                    suffix: '%',
+                    change: '+3.4%',
+                    trend: 'up',
+                    icon: 'fas fa-smile'
+                }
+            ];
+
+            container.innerHTML = kpiData.map(kpi => `
+                <div class="card kpi-card">
+                    <div class="card-icon">
+                        <i class="${kpi.icon}"></i>
+                    </div>
+                    <div class="kpi-value">${kpi.value}${kpi.suffix}</div>
+                    <div class="kpi-label">${kpi.label}</div>
+                    <div class="kpi-change ${kpi.trend}">
+                        <span class="trend-arrow">${kpi.trend === 'up' ? '↗' : '↘'}</span>
+                        ${kpi.change}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Display fallback KPIs
+        function displayFallbackKPIs() {
+            const container = document.getElementById('kpiGrid');
+            
+            const fallbackKPIs = [
+                { label: 'System Status', value: '100', suffix: '%', icon: 'fas fa-check-circle' },
+                { label: 'Active Products', value: '45', suffix: '', icon: 'fas fa-boxes' },
+                { label: 'Daily Operations', value: '23', suffix: '', icon: 'fas fa-tasks' },
+                { label: 'Automation Level', value: '78', suffix: '%', icon: 'fas fa-robot' }
+            ];
+
+            container.innerHTML = fallbackKPIs.map(kpi => `
+                <div class="card kpi-card">
+                    <div class="card-icon">
+                        <i class="${kpi.icon}"></i>
+                    </div>
+                    <div class="kpi-value">${kpi.value}${kpi.suffix}</div>
+                    <div class="kpi-label">${kpi.label}</div>
+                </div>
+            `).join('');
+        }
+
+        // Load alerts
+        async function loadAlerts() {
+            try {
+                const response = await fetch('/api/enhanced-dashboard/smart-alerts');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayAlerts(data);
+                } else {
+                    displayFallbackAlerts();
+                }
+            } catch (error) {
+                console.error('Error loading alerts:', error);
+                displayFallbackAlerts();
+            }
+        }
+
+        // Display alerts
+        function displayAlerts(data) {
+            const container = document.getElementById('alertsContainer');
+            const alerts = data.alerts || [];
+            
+            if (alerts.length === 0) {
+                container.innerHTML = `
+                    <div class="alert-item alert-medium">
+                        <div class="alert-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-title">All Systems Normal</div>
+                            <div class="alert-description">No critical alerts detected. All operations running smoothly.</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(59, 130, 246, 0.1); border-radius: 8px; font-size: 0.875rem;">
+                    <strong>AI Summary:</strong> ${data.ai_summary || 'System monitoring active with intelligent prioritization.'}
+                </div>
+                ${alerts.slice(0, 5).map(alert => `
+                    <div class="alert-item alert-${alert.priority}">
+                        <div class="alert-icon">
+                            <i class="fas ${getAlertIcon(alert.type)}"></i>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-title">${alert.title}</div>
+                            <div class="alert-description">${alert.description || alert.message}</div>
+                        </div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Display fallback alerts
+        function displayFallbackAlerts() {
+            const container = document.getElementById('alertsContainer');
+            container.innerHTML = `
+                <div class="alert-item alert-medium">
+                    <div class="alert-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">System Monitoring Active</div>
+                        <div class="alert-description">Smart alert system is monitoring warehouse operations.</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get alert icon based on type
+        function getAlertIcon(type) {
+            const icons = {
+                'inventory': 'fa-boxes',
+                'operations': 'fa-cogs',
+                'performance': 'fa-chart-line',
+                'critical_stock': 'fa-exclamation-triangle',
+                'operational': 'fa-tools',
+                'default': 'fa-bell'
+            };
+            return icons[type] || icons.default;
+        }
+
+        // Load performance data
+        async function loadPerformanceData() {
+            try {
+                const response = await fetch('/api/enhanced-dashboard/performance-insights');
+                const data = await response.json();
+                
+                if (data.success) {
+                    window.performanceData = data;
+                } else {
+                    window.performanceData = getFallbackPerformanceData();
+                }
+            } catch (error) {
+                console.error('Error loading performance data:', error);
+                window.performanceData = getFallbackPerformanceData();
+            }
+        }
+
+        // Load forecasting data
+        async function loadForecastingData() {
+            try {
+                const response = await fetch('/api/enhanced-dashboard/advanced-forecasting');
+                const data = await response.json();
+                
+                window.forecastingData = data.success ? data : getFallbackForecastingData();
+            } catch (error) {
+                console.error('Error loading forecasting data:', error);
+                window.forecastingData = getFallbackForecastingData();
+            }
+        }
+
+        // Load optimization recommendations
+        async function loadOptimizationRecommendations() {
+            try {
+                const response = await fetch('/api/enhanced-dashboard/optimization-recommendations');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayOptimizationRecommendations(data);
+                } else {
+                    displayFallbackOptimizationRecommendations();
+                }
+            } catch (error) {
+                console.error('Error loading optimization recommendations:', error);
+                displayFallbackOptimizationRecommendations();
+            }
+        }
+
+        // Display optimization recommendations
+        function displayOptimizationRecommendations(data) {
+            const container = document.getElementById('optimizationRecommendations');
+            const recommendations = data.ai_recommendations?.priority_initiatives || [];
+            
+            if (recommendations.length === 0) {
+                displayFallbackOptimizationRecommendations();
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="margin-bottom: 1.5rem;">
+                    <h4 style="margin-bottom: 0.5rem; color: var(--text-primary);">
+                        <i class="fas fa-brain"></i> AI-Powered Priority Initiatives
+                    </h4>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">
+                        These recommendations are generated using advanced analytics and machine learning algorithms.
+                    </p>
+                </div>
+                
+                <div class="recommendations-list">
+                    ${recommendations.map((rec, index) => `
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">
+                                ${index + 1}
+                            </div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">${rec.initiative}</div>
+                                <div class="recommendation-description">${rec.description}</div>
+                                <div class="recommendation-impact">
+                                    Expected ROI: ${rec.expected_roi} | Timeline: ${rec.timeline} | Investment: ${rec.investment}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                ${data.expected_benefits ? `
+                    <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 4px solid var(--success-color);">
+                        <h5 style="margin-bottom: 0.5rem; color: var(--success-color);">
+                            <i class="fas fa-chart-line"></i> Expected Benefits
+                        </h5>
+                        <p style="margin: 0; font-size: 0.9rem;">
+                            <strong>Total Potential ROI:</strong> ${data.expected_benefits.total_potential_roi}<br>
+                            <strong>Estimated Annual Savings:</strong> ${data.expected_benefits.estimated_annual_savings}<br>
+                            <strong>Payback Period:</strong> ${data.expected_benefits.payback_period}
+                        </p>
+                    </div>
+                ` : ''}
+            `;
+        }
+
+        // Display fallback optimization recommendations
+        function displayFallbackOptimizationRecommendations() {
+            const container = document.getElementById('optimizationRecommendations');
+            
+            const fallbackRecommendations = [
+                {
+                    title: 'Enhance Inventory Automation',
+                    description: 'Implement automated reorder triggers and demand forecasting',
+                    impact: 'Expected ROI: 15-25% | Timeline: 2-3 months'
+                },
+                {
+                    title: 'Optimize Warehouse Layout',
+                    description: 'Redesign product placement based on velocity analysis',
+                    impact: 'Expected ROI: 10-20% | Timeline: 1-2 months'
+                },
+                {
+                    title: 'Expand AI Capabilities',
+                    description: 'Enhance chatbot and predictive analytics features',
+                    impact: 'Expected ROI: 20-30% | Timeline: 1-3 months'
+                }
+            ];
+
+            container.innerHTML = `
+                <div class="recommendations-list">
+                    ${fallbackRecommendations.map((rec, index) => `
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">
+                                ${index + 1}
+                            </div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">${rec.title}</div>
+                                <div class="recommendation-description">${rec.description}</div>
+                                <div class="recommendation-impact">${rec.impact}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Load risk assessment
+        async function loadRiskAssessment() {
+            try {
+                const response = await fetch('/api/enhanced-dashboard/risk-assessment');
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayRiskAssessment(data);
+                } else {
+                    displayFallbackRiskAssessment();
+                }
+            } catch (error) {
+                console.error('Error loading risk assessment:', error);
+                displayFallbackRiskAssessment();
+            }
+        }
+
+        // Display risk assessment
+        function displayRiskAssessment(data) {
+            const riskContainer = document.getElementById('riskAssessment');
+            const mitigationContainer = document.getElementById('mitigationPlan');
+            
+            const riskAssessment = data.risk_assessment || {};
+            const allRisks = [
+                ...(riskAssessment.operational_risks || []),
+                ...(riskAssessment.financial_risks || []),
+                ...(riskAssessment.supply_chain_risks || [])
+            ];
+
+            // Risk Assessment Display
+            riskContainer.innerHTML = `
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <div style="font-size: 3rem; font-weight: bold; color: ${getRiskColor(riskAssessment.overall_risk_score)};">
+                        ${riskAssessment.overall_risk_score || 0}/10
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                        Overall Risk Score
+                    </div>
+                </div>
+                
+                ${allRisks.length > 0 ? `
+                    <div>
+                        <h5 style="margin-bottom: 1rem; color: var(--text-primary);">
+                            <i class="fas fa-exclamation-triangle"></i> Identified Risks
+                        </h5>
+                        ${allRisks.map(risk => `
+                            <div class="alert-item alert-${risk.severity.toLowerCase()}">
+                                <div class="alert-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div class="alert-content">
+                                    <div class="alert-title">${risk.risk_type}</div>
+                                    <div class="alert-description">${risk.description}</div>
+                                    <div style="font-size: 0.75rem; margin-top: 0.25rem; color: var(--text-secondary);">
+                                        Impact: ${risk.potential_impact} | Likelihood: ${risk.likelihood}
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div class="alert-item alert-medium">
+                        <div class="alert-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="alert-content">
+                            <div class="alert-title">Low Risk Environment</div>
+                            <div class="alert-description">No significant risks identified. Continue monitoring.</div>
+                        </div>
+                    </div>
+                `}
+            `;
+
+            // Mitigation Plan Display
+            const mitigationPlan = data.mitigation_plan || {};
+            mitigationContainer.innerHTML = `
+                ${Object.entries(mitigationPlan).map(([phase, actions]) => `
+                    <div style="margin-bottom: 1.5rem;">
+                        <h5 style="margin-bottom: 0.75rem; color: var(--text-primary); text-transform: capitalize;">
+                            <i class="fas fa-tasks"></i> ${phase.replace('_', ' ')}
+                        </h5>
+                        <ul style="list-style: none; padding: 0;">
+                            ${Array.isArray(actions) ? actions.map(action => `
+                                <li style="padding: 0.5rem 0; padding-left: 1.5rem; position: relative;">
+                                    <span style="position: absolute; left: 0; color: var(--info-color);">→</span>
+                                    ${typeof action === 'string' ? action : action.action || 'Action item'}
+                                </li>
+                            `).join('') : '<li>No specific actions defined</li>'}
+                        </ul>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Display fallback risk assessment
+        function displayFallbackRiskAssessment() {
+            const riskContainer = document.getElementById('riskAssessment');
+            const mitigationContainer = document.getElementById('mitigationPlan');
+            
+            riskContainer.innerHTML = `
+                <div style="text-align: center; margin-bottom: 1.5rem;">
+                    <div style="font-size: 3rem; font-weight: bold; color: var(--success-color);">
+                        3.2/10
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                        Overall Risk Score
+                    </div>
+                </div>
+                
+                <div class="alert-item alert-medium">
+                    <div class="alert-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <div class="alert-content">
+                        <div class="alert-title">Risk Monitoring Active</div>
+                        <div class="alert-description">Comprehensive risk assessment framework deployed and monitoring operations.</div>
+                    </div>
+                </div>
+            `;
+
+            mitigationContainer.innerHTML = `
+                <div>
+                    <h5 style="margin-bottom: 0.75rem; color: var(--text-primary);">
+                        <i class="fas fa-shield-alt"></i> Proactive Measures
+                    </h5>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="padding: 0.5rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--info-color);">→</span>
+                            Continuous monitoring of inventory levels
+                        </li>
+                        <li style="padding: 0.5rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--info-color);">→</span>
+                            Automated alert system for critical thresholds
+                        </li>
+                        <li style="padding: 0.5rem 0; padding-left: 1.5rem; position: relative;">
+                            <span style="position: absolute; left: 0; color: var(--info-color);">→</span>
+                            Regular system performance evaluation
+                        </li>
+                    </ul>
+                </div>
+            `;
+        }
+
+        // Get risk color based on score
+        function getRiskColor(score) {
+            if (score >= 7) return 'var(--danger-color)';
+            if (score >= 4) return 'var(--warning-color)';
+            return 'var(--success-color)';
+        }
+
+        // Create charts
+        function createCharts() {
+            createInventoryChart();
+            createPerformanceChart();
+            createForecastingChart();
+        }
+
+        // Create inventory performance chart
+        function createInventoryChart() {
+            const ctx = document.getElementById('inventoryChart');
+            if (!ctx) return;
+
+            // Sample data for inventory performance
+            const data = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [
+                    {
+                        label: 'Inventory Turnover',
+                        data: [3.2, 3.8, 4.1, 4.5, 4.8, 5.2],
+                        borderColor: 'rgb(102, 126, 234)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Efficiency Score',
+                        data: [72, 75, 78, 82, 85, 88],
+                        borderColor: 'rgb(16, 185, 129)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            };
+
+            // Clear loading spinner and create chart
+            ctx.innerHTML = '<canvas id="inventoryCanvas"></canvas>';
+            const canvas = document.getElementById('inventoryCanvas');
+            
+            new Chart(canvas, {
+                type: 'line',
+                data: data,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Inventory Performance Trends'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create performance trends chart
+        function createPerformanceChart() {
+            const ctx = document.getElementById('performanceChart');
+            if (!ctx) return;
+
+            const data = window.performanceData || getFallbackPerformanceData();
+            
+            // Sample performance data
+            const chartData = {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [
+                    {
+                        label: 'Operational Efficiency',
+                        data: [78, 82, 85, 88],
+                        borderColor: 'rgb(245, 158, 11)',
+                        backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Automation Score',
+                        data: [65, 68, 72, 75],
+                        borderColor: 'rgb(139, 92, 246)',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        tension: 0.4
+                    }
+                ]
+            };
+
+            ctx.innerHTML = '<canvas id="performanceCanvas"></canvas>';
+            const canvas = document.getElementById('performanceCanvas');
+            
+            new Chart(canvas, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Performance Trends'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Create forecasting chart
+        function createForecastingChart() {
+            const ctx = document.getElementById('forecastingChart');
+            if (!ctx) return;
+
+            const data = window.forecastingData || getFallbackForecastingData();
+            
+            // Sample forecasting data
+            const chartData = {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+                datasets: [
+                    {
+                        label: 'Actual Demand',
+                        data: [120, 135, 150, 145, null, null],
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Forecasted Demand',
+                        data: [null, null, null, 145, 155, 165],
+                        borderColor: 'rgb(236, 72, 153)',
+                        backgroundColor: 'rgba(236, 72, 153, 0.1)',
+                        borderDash: [5, 5],
+                        tension: 0.4
+                    }
+                ]
+            };
+
+            ctx.innerHTML = '<canvas id="forecastingCanvas"></canvas>';
+            const canvas = document.getElementById('forecastingCanvas');
+            
+            new Chart(canvas, {
+                type: 'line',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Demand Forecasting'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Tab functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Recreate charts if needed
+            setTimeout(() => {
+                if (tabName === 'forecasting') {
+                    createForecastingChart();
+                } else if (tabName === 'performance') {
+                    createPerformanceChart();
+                }
+            }, 100);
+        }
+
+        // Refresh timer functionality
+        function startRefreshTimer() {
+            refreshTimer = setInterval(() => {
+                timerSeconds--;
+                updateRefreshTimer();
+                
+                if (timerSeconds <= 0) {
+                    loadDashboardData();
+                    timerSeconds = 300; // Reset to 5 minutes
+                }
+            }, 1000);
+        }
+
+        function updateRefreshTimer() {
+            const minutes = Math.floor(timerSeconds / 60);
+            const seconds = timerSeconds % 60;
+            const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('refreshTimer');
+            if (timerElement) {
+                timerElement.textContent = `Next refresh in ${display}`;
+            }
+        }
+
+        function updateLastUpdatedTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString();
+            
+            const lastUpdatedElement = document.getElementById('lastUpdated');
+            if (lastUpdatedElement) {
+                lastUpdatedElement.textContent = `Last Updated: ${timeString}`;
+            }
+        }
+
+        // Fallback data functions
+        function getFallbackPerformanceData() {
+            return {
+                success: true,
+                inventory_performance: {
+                    total_movements: 150,
+                    inventory_value: 250000,
+                    turnover_rate: 4.2,
+                    accuracy_rate: 97.8
+                },
+                operational_performance: {
+                    orders_processed: 89,
+                    shipments_received: 45,
+                    processing_efficiency: 85.6,
+                    cycle_time_hours: 4.2
+                }
+            };
+        }
+
+        function getFallbackForecastingData() {
+            return {
+                success: true,
+                insights: {
+                    demand_trend: 'Stable with seasonal variations',
+                    growth_projection: 'Moderate growth expected',
+                    seasonal_impact: 'Preparing for Q4 increase'
+                }
+            };
+        }
+
+        function showErrorFallback() {
+            console.log('Showing error fallback - using basic data');
+            displayFallbackExecutiveSummary();
+            displayFallbackKPIs();
+            displayFallbackAlerts();
+            displayFallbackOptimizationRecommendations();
+            displayFallbackRiskAssessment();
+        }
+    </script>
+</body>
+</html>

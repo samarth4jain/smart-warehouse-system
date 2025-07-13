@@ -1,0 +1,2310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Warehouse Pro - Commercial Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        :root {
+            --primary-blue: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --accent-purple: #8b5cf6;
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-light: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-success: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --gradient-warning: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-info: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Enhanced Navigation */
+        .topbar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+            padding: 0 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            background: var(--gradient-primary);
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .brand-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            font-size: 0.875rem;
+            background: var(--bg-primary);
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: var(--accent-red);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-profile:hover {
+            background: var(--bg-primary);
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Main Layout */
+        .dashboard-container {
+            margin-top: 70px;
+            display: flex;
+            min-height: calc(100vh - 70px);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-light);
+            padding: 2rem 0;
+            position: fixed;
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            padding: 0 1.5rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-right: 3px solid transparent;
+            font-weight: 500;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-blue);
+            background: rgba(37, 99, 235, 0.05);
+            border-right-color: var(--primary-blue);
+        }
+
+        .nav-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: var(--accent-red);
+            color: white;
+            border-radius: 12px;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            flex: 1;
+            padding: 2rem;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .page-subtitle {
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-primary);
+            transform: translateY(-1px);
+        }
+
+        /* Enhanced Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .stat-icon.primary { background: var(--gradient-primary); }
+        .stat-icon.success { background: var(--gradient-success); }
+        .stat-icon.warning { background: var(--gradient-warning); }
+        .stat-icon.info { background: var(--gradient-info); }
+
+        .stat-menu {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-menu:hover {
+            background: var(--bg-primary);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .trend-positive {
+            color: var(--accent-green);
+        }
+
+        .trend-negative {
+            color: var(--accent-red);
+        }
+
+        .trend-neutral {
+            color: var(--accent-orange);
+        }
+
+        /* Enhanced Charts Section */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chart-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chart-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-light);
+            background: var(--bg-primary);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chart-btn.active {
+            background: var(--primary-blue);
+            color: white;
+            border-color: var(--primary-blue);
+        }
+
+        /* Activity Feed */
+        .activity-feed {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border-light);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .activity-time {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        /* Quick Actions Panel */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .action-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 1.5rem;
+            border: 1px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .action-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-blue);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .action-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-description {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Alert System */
+        .alert-banner {
+            background: var(--gradient-warning);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .alert-icon {
+            font-size: 1.25rem;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-message {
+            opacity: 0.9;
+        }
+
+        .alert-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .alert-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Table Enhancements */
+        .data-table {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            margin-bottom: 2rem;
+        }
+
+        .table-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .table-filters {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            background: var(--bg-primary);
+            font-size: 0.875rem;
+        }
+
+        .table-content {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        th {
+            background: var(--bg-primary);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: var(--bg-primary);
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent-green);
+        }
+
+        .status-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--accent-orange);
+        }
+
+        .status-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-red);
+        }
+
+        /* Loading States */
+        .skeleton {
+            background: linear-gradient(90deg, var(--bg-primary) 25%, #e2e8f0 50%, var(--bg-primary) 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 250px;
+            }
+            
+            .main-content {
+                margin-left: 250px;
+            }
+            
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+            
+            .topbar {
+                padding: 0 1rem;
+            }
+            
+            .search-bar {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .header-actions {
+                width: 100%;
+                justify-content: stretch;
+            }
+            
+            .btn {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        /* Dark Mode Support */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-primary: #0f172a;
+                --bg-secondary: #1e293b;
+                --text-primary: #f1f5f9;
+                --text-secondary: #94a3b8;
+                --border-light: #334155;
+            }
+        }
+
+        /* Enhanced Animations */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -468px 0;
+            }
+            100% {
+                background-position: 468px 0;
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+
+        /* Enhanced Loading States */
+        .loading-shimmer {
+            background: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+            background-size: 800px 104px;
+            animation: shimmer 1.5s infinite linear;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 640px) {
+            .mobile-hide {
+                display: none !important;
+            }
+            
+            .mobile-stack {
+                flex-direction: column !important;
+                gap: 0.5rem !important;
+            }
+            
+            .mobile-full {
+                width: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <div class="topbar">
+        <div class="logo-section">
+            <div class="logo">SW</div>
+            <div class="brand-text">
+                <div class="brand-name">Smart Warehouse Pro</div>
+                <div class="brand-subtitle">Commercial Edition</div>
+            </div>
+        </div>
+
+        <div class="nav-controls">
+            <div class="search-bar">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-input" placeholder="Search products, orders, or locations...">
+            </div>
+
+            <div class="nav-actions">
+                <button class="action-btn" title="Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+                <button class="action-btn" title="Quick Actions">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="action-btn" title="Settings">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <div class="user-info">
+                    <div class="user-name">John Doe</div>
+                    <div class="user-role">Warehouse Manager</div>
+                </div>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- Enhanced Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="section-title">Main</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link active">
+                            <i class="fas fa-tachometer-alt nav-icon"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-boxes nav-icon"></i>
+                            Inventory
+                            <span class="nav-badge">23</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-truck-loading nav-icon"></i>
+                            Inbound
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-shipping-fast nav-icon"></i>
+                            Outbound
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Analytics</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-chart-line nav-icon"></i>
+                            Performance
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-brain nav-icon"></i>
+                            AI Insights
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-file-alt nav-icon"></i>
+                            Reports
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">Tools</div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-qrcode nav-icon"></i>
+                            QR Scanner
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-robot nav-icon"></i>
+                            AI Assistant
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="fas fa-mobile-alt nav-icon"></i>
+                            Mobile App
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Alert Banner -->
+            <div class="alert-banner">
+                <i class="fas fa-exclamation-triangle alert-icon"></i>
+                <div class="alert-content">
+                    <div class="alert-title">Stock Alert</div>
+                    <div class="alert-message">7 products are below reorder level. Review inventory immediately.</div>
+                </div>
+                <button class="alert-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Page Header -->
+            <div class="content-header">
+                <div>
+                    <h1 class="page-title">Warehouse Overview</h1>
+                    <p class="page-subtitle">Real-time insights and operational metrics</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Export Report
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        New Order
+                    </button>
+                </div>
+            </div>
+
+            <!-- Enhanced Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card" data-metric="total-products">
+                    <div class="stat-header">
+                        <div class="stat-icon primary">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <button class="stat-menu" aria-label="Product options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    <div class="stat-value">1,247</div>
+                    <div class="stat-label">Total Products</div>
+                    <div class="stat-trend trend-positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +12% from last month
+                    </div>
+                </div>
+
+                <div class="stat-card" data-metric="active-shipments">
+                    <div class="stat-header">
+                        <div class="stat-icon success">
+                            <i class="fas fa-truck-loading"></i>
+                        </div>
+                        <button class="stat-menu" aria-label="Shipment options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    <div class="stat-value">89</div>
+                    <div class="stat-label">Active Shipments</div>
+                    <div class="stat-trend trend-positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +8% this week
+                    </div>
+                </div>
+
+                <div class="stat-card" data-metric="low-stock-alerts">
+                    <div class="stat-header">
+                        <div class="stat-icon warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <button class="stat-menu" aria-label="Alert options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    <div class="stat-value">7</div>
+                    <div class="stat-label">Low Stock Alerts</div>
+                    <div class="stat-trend trend-negative">
+                        <i class="fas fa-arrow-down"></i>
+                        Needs attention
+                    </div>
+                </div>
+
+                <div class="stat-card" data-metric="efficiency-score">
+                    <div class="stat-header">
+                        <div class="stat-icon info">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <button class="stat-menu" aria-label="Efficiency options">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    <div class="stat-value">94.2%</div>
+                    <div class="stat-label">Efficiency Score</div>
+                    <div class="stat-trend trend-positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +2.3% improvement
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Panel -->
+            <div class="quick-actions">
+                <div class="action-card" onclick="showQRScanner()">
+                    <div class="action-icon primary">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="action-title">QR Scanner</div>
+                    <div class="action-description">Scan products for quick updates</div>
+                </div>
+
+                <div class="action-card" onclick="showStockCount()">
+                    <div class="action-icon success">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <div class="action-title">Stock Count</div>
+                    <div class="action-description">Perform cycle counting</div>
+                </div>
+
+                <div class="action-card" onclick="showLocationOptimizer()">
+                    <div class="action-icon info">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <div class="action-title">Location Optimizer</div>
+                    <div class="action-description">AI-powered layout optimization</div>
+                </div>
+
+                <div class="action-card" onclick="showMobileApp()">
+                    <div class="action-icon warning">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div class="action-title">Mobile App</div>
+                    <div class="action-description">Access on-the-go features</div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-section">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">Warehouse Performance</div>
+                            <div class="chart-subtitle">Real-time operational metrics</div>
+                        </div>
+                        <div class="chart-actions">
+                            <button class="chart-btn active">Day</button>
+                            <button class="chart-btn">Week</button>
+                            <button class="chart-btn">Month</button>
+                        </div>
+                    </div>
+                    <div id="performanceChart" style="height: 300px;"></div>
+                </div>
+
+                <div class="activity-feed">
+                    <div class="chart-header">
+                        <div>
+                            <div class="chart-title">Recent Activity</div>
+                            <div class="chart-subtitle">Live warehouse updates</div>
+                        </div>
+                    </div>
+                    
+                    <div class="activity-item">
+                        <div class="activity-icon primary">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Shipment Received</div>
+                            <div class="activity-description">INB-2034 from TechSupplier Inc.</div>
+                            <div class="activity-time">2 minutes ago</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon success">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Order Completed</div>
+                            <div class="activity-description">ORD-4567 shipped to customer</div>
+                            <div class="activity-time">5 minutes ago</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon warning">
+                            <i class="fas fa-exclamation"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Stock Alert</div>
+                            <div class="activity-description">USB-C Cable below reorder point</div>
+                            <div class="activity-time">12 minutes ago</div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-icon info">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Staff Login</div>
+                            <div class="activity-description">Sarah M. started shift</div>
+                            <div class="activity-time">28 minutes ago</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Data Table -->
+            <div class="data-table">
+                <div class="table-header">
+                    <div class="table-title">Low Stock Items</div>
+                    <div class="table-filters">
+                        <select class="filter-select">
+                            <option>All Categories</option>
+                            <option>Electronics</option>
+                            <option>Furniture</option>
+                            <option>Office Supplies</option>
+                        </select>
+                        <select class="filter-select">
+                            <option>All Locations</option>
+                            <option>Zone A</option>
+                            <option>Zone B</option>
+                            <option>Zone C</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-content">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>SKU</th>
+                                <th>Current Stock</th>
+                                <th>Reorder Level</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lowStockTable">
+                            <!-- Table content will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Dashboard Initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Initializing Smart Warehouse Pro Commercial Dashboard...');
+            
+            // Initialize core features
+            initializeCharts();
+            loadLowStockData();
+            initializeAccessibility();
+            
+            // Start real-time updates
+            startRealTimeUpdates();
+            
+            // Add mobile menu button for responsive design
+            addMobileMenuButton();
+            
+            // Initialize performance monitoring
+            initializePerformanceMonitoring();
+            
+            // Show welcome notification
+            setTimeout(() => {
+                showNotification('Welcome to Smart Warehouse Pro! All systems operational.', 'success');
+            }, 1000);
+            
+            console.log('✅ Dashboard initialization complete');
+        });
+
+        function addMobileMenuButton() {
+            const topbar = document.querySelector('.topbar .nav-actions');
+            if (topbar && window.innerWidth <= 768) {
+                const mobileMenuBtn = document.createElement('button');
+                mobileMenuBtn.className = 'action-btn mobile-menu-btn';
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                mobileMenuBtn.setAttribute('aria-label', 'Toggle mobile menu');
+                mobileMenuBtn.onclick = toggleMobileMenu;
+                topbar.insertBefore(mobileMenuBtn, topbar.firstChild);
+            }
+        }
+
+        function initializePerformanceMonitoring() {
+            // Monitor page performance
+            const observer = new PerformanceObserver((list) => {
+                for (const entry of list.getEntries()) {
+                    if (entry.entryType === 'navigation') {
+                        console.log(`📊 Page load time: ${entry.loadEventEnd - entry.loadEventStart}ms`);
+                    }
+                }
+            });
+            
+            observer.observe({ entryTypes: ['navigation'] });
+            
+            // Monitor real-time performance
+            setInterval(() => {
+                const memory = performance.memory;
+                if (memory && memory.usedJSHeapSize > 50000000) { // 50MB
+                    console.warn('⚠️ High memory usage detected');
+                }
+            }, 60000);
+        }
+
+        // Global error handling
+        window.addEventListener('error', function(e) {
+            console.error('🔥 Global error:', e.error);
+            showNotification('An error occurred. Please refresh the page if issues persist.', 'error');
+        });
+
+        // Handle unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('🔥 Unhandled promise rejection:', e.reason);
+            e.preventDefault();
+        });
+
+        // Initialize Charts
+        function initializeCharts() {
+            const ctx = document.getElementById('performanceChart');
+            if (!ctx) return;
+
+            // Create performance chart
+            const performanceChart = {
+                data: [{
+                    x: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                    y: [65, 78, 85, 92, 88, 82, 75],
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Efficiency %',
+                    line: { 
+                        color: '#2563eb', 
+                        width: 3,
+                        shape: 'spline'
+                    },
+                    marker: {
+                        color: '#2563eb',
+                        size: 8
+                    }
+                }, {
+                    x: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '24:00'],
+                    y: [120, 145, 180, 220, 195, 165, 140],
+                    type: 'scatter',
+                    mode: 'lines+markers',
+                    name: 'Orders/Hour',
+                    yaxis: 'y2',
+                    line: { 
+                        color: '#10b981', 
+                        width: 3,
+                        shape: 'spline'
+                    },
+                    marker: {
+                        color: '#10b981',
+                        size: 8
+                    }
+                }],
+                layout: {
+                    title: '',
+                    xaxis: { 
+                        title: 'Time',
+                        gridcolor: '#e2e8f0',
+                        linecolor: '#e2e8f0'
+                    },
+                    yaxis: { 
+                        title: 'Efficiency (%)',
+                        gridcolor: '#e2e8f0',
+                        linecolor: '#e2e8f0'
+                    },
+                    yaxis2: {
+                        title: 'Orders per Hour',
+                        overlaying: 'y',
+                        side: 'right',
+                        gridcolor: '#e2e8f0'
+                    },
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    margin: { t: 20, b: 40, l: 50, r: 50 },
+                    legend: {
+                        x: 0,
+                        y: 1,
+                        bgcolor: 'rgba(255,255,255,0.8)'
+                    }
+                }
+            };
+
+            Plotly.newPlot('performanceChart', performanceChart.data, performanceChart.layout, {
+                responsive: true,
+                displayModeBar: false
+            });
+        }
+
+        // Enhanced Load Low Stock Data with Real API Integration
+        async function loadLowStockData() {
+            const tbody = document.getElementById('lowStockTable');
+            if (!tbody) return;
+
+            try {
+                // Try to fetch real data from API
+                const response = await fetch('/api/inventory');
+                if (response.ok) {
+                    const products = await response.json();
+                    const lowStockItems = products.filter(p => p.available_quantity <= (p.reorder_level || 10));
+                    
+                    if (lowStockItems.length > 0) {
+                        renderLowStockTable(lowStockItems, tbody);
+                        return;
+                    }
+                }
+            } catch (error) {
+                console.warn('Failed to fetch real data, using demo data:', error);
+            }
+
+            // Enhanced demo data with more details
+            const lowStockItems = [
+                {
+                    product: 'USB-C Cable',
+                    sku: 'UC-004',
+                    currentStock: 8,
+                    reorderLevel: 15,
+                    location: 'B1-A3',
+                    status: 'critical',
+                    supplier: 'TechCorp',
+                    lastOrdered: '2025-01-10'
+                },
+                {
+                    product: 'Wireless Mouse',
+                    sku: 'WM-012',
+                    currentStock: 12,
+                    reorderLevel: 20,
+                    location: 'A2-B5',
+                    status: 'warning',
+                    supplier: 'PeripheralPro',
+                    lastOrdered: '2025-01-08'
+                },
+                {
+                    product: 'Monitor Stand',
+                    sku: 'MS-008',
+                    currentStock: 3,
+                    reorderLevel: 10,
+                    location: 'C1-D2',
+                    status: 'critical',
+                    supplier: 'ErgoCorp',
+                    lastOrdered: '2025-01-05'
+                },
+                {
+                    product: 'Keyboard Wireless',
+                    sku: 'KW-015',
+                    currentStock: 18,
+                    reorderLevel: 25,
+                    location: 'A1-C4',
+                    status: 'warning',
+                    supplier: 'PeripheralPro',
+                    lastOrdered: '2025-01-12'
+                },
+                {
+                    product: 'HDMI Cable 6ft',
+                    sku: 'HD-006',
+                    currentStock: 5,
+                    reorderLevel: 15,
+                    location: 'B2-A1',
+                    status: 'critical',
+                    supplier: 'CableTech',
+                    lastOrdered: '2025-01-07'
+                }
+            ];
+
+            renderLowStockTable(lowStockItems, tbody);
+        }
+
+        function renderLowStockTable(items, tbody) {
+            tbody.innerHTML = items.map(item => `
+                <tr>
+                    <td>
+                        <strong>${item.product || item.name}</strong>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.25rem;">
+                            ${item.supplier ? `Supplier: ${item.supplier}` : ''}
+                        </div>
+                    </td>
+                    <td><code style="background: var(--bg-primary); padding: 0.25rem 0.5rem; border-radius: 4px;">${item.sku}</code></td>
+                    <td><span style="font-weight: 700; color: ${item.currentStock <= 5 ? 'var(--accent-red)' : 'var(--text-primary)'};">${item.currentStock || item.available_quantity}</span></td>
+                    <td>${item.reorderLevel || item.reorder_level}</td>
+                    <td><span style="background: var(--bg-primary); padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.75rem;">${item.location}</span></td>
+                    <td>
+                        <span class="status-badge status-${item.status === 'critical' ? 'danger' : 'warning'}">
+                            ${item.status}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.75rem;" onclick="reorderProduct('${item.sku}')">
+                            <i class="fas fa-shopping-cart"></i> Reorder
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Enhanced Quick Action Functions with Modal Support
+        function showQRScanner() {
+            showModal('QR Code Scanner', `
+                <div style="text-align: center; padding: 2rem;">
+                    <div style="font-size: 4rem; color: var(--primary-blue); margin-bottom: 1rem;">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <h3>QR Code Scanner</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        This feature integrates with mobile cameras for instant product scanning and inventory updates.
+                    </p>
+                    <div style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <strong>Features:</strong><br>
+                        • Instant product lookup<br>
+                        • Quick stock updates<br>
+                        • Location verification<br>
+                        • Batch scanning support
+                    </div>
+                    <button class="btn btn-primary" onclick="closeModal()">
+                        <i class="fas fa-camera"></i> Start Scanning (Demo)
+                    </button>
+                </div>
+            `);
+        }
+
+        function showStockCount() {
+            showModal('Cycle Count Manager', `
+                <div style="padding: 2rem;">
+                    <div style="text-align: center; font-size: 4rem; color: var(--accent-green); margin-bottom: 1rem;">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h3>Cycle Count Manager</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        Systematic inventory counting with AI-powered variance detection.
+                    </p>
+                    
+                    <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                        <div style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-blue);">247</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Products to Count</div>
+                        </div>
+                        <div style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-green);">94.2%</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Accuracy Rate</div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="closeModal()" style="margin-right: 1rem;">
+                            <i class="fas fa-play"></i> Start Count Session
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeModal()">
+                            <i class="fas fa-history"></i> View History
+                        </button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showLocationOptimizer() {
+            showModal('AI Location Optimizer', `
+                <div style="padding: 2rem;">
+                    <div style="text-align: center; font-size: 4rem; color: var(--accent-purple); margin-bottom: 1rem;">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h3>AI-Powered Layout Optimization</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        Machine learning algorithms analyze movement patterns to optimize warehouse layout.
+                    </p>
+                    
+                    <div style="background: var(--bg-primary); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                        <h4 style="margin-bottom: 1rem; color: var(--primary-blue);">
+                            <i class="fas fa-lightbulb"></i> Optimization Recommendations
+                        </h4>
+                        <ul style="margin: 0; padding-left: 1.5rem;">
+                            <li>Move fast-moving items closer to shipping area (+15% efficiency)</li>
+                            <li>Reorganize Zone A for better picker routes (+8% time savings)</li>
+                            <li>Relocate seasonal items to optimize space usage (+12% capacity)</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="closeModal()" style="margin-right: 1rem;">
+                            <i class="fas fa-magic"></i> Apply Recommendations
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeModal()">
+                            <i class="fas fa-chart-bar"></i> View Analysis
+                        </button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showMobileApp() {
+            showModal('Mobile Warehouse App', `
+                <div style="padding: 2rem; text-align: center;">
+                    <div style="font-size: 4rem; color: var(--accent-orange); margin-bottom: 1rem;">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Smart Warehouse Mobile</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        Complete warehouse management in your pocket. Available on iOS and Android.
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                        <div style="background: var(--bg-primary); padding: 1rem; border-radius: 8px;">
+                            <i class="fas fa-qrcode" style="font-size: 2rem; color: var(--primary-blue); margin-bottom: 0.5rem;"></i>
+                            <div style="font-weight: 600;">QR Scanning</div>
+                        </div>
+                        <div style="background: var(--bg-primary); padding: 1rem; border-radius: 8px;">
+                            <i class="fas fa-map-marker-alt" style="font-size: 2rem; color: var(--accent-green); margin-bottom: 0.5rem;"></i>
+                            <div style="font-weight: 600;">GPS Tracking</div>
+                        </div>
+                        <div style="background: var(--bg-primary); padding: 1rem; border-radius: 8px;">
+                            <i class="fas fa-bell" style="font-size: 2rem; color: var(--accent-orange); margin-bottom: 0.5rem;"></i>
+                            <div style="font-weight: 600;">Push Alerts</div>
+                        </div>
+                        <div style="background: var(--bg-primary); padding: 1rem; border-radius: 8px;">
+                            <i class="fas fa-sync" style="font-size: 2rem; color: var(--accent-purple); margin-bottom: 0.5rem;"></i>
+                            <div style="font-weight: 600;">Offline Sync</div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button class="btn btn-primary" onclick="closeModal()">
+                            <i class="fab fa-apple"></i> Download for iOS
+                        </button>
+                        <button class="btn btn-primary" onclick="closeModal()">
+                            <i class="fab fa-google-play"></i> Download for Android
+                        </button>
+                    </div>
+                </div>
+            `);
+        }
+
+        // Enhanced Modal System
+        function showModal(title, content) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+                backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="
+                    background: var(--bg-secondary);
+                    border-radius: 16px;
+                    max-width: 600px;
+                    width: 90%;
+                    max-height: 80vh;
+                    overflow-y: auto;
+                    box-shadow: var(--shadow-xl);
+                    border: 1px solid var(--border-light);
+                ">
+                    <div style="
+                        padding: 1.5rem 2rem;
+                        border-bottom: 1px solid var(--border-light);
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    ">
+                        <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700;">${title}</h2>
+                        <button onclick="closeModal()" style="
+                            background: none;
+                            border: none;
+                            font-size: 1.5rem;
+                            cursor: pointer;
+                            color: var(--text-secondary);
+                            padding: 0.5rem;
+                            border-radius: 8px;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.background='var(--bg-primary)'" onmouseout="this.style.background='none'">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div>${content}</div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            modal.setAttribute('id', 'activeModal');
+            
+            // Close on backdrop click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('activeModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Enhanced Reorder Function with Integration Support
+        function reorderProduct(sku) {
+            showModal('Reorder Product', `
+                <div style="padding: 2rem;">
+                    <div style="text-align: center; font-size: 3rem; color: var(--primary-blue); margin-bottom: 1rem;">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>Reorder: ${sku}</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        Automatic reorder process with supplier integration
+                    </p>
+                    
+                    <div style="background: var(--bg-primary); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+                            <div>
+                                <label style="font-weight: 600; color: var(--text-secondary); font-size: 0.875rem;">Current Stock</label>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-red);">5 units</div>
+                            </div>
+                            <div>
+                                <label style="font-weight: 600; color: var(--text-secondary); font-size: 0.875rem;">Suggested Quantity</label>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--accent-green);">50 units</div>
+                            </div>
+                            <div>
+                                <label style="font-weight: 600; color: var(--text-secondary); font-size: 0.875rem;">Estimated Cost</label>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-blue);">$247.50</div>
+                            </div>
+                            <div>
+                                <label style="font-weight: 600; color: var(--text-secondary); font-size: 0.875rem;">Delivery Time</label>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">3-5 days</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Order Quantity</label>
+                        <input type="number" value="50" min="1" style="
+                            width: 100%;
+                            padding: 0.75rem;
+                            border: 1px solid var(--border-light);
+                            border-radius: 8px;
+                            font-size: 1rem;
+                        ">
+                    </div>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Priority Level</label>
+                        <select style="
+                            width: 100%;
+                            padding: 0.75rem;
+                            border: 1px solid var(--border-light);
+                            border-radius: 8px;
+                            font-size: 1rem;
+                        ">
+                            <option>Standard (3-5 days)</option>
+                            <option>Express (1-2 days)</option>
+                            <option>Emergency (Same day)</option>
+                        </select>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn btn-primary" onclick="processReorder('${sku}')" style="margin-right: 1rem;">
+                            <i class="fas fa-check"></i> Confirm Reorder
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeModal()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+            `);
+        }
+
+        function processReorder(sku) {
+            closeModal();
+            showNotification(`Reorder initiated for ${sku}. Purchase order PO-${Date.now()} has been sent to supplier.`, 'success');
+            
+            // Simulate real-time update
+            setTimeout(() => {
+                showNotification(`Supplier confirmed order for ${sku}. Expected delivery: ${new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toLocaleDateString()}`, 'info');
+            }, 2000);
+        }
+
+        // Enhanced Notification System
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+            
+            const colors = {
+                success: '#10b981',
+                error: '#ef4444',
+                warning: '#f59e0b',
+                info: '#3b82f6'
+            };
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: white;
+                border: 1px solid ${colors[type]};
+                border-left: 4px solid ${colors[type]};
+                border-radius: 8px;
+                padding: 1rem 1.5rem;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                z-index: 10001;
+                max-width: 400px;
+                animation: slideInRight 0.3s ease;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <i class="${icons[type]}" style="color: ${colors[type]}; font-size: 1.25rem;"></i>
+                    <div style="flex: 1; font-size: 0.875rem; line-height: 1.4;">${message}</div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: none;
+                        border: none;
+                        color: var(--text-secondary);
+                        cursor: pointer;
+                        padding: 0.25rem;
+                        border-radius: 4px;
+                    ">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+
+        // Enhanced Real-time Updates with Intelligence
+        let updateInterval;
+        let isOnline = navigator.onLine;
+
+        function startRealTimeUpdates() {
+            // Check connection status
+            window.addEventListener('online', () => {
+                isOnline = true;
+                showNotification('Connection restored. Real-time updates resumed.', 'success');
+                resumeUpdates();
+            });
+            
+            window.addEventListener('offline', () => {
+                isOnline = false;
+                showNotification('Connection lost. Updates paused.', 'warning');
+                pauseUpdates();
+            });
+
+            // Start periodic updates
+            updateInterval = setInterval(intelligentUpdate, 30000); // Update every 30 seconds
+            
+            // Immediate update
+            intelligentUpdate();
+        }
+
+        async function intelligentUpdate() {
+            if (!isOnline) return;
+            
+            try {
+                // Update key metrics with animation
+                await updateMetricsWithAnimation();
+                
+                // Update activity feed
+                updateActivityFeed();
+                
+                // Update charts if visible
+                if (isElementVisible('#performanceChart')) {
+                    updatePerformanceChart();
+                }
+                
+                // Check for alerts
+                checkForNewAlerts();
+                
+                console.log('✅ Dashboard updated successfully');
+            } catch (error) {
+                console.warn('⚠️ Update failed:', error);
+                showNotification('Update failed. Retrying...', 'warning');
+            }
+        }
+
+        async function updateMetricsWithAnimation() {
+            const metrics = [
+                { id: 'total-products', value: Math.floor(1200 + Math.random() * 100), trend: '+12%' },
+                { id: 'active-shipments', value: Math.floor(85 + Math.random() * 15), trend: '+8%' },
+                { id: 'efficiency-score', value: (94 + Math.random() * 4).toFixed(1) + '%', trend: '+2.3%' }
+            ];
+
+            metrics.forEach(metric => {
+                const element = document.querySelector(`[data-metric="${metric.id}"]`);
+                if (element) {
+                    // Add pulse animation
+                    element.classList.add('pulse-animation');
+                    
+                    // Update value with count-up effect
+                    animateValue(element.querySelector('.stat-value'), metric.value);
+                    
+                    // Remove animation after delay
+                    setTimeout(() => {
+                        element.classList.remove('pulse-animation');
+                    }, 2000);
+                }
+            });
+        }
+
+        function animateValue(element, targetValue) {
+            if (!element) return;
+            
+            const startValue = parseInt(element.textContent) || 0;
+            const target = parseInt(targetValue) || 0;
+            const duration = 1000;
+            const startTime = Date.now();
+            
+            function update() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const currentValue = Math.round(startValue + (target - startValue) * progress);
+                element.textContent = typeof targetValue === 'string' && targetValue.includes('%') 
+                    ? currentValue + '%' 
+                    : currentValue.toLocaleString();
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        function updateActivityFeed() {
+            const activities = [
+                {
+                    title: 'Shipment Received',
+                    description: `INB-${Math.floor(Math.random() * 9999) + 1000} from ${['TechSupplier Inc.', 'ElectroCorps', 'GlobalParts'][Math.floor(Math.random() * 3)]}`,
+                    time: 'Just now',
+                    icon: 'fas fa-truck',
+                    type: 'primary'
+                },
+                {
+                    title: 'Order Completed',
+                    description: `ORD-${Math.floor(Math.random() * 9999) + 1000} shipped to customer`,
+                    time: `${Math.floor(Math.random() * 30) + 1} minutes ago`,
+                    icon: 'fas fa-check',
+                    type: 'success'
+                },
+                {
+                    title: 'Low Stock Alert',
+                    description: `${['Wireless Mouse', 'USB Cable', 'Keyboard'][Math.floor(Math.random() * 3)]} below reorder point`,
+                    time: `${Math.floor(Math.random() * 60) + 1} minutes ago`,
+                    icon: 'fas fa-exclamation',
+                    type: 'warning'
+                }
+            ];
+
+            const container = document.querySelector('.activity-feed .activity-item:first-child');
+            if (container && Math.random() > 0.7) { // 30% chance of new activity
+                const newActivity = activities[Math.floor(Math.random() * activities.length)];
+                
+                const activityElement = document.createElement('div');
+                activityElement.className = 'activity-item fade-in';
+                activityElement.innerHTML = `
+                    <div class="activity-icon ${newActivity.type}">
+                        <i class="${newActivity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${newActivity.title}</div>
+                        <div class="activity-description">${newActivity.description}</div>
+                        <div class="activity-time">${newActivity.time}</div>
+                    </div>
+                `;
+                
+                container.parentElement.insertBefore(activityElement, container);
+                
+                // Remove oldest activity if more than 5
+                const allActivities = container.parentElement.querySelectorAll('.activity-item');
+                if (allActivities.length > 5) {
+                    allActivities[allActivities.length - 1].remove();
+                }
+            }
+        }
+
+        function updatePerformanceChart() {
+            // Update chart with new data point
+            if (window.performanceChart && window.performanceChart.data) {
+                const currentTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const newEfficiency = 90 + Math.random() * 10;
+                const newOrders = 150 + Math.random() * 100;
+                
+                // Update data
+                window.performanceChart.data[0].x.push(currentTime);
+                window.performanceChart.data[0].y.push(newEfficiency);
+                window.performanceChart.data[1].x.push(currentTime);
+                window.performanceChart.data[1].y.push(newOrders);
+                
+                // Keep only last 7 points
+                if (window.performanceChart.data[0].x.length > 7) {
+                    window.performanceChart.data[0].x.shift();
+                    window.performanceChart.data[0].y.shift();
+                    window.performanceChart.data[1].x.shift();
+                    window.performanceChart.data[1].y.shift();
+                }
+                
+                // Redraw chart
+                Plotly.redraw('performanceChart');
+            }
+        }
+
+        function checkForNewAlerts() {
+            if (Math.random() > 0.95) { // 5% chance of new alert
+                const alerts = [
+                    { type: 'warning', message: 'Zone A temperature elevated. Check HVAC system.' },
+                    { type: 'info', message: 'New supplier catalog available for review.' },
+                    { type: 'success', message: 'Weekly efficiency target exceeded by 5%.' }
+                ];
+                
+                const alert = alerts[Math.floor(Math.random() * alerts.length)];
+                showNotification(alert.message, alert.type);
+            }
+        }
+
+        function isElementVisible(selector) {
+            const element = document.querySelector(selector);
+            if (!element) return false;
+            
+            const rect = element.getBoundingClientRect();
+            return rect.top < window.innerHeight && rect.bottom > 0;
+        }
+
+        function pauseUpdates() {
+            if (updateInterval) {
+                clearInterval(updateInterval);
+                updateInterval = null;
+            }
+        }
+
+        function resumeUpdates() {
+            if (!updateInterval) {
+                startRealTimeUpdates();
+            }
+        }
+
+        // Enhanced Mobile Support and Responsive Features
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('.sidebar');
+            sidebar.classList.toggle('mobile-open');
+            
+            // Add overlay for mobile
+            let overlay = document.querySelector('.mobile-overlay');
+            if (!overlay && sidebar.classList.contains('mobile-open')) {
+                overlay = document.createElement('div');
+                overlay.className = 'mobile-overlay';
+                overlay.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 999;
+                    display: none;
+                `;
+                document.body.appendChild(overlay);
+                
+                overlay.addEventListener('click', toggleMobileMenu);
+            }
+            
+            if (overlay) {
+                overlay.style.display = sidebar.classList.contains('mobile-open') ? 'block' : 'none';
+            }
+        }
+
+        // Enhanced Search functionality
+        let searchTimeout;
+        document.querySelector('.search-input')?.addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase().trim();
+            
+            // Clear previous timeout
+            if (searchTimeout) clearTimeout(searchTimeout);
+            
+            // Debounce search
+            searchTimeout = setTimeout(() => {
+                performSearch(query);
+            }, 300);
+        });
+
+        function performSearch(query) {
+            if (!query) {
+                clearSearchResults();
+                return;
+            }
+            
+            // Search through products, orders, locations
+            const searchResults = searchDatabase(query);
+            displaySearchResults(searchResults);
+        }
+
+        function searchDatabase(query) {
+            // Mock search results - in real app, this would call API
+            const mockData = [
+                { type: 'product', name: 'Wireless Headphones', sku: 'WH-1000XM4', location: 'A-3-B' },
+                { type: 'product', name: 'USB-C Cable', sku: 'USB-C-001', location: 'B-1-A' },
+                { type: 'order', name: 'Order #ORD-1234', customer: 'Tech Corp', status: 'Processing' },
+                { type: 'location', name: 'Zone A-3-B', description: 'Electronics Storage' }
+            ];
+            
+            return mockData.filter(item => 
+                item.name.toLowerCase().includes(query) ||
+                (item.sku && item.sku.toLowerCase().includes(query)) ||
+                (item.customer && item.customer.toLowerCase().includes(query))
+            );
+        }
+
+        function displaySearchResults(results) {
+            let dropdown = document.querySelector('.search-dropdown');
+            if (!dropdown) {
+                dropdown = document.createElement('div');
+                dropdown.className = 'search-dropdown';
+                dropdown.style.cssText = `
+                    position: absolute;
+                    top: 100%;
+                    left: 0;
+                    right: 0;
+                    background: var(--bg-secondary);
+                    border: 1px solid var(--border-light);
+                    border-radius: 8px;
+                    box-shadow: var(--shadow-xl);
+                    max-height: 300px;
+                    overflow-y: auto;
+                    z-index: 1000;
+                    margin-top: 0.5rem;
+                `;
+                document.querySelector('.search-bar').appendChild(dropdown);
+            }
+            
+            if (results.length === 0) {
+                dropdown.innerHTML = `
+                    <div style="padding: 1rem; text-align: center; color: var(--text-secondary);">
+                        <i class="fas fa-search"></i> No results found
+                    </div>
+                `;
+            } else {
+                dropdown.innerHTML = results.map(item => `
+                    <div style="
+                        padding: 0.75rem 1rem;
+                        border-bottom: 1px solid var(--border-light);
+                        cursor: pointer;
+                        transition: background 0.2s ease;
+                    " onmouseover="this.style.background='var(--bg-primary)'" onmouseout="this.style.background='transparent'" onclick="selectSearchResult('${item.type}', '${item.sku || item.name}')">
+                        <div style="display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-${getSearchIcon(item.type)}" style="color: var(--primary-blue);"></i>
+                            <div>
+                                <div style="font-weight: 600; font-size: 0.875rem;">${item.name}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">
+                                    ${item.sku ? `SKU: ${item.sku}` : ''}
+                                    ${item.location ? ` | Location: ${item.location}` : ''}
+                                    ${item.customer ? ` | Customer: ${item.customer}` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function getSearchIcon(type) {
+            const icons = {
+                product: 'box',
+                order: 'file-invoice',
+                location: 'map-marker-alt',
+                customer: 'user'
+            };
+            return icons[type] || 'search';
+        }
+
+        function selectSearchResult(type, identifier) {
+            clearSearchResults();
+            document.querySelector('.search-input').value = '';
+            
+            // Navigate to or highlight the selected item
+            showNotification(`Opening ${type}: ${identifier}`, 'info');
+        }
+
+        function clearSearchResults() {
+            const dropdown = document.querySelector('.search-dropdown');
+            if (dropdown) {
+                dropdown.remove();
+            }
+        }
+
+        // Enhanced Keyboard Shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + K for search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.querySelector('.search-input')?.focus();
+            }
+            
+            // Escape to close modals/dropdowns
+            if (e.key === 'Escape') {
+                closeModal();
+                clearSearchResults();
+            }
+            
+            // Alt + number for quick navigation
+            if (e.altKey && e.key >= '1' && e.key <= '9') {
+                e.preventDefault();
+                const navItems = document.querySelectorAll('.nav-link');
+                const index = parseInt(e.key) - 1;
+                if (navItems[index]) {
+                    navItems[index].click();
+                }
+            }
+        });
+
+        // Enhanced Accessibility Features
+        function initializeAccessibility() {
+            // Add ARIA labels
+            document.querySelectorAll('button, a, input').forEach(element => {
+                if (!element.getAttribute('aria-label') && !element.textContent.trim()) {
+                    const icon = element.querySelector('i');
+                    if (icon) {
+                        const iconClass = icon.className;
+                        element.setAttribute('aria-label', getAriaLabel(iconClass));
+                    }
+                }
+            });
+            
+            // Add focus indicators
+            const style = document.createElement('style');
+            style.textContent = `
+                *:focus {
+                    outline: 2px solid var(--primary-blue) !important;
+                    outline-offset: 2px !important;
+                }
+                .focus-visible {
+                    outline: 2px solid var(--primary-blue) !important;
+                    outline-offset: 2px !important;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        function getAriaLabel(iconClass) {
+            const labels = {
+                'fa-bell': 'Notifications',
+                'fa-search': 'Search',
+                'fa-cog': 'Settings',
+                'fa-plus': 'Add new',
+                'fa-times': 'Close',
+                'fa-menu': 'Menu',
+                'fa-sync': 'Refresh'
+            };
+            
+            for (const [icon, label] of Object.entries(labels)) {
+                if (iconClass.includes(icon)) return label;
+            }
+            return 'Button';
+        }
+    </script>
+</body>
+</html>
