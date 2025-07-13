@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
             position: 'fixed',
             top: '20px',
             right: '20px',
-            background: type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#0891b2',
+            background: type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#0ea5e9',
             color: 'white',
             padding: '1rem 1.5rem',
             borderRadius: '12px',
@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 width: 40px;
                 height: 40px;
                 border: 4px solid #f3f3f3;
-                border-top: 4px solid #0891b2;
+                border-top: 4px solid #0ea5e9;
                 border-radius: 50%;
                 animation: spin 1s linear infinite;
                 margin-bottom: 1rem;

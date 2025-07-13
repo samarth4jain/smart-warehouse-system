@@ -211,7 +211,7 @@
 
 .preview-metrics .metric i {
     font-size: 1.5rem;
-    color: #0891b2;
+    color: #0ea5e9;
     margin-bottom: 0.5rem;
 }
 
@@ -432,7 +432,7 @@
     width: 60px;
     height: 60px;
     border-radius: 15px;
-    background: linear-gradient(135deg, #0891b2, #8b5cf6);
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -496,7 +496,7 @@
     display: block;
     font-size: 2rem;
     font-weight: 700;
-    color: #0891b2;
+    color: #0ea5e9;
     margin-bottom: 0.5rem;
 }
 
@@ -515,7 +515,7 @@
     width: 300px;
     height: 300px;
     border-radius: 20px;
-    background: linear-gradient(135deg, #0891b2, #8b5cf6);
+    background: linear-gradient(135deg, #0ea5e9, #6366f1);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -570,7 +570,7 @@
 }
 
 .contact-item i {
-    color: #0891b2;
+    color: #0ea5e9;
 }
 
 /* Footer */
@@ -597,7 +597,7 @@
 }
 
 .footer-brand .brand i {
-    color: #0891b2;
+    color: #0ea5e9;
 }
 
 .footer-brand p {
@@ -615,7 +615,7 @@
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 1rem;
-    color: #0891b2;
+    color: #0ea5e9;
 }
 
 .link-group a {
@@ -661,7 +661,7 @@
 }
 
 .footer-social a:hover {
-    background: #0891b2;
+    background: #0ea5e9;
     transform: translateY(-2px);
 }
 
