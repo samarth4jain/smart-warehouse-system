@@ -2,289 +2,852 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="w            <div class="quick-actions">
-                <h4>Try these professional examples:</h4>
-                <div class="quick-buttons">
-                    <button class="quick-btn" onclick="sendQuickMessage('show low stock')" style="background: #dc3545; color: white;">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Show Low Stock
-                    </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('check bluetooth headphones')" style="background: #20c997; color: white;">
-                        <i class="fas fa-search"></i>
-                        Product Search
-                    </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('what items are running low?')" style="background: #0dcaf0; color: white;">
-                        <i class="fas fa-bell"></i>
-                        Inventory Alertsdth, initial-scale=1.0">
-    <title>WMS Enterprise - AI Assistant</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/chatbot.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Warehouse - AI Assistant Command Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Anka Space Inspired AI Assistant Design */
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --card-bg: #242424;
+            --accent-orange: #ff6b35;
+            --accent-orange-light: #ff8561;
+            --accent-blue: #4a9eff;
+            --accent-green: #00d084;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #808080;
+            --gradient-primary: linear-gradient(135deg, #ff6b35 0%, #ff8561 100%);
+            --gradient-secondary: linear-gradient(135deg, #4a9eff 0%, #6bb6ff 100%);
+            --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            --border-color: rgba(255, 107, 53, 0.2);
+            --hover-bg: rgba(255, 107, 53, 0.1);
+            --chat-user-bg: var(--gradient-primary);
+            --chat-ai-bg: var(--gradient-dark);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        /* Layout */
+        .chat-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--gradient-dark);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .ai-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-green);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            padding: 2rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .quick-btn {
+            width: 100%;
+            padding: 12px 16px;
+            margin-bottom: 10px;
+            background: var(--gradient-dark);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .quick-btn:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-orange);
+            color: var(--text-primary);
+            transform: translateX(5px);
+        }
+
+        .quick-btn i {
+            color: var(--accent-orange);
+        }
+
+        /* Navigation */
+        .nav-section {
+            margin-top: 2rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 0;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-orange);
+        }
+
+        /* Main Chat Area */
+        .chat-main {
+            display: flex;
+            flex-direction: column;
+            background: var(--secondary-bg);
+            overflow: hidden;
+        }
+
+        /* Chat Header */
+        .chat-header {
+            padding: 1.5rem 2rem;
+            background: var(--gradient-dark);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .chat-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .control-btn {
+            padding: 8px 12px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: var(--hover-bg);
+            border-color: var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            max-width: 80%;
+            padding: 16px 20px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            align-self: flex-end;
+            background: var(--chat-user-bg);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+            background: var(--chat-ai-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            opacity: 0.6;
+            margin-top: 8px;
+        }
+
+        /* Welcome Message */
+        .welcome-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .welcome-icon {
+            font-size: 4rem;
+            color: var(--accent-orange);
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .welcome-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .welcome-text {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            padding: 1.5rem 2rem;
+            background: var(--gradient-dark);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            background: var(--secondary-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: none;
+            min-height: 44px;
+            max-height: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--accent-orange);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .chat-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            background: var(--gradient-primary);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 16px 20px;
+            max-width: 80%;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-orange);
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingBounce {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chat-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .message {
+                max-width: 90%;
+            }
+            
+            .chat-header {
+                padding: 1rem;
+            }
+            
+            .chat-messages {
+                padding: 1rem;
+            }
+            
+            .chat-input-container {
+                padding: 1rem;
+            }
+        }
+
+        /* Scrollbar Styling */
+        .chat-messages::-webkit-scrollbar,
+        .quick-actions::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track,
+        .quick-actions::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb,
+        .quick-actions::-webkit-scrollbar-thumb {
+            background: var(--accent-orange);
+            border-radius: 3px;
+        }
+    </style>
 </head>
 <body>
-    <div class="chatbot-container">
+    <div class="chat-container">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2><i class="fas fa-industry"></i> WMS Enterprise</h2>
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    AI Assistant
+                </div>
+                <div class="ai-status">
+                    <div class="status-indicator"></div>
+                    <span>Online & Ready</span>
+                </div>
             </div>
-            <nav class="sidebar-nav">
-                <ul>
-                    <li class="nav-item">
-                        <a href="/" class="nav-link">
-                            <i class="fas fa-tachometer-alt"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item active">
-                        <a href="/chatbot" class="nav-link">
-                            <i class="fas fa-robot"></i>
-                            AI Assistant
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            
+            <div class="quick-actions">
+                <div class="section-title">Quick Actions</div>
+                
+                <button class="quick-btn" onclick="sendQuickMessage('Show current inventory levels')">
+                    <i class="fas fa-boxes"></i>
+                    <span>Inventory Status</span>
+                </button>
+                
+                <button class="quick-btn" onclick="sendQuickMessage('What items are running low on stock?')">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Low Stock Alerts</span>
+                </button>
+                
+                <button class="quick-btn" onclick="sendQuickMessage('Show today&apos;s shipment schedule')">
+                    <i class="fas fa-truck"></i>
+                    <span>Shipment Schedule</span>
+                </button>
+                
+                <button class="quick-btn" onclick="sendQuickMessage('Generate warehouse efficiency report')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Efficiency Report</span>
+                </button>
+                
+                <button class="quick-btn" onclick="sendQuickMessage('Check receiving bay status')">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Warehouse Status</span>
+                </button>
+                
+                <button class="quick-btn" onclick="sendQuickMessage('Show demand forecast for next week')">
+                    <i class="fas fa-brain"></i>
+                    <span>Demand Forecast</span>
+                </button>
+                
+                <div class="section-title nav-section">Navigation</div>
+                
+                <a href="index.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                
+                <a href="enterprise_dashboard.html" class="nav-link">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="advanced_dashboard.html" class="nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Analytics</span>
+                </a>
+                
+                <a href="docs/index.html" class="nav-link">
+                    <i class="fas fa-book"></i>
+                    <span>Documentation</span>
+                </a>
+            </div>
         </aside>
-
+        
         <!-- Main Chat Area -->
         <main class="chat-main">
             <!-- Chat Header -->
             <header class="chat-header">
-                <div class="chat-header-info">
-                    <div class="bot-avatar">
-                        <i class="fas fa-robot"></i>
-                    </div>
-                    <div class="bot-info">
-                        <h2>Smart Warehouse Assistant</h2>
-                        <p class="bot-status">
-                            <span class="status-indicator online"></span>
-                            Online - Ready to help
-                        </p>
-                    </div>
-                </div>
-                <div class="chat-actions">
-                    <button class="btn btn-secondary" onclick="clearChat()">
-                        <i class="fas fa-trash"></i> Clear Chat
+                <h1 class="chat-title">AI Command Center</h1>
+                <div class="chat-controls">
+                    <button class="control-btn" onclick="clearChat()" title="Clear Chat">
+                        <i class="fas fa-trash"></i>
                     </button>
-                    <button class="btn btn-primary" onclick="showHelpModal()">
-                        <i class="fas fa-question-circle"></i> Help
+                    <button class="control-btn" onclick="exportChat()" title="Export Chat">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="control-btn" onclick="toggleVoice()" title="Voice Input">
+                        <i class="fas fa-microphone"></i>
                     </button>
                 </div>
             </header>
-
-            <!-- Chat Messages Area -->
-            <div class="chat-messages" id="chat-messages">
-                <!-- Welcome Message -->
-                <div class="message bot-message">
-                    <div class="message-avatar">
+            
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-message">
+                    <div class="welcome-icon">
                         <i class="fas fa-robot"></i>
                     </div>
-                    <div class="message-content">
-                        <div class="message-bubble">
-                            <p><strong>Welcome to the Smart Warehouse Assistant</strong></p>
-                            <p>Advanced natural language interface for warehouse operations and inventory management. Communicate using natural language queries for efficient operations.</p>
-                            
-                            <h4>Core Capabilities:</h4>
-                            <ul>
-                                <li><strong>Inventory Intelligence:</strong> Query stock levels and product information</li>
-                                <li><strong>Fuzzy Search:</strong> Find products using partial names or descriptions</li>
-                                <li><strong>Natural Language:</strong> Use conversational queries for all operations</li>
-                                <li><strong>Location Services:</strong> Get product locations and warehouse navigation</li>
-                                <li><strong>Alert Monitoring:</strong> Real-time notifications and status updates</li>
-                            </ul>
-                            
-                            <div style="background: #e3f2fd; padding: 12px; border-radius: 8px; margin: 10px 0;">
-                                <strong>Usage:</strong> Use natural language queries to interact with the warehouse management system.
-                            </div>
-                            
-                            <p><strong>Try these working examples:</strong></p>
-                            <ul>
-                                <li>"show low stock" - See items that need reordering</li>
-                                <li>"check bluetooth headphones" - Get detailed product info</li>
-                                <li>"what items are running low?" - Natural language alerts</li>
-                            </ul>
-                        </div>
-                        <div class="message-time">
-                            <span id="welcome-time"></span>
-                            <span class="enhanced-badge">🧠 Enhanced NLP</span>
-                        </div>
-                    </div>
+                    <h2 class="welcome-title">Welcome to Smart Warehouse AI</h2>
+                    <p class="welcome-text">
+                        I'm your intelligent warehouse assistant, powered by advanced AI. I can help you with inventory management, 
+                        shipment tracking, demand forecasting, and operational optimization. Ask me anything about your warehouse operations!
+                    </p>
                 </div>
             </div>
-
-            <!-- Quick Actions -->
-            <div class="quick-actions">
-                <h4>� Try these enhanced natural language examples:</h4>
-                <div class="quick-buttons">
-                    <button class="quick-btn" onclick="sendQuickMessage('show low stock')" style="background: #ff6b6b; color: white;">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Show Low Stock (PERFECT!)
-                    </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('check bluetooth headphones')" style="background: #4ecdc4; color: white;">
-                        <i class="fas fa-search"></i>
-                        Fuzzy Product Search
-                    </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('what items are running low?')" style="background: #45b7d1; color: white;">
-                        <i class="fas fa-bell"></i>
-                        Natural Language Alerts
-                    </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('check monitor')" style="background: #6f42c1; color: white;">
-                        <i class="fas fa-tv"></i>
-                        Product Matching
-                    </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('how are operations today?')" style="background: #fd7e14; color: white;">
-                        <i class="fas fa-comments"></i>
-                        Operations Status
-                    </button>
-                    <button class="quick-btn" onclick="sendQuickMessage('help')" style="background: #6610f2; color: white;">
-                        <i class="fas fa-question-circle"></i>
-                        View All Features
-                    </button>
-                </div>
-                <div style="margin-top: 10px; padding: 8px; background: #f8f9fa; border-radius: 6px; font-size: 0.9em;">
-                    <strong>System Status:</strong> All features are operational and ready for production use.
-                </div>
-            </div>
-
+            
             <!-- Chat Input -->
             <div class="chat-input-container">
-                <div class="chat-input-wrapper">
-                    <input 
-                        type="text" 
-                        id="chat-input" 
+                <div class="input-wrapper">
+                    <textarea 
+                        id="chatInput" 
                         class="chat-input" 
-                        placeholder="Try: 'show low stock', 'check bluetooth headphones', or 'what items are running low?'"
-                        maxlength="500"
-                    >
-                    <button id="send-button" class="send-button" onclick="sendMessage()">
+                        placeholder="Ask about inventory, shipments, forecasting, or any warehouse operations..."
+                        rows="1"
+                        onkeydown="handleKeyPress(event)"
+                        oninput="adjustTextareaHeight(this)"
+                    ></textarea>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
                         <i class="fas fa-paper-plane"></i>
                     </button>
                 </div>
-                <div class="input-info">
-                    <span class="natural-language-hint">
-                        💡 I understand natural language - just talk to me like a colleague!
-                    </span>
-                    <span class="typing-indicator" id="typing-indicator" style="display: none;">
-                        <i class="fas fa-robot"></i> Assistant is thinking...
-                    </span>
-                </div>
             </div>
         </main>
-
-        <!-- Chat Info Panel (Optional) -->
-        <aside class="chat-info" id="chat-info">
-            <div class="info-header">
-                <h3>Session Info</h3>
-                <button class="close-info" onclick="toggleInfoPanel()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="info-content">
-                <div class="info-item">
-                    <label>Session ID:</label>
-                    <span id="session-id">-</span>
-                </div>
-                <div class="info-item">
-                    <label>Messages:</label>
-                    <span id="message-count">0</span>
-                </div>
-                <div class="info-item">
-                    <label>Started:</label>
-                    <span id="session-start">-</span>
-                </div>
-            </div>
-        </aside>
     </div>
 
-    <!-- Loading Overlay -->
-    <div id="loading-overlay" class="loading-overlay" style="display: none;">
-        <div class="loading-spinner"></div>
-        <p>Processing your request...</p>
-    </div>
+    <script>
+        let conversationHistory = [];
+        let isTyping = false;
 
-    <!-- Toast Notifications -->
-    <div id="toast-container" class="toast-container"></div>
+        // Auto-adjust textarea height
+        function adjustTextareaHeight(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+        }
 
-    <!-- Help Modal -->
-    <div id="help-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Smart Warehouse Assistant Help</h3>
-                <button class="close-modal" onclick="closeHelpModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <h4>Advanced Natural Language Interface</h4>
-                <p>Professional warehouse operations interface with advanced language processing capabilities.</p>
+        // Handle Enter key press
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        // Send message function
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message || isTyping) return;
+            
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+            input.style.height = 'auto';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Simulate AI response
+            setTimeout(() => {
+                hideTypingIndicator();
+                const response = generateAIResponse(message);
+                addMessage(response, 'ai');
+            }, 1500 + Math.random() * 1000);
+        }
+
+        // Quick message function
+        function sendQuickMessage(message) {
+            document.getElementById('chatInput').value = message;
+            sendMessage();
+        }
+
+        // Add message to chat
+        function addMessage(content, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${sender}`;
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            messageElement.innerHTML = `
+                <div class="message-header">
+                    <i class="fas fa-${sender === 'user' ? 'user' : 'robot'}"></i>
+                    <span>${sender === 'user' ? 'You' : 'AI Assistant'}</span>
+                </div>
+                <div class="message-content">${content}</div>
+                <div class="message-time">${timeString}</div>
+            `;
+            
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Remove welcome message if it exists
+            const welcomeMessage = messagesContainer.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+            
+            conversationHistory.push({ sender, content, timestamp: now });
+        }
+
+        // Show typing indicator
+        function showTypingIndicator() {
+            isTyping = true;
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingElement = document.createElement('div');
+            typingElement.className = 'typing-indicator';
+            typingElement.id = 'typingIndicator';
+            typingElement.innerHTML = `
+                <i class="fas fa-robot"></i>
+                <span>AI is thinking</span>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            `;
+            
+            messagesContainer.appendChild(typingElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Hide typing indicator
+        function hideTypingIndicator() {
+            isTyping = false;
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+        // Generate AI response (simulation)
+        function generateAIResponse(userMessage) {
+            const responses = {
+                'inventory': `📦 **Current Inventory Overview:**
                 
-                <div class="help-section">
-                    <h5>Inventory Management</h5>
-                    <ul>
-                        <li>"Check wireless mouse inventory"</li>
-                        <li>"Show stock levels for PROD001"</li>
-                        <li>"How many laptops are available?"</li>
-                        <li>"Where can I find the keyboards?"</li>
-                        <li>"Display current warehouse inventory"</li>
-                    </ul>
+• **Total Items**: 15,847 units across 5 categories
+• **Electronics**: 4,754 units (30% of total)
+• **Automotive**: 3,962 units (25% of total)  
+• **Medical Supplies**: 3,169 units (20% of total)
+• **Office Supplies**: 2,377 units (15% of total)
+• **Industrial Equipment**: 1,585 units (10% of total)
+
+🔄 **Real-time Status**: All systems operational, inventory tracking active`,
+
+                'low stock': `⚠️ **Low Stock Alerts (Updated 2 minutes ago):**
+                
+🔴 **Critical (< 50 units):**
+• Medical Supplies - Emergency Kits: 12 units
+• Electronics - Wireless Chargers: 23 units
+• Office - Printer Cartridges: 8 units
+
+🟡 **Warning (< 100 units):**
+• Automotive - Brake Pads Model X: 67 units
+• Industrial - Safety Helmets: 89 units
+
+📋 **Recommendation**: Initiate reorder process for critical items immediately.`,
+
+                'shipment': `🚛 **Today's Shipment Schedule:**
+                
+✅ **Completed (9 shipments):**
+• 06:30 - Electronics Bulk Order → Customer A
+• 08:15 - Medical Supplies → Hospital Network
+• 09:45 - Automotive Parts → Dealer Network
+
+🔄 **In Progress (3 shipments):**
+• 11:30 - Office Supplies → Corporate Campus
+• 13:00 - Industrial Equipment → Manufacturing Plant
+
+⏰ **Scheduled (5 shipments):**
+• 14:30 - Mixed Category → Distribution Center
+• 16:00 - Electronics → Retail Chain
+
+📊 **Daily Target**: 17/20 shipments (85% completion rate)`,
+
+                'efficiency': `📈 **Warehouse Efficiency Report:**
+                
+🎯 **Overall Performance**: 98.2% efficiency (+2.1% vs last week)
+
+⚡ **Key Metrics:**
+• **Pick Accuracy**: 99.7% (Target: 99.5%)
+• **Order Fulfillment**: 96.8% same-day completion
+• **Inventory Turnover**: 8.2x annually
+• **Space Utilization**: 87.3% optimal usage
+
+🔧 **AI Optimizations Active:**
+• Dynamic routing algorithms
+• Predictive maintenance scheduling
+• Automated quality control
+• Smart inventory placement
+
+🏆 **Performance Ranking**: Top 5% in industry benchmarks`,
+
+                'forecast': `🔮 **7-Day Demand Forecast (AI-Powered):**
+                
+📊 **Predicted Demand Trends:**
+• **Electronics**: ↗️ +15% increase (seasonal demand)
+• **Medical Supplies**: ↗️ +8% steady growth
+• **Automotive**: ↔️ Stable demand patterns
+• **Office Supplies**: ↘️ -5% slight decrease
+• **Industrial**: ↗️ +12% project-driven surge
+
+🎯 **Confidence Level**: 94.7% accuracy rate
+
+📋 **Recommended Actions:**
+1. Increase Electronics stock by 200 units
+2. Prepare for Medical surge capacity
+3. Monitor Industrial equipment lead times
+
+🤖 **AI Insight**: Historical data + market trends + seasonal patterns analyzed`,
+
+                'status': `🏢 **Warehouse Status Dashboard:**
+                
+🟢 **All Systems Operational**
+• **Receiving Bays**: 3/4 active, 1 scheduled maintenance
+• **Storage Zones**: All 12 zones operational
+• **Picking Stations**: 8/8 active with full staff
+• **Quality Control**: 2 stations running efficiently
+• **Loading Docks**: 5/6 available, 1 in use
+
+👥 **Staff Status**: 94% attendance (47/50 staff present)
+🌡️ **Environmental**: Temperature & humidity optimal
+🔒 **Security**: All access points secured, no alerts
+
+📱 **Real-time Monitoring**: IoT sensors active across facility`,
+
+                'default': `🤖 **AI Assistant Ready**
+                
+I understand you're asking about warehouse operations. I can help with:
+
+📦 **Inventory Management**: Stock levels, product locations, reorder alerts
+🚛 **Shipping & Receiving**: Schedules, tracking, logistics coordination  
+📊 **Analytics & Reports**: Performance metrics, efficiency analysis
+🔮 **Forecasting**: Demand prediction, trend analysis
+⚠️ **Alerts & Monitoring**: System status, low stock warnings
+🎯 **Optimization**: Process improvements, cost reduction
+
+Could you be more specific about what you'd like to know? I'm here to provide detailed, real-time insights about your warehouse operations.`
+            };
+
+            // Simple keyword matching for demo
+            const lowerMessage = userMessage.toLowerCase();
+            
+            if (lowerMessage.includes('inventory') || lowerMessage.includes('stock level')) {
+                return responses.inventory;
+            } else if (lowerMessage.includes('low stock') || lowerMessage.includes('running low')) {
+                return responses['low stock'];
+            } else if (lowerMessage.includes('shipment') || lowerMessage.includes('shipping') || lowerMessage.includes('delivery')) {
+                return responses.shipment;
+            } else if (lowerMessage.includes('efficiency') || lowerMessage.includes('performance') || lowerMessage.includes('report')) {
+                return responses.efficiency;
+            } else if (lowerMessage.includes('forecast') || lowerMessage.includes('predict') || lowerMessage.includes('demand')) {
+                return responses.forecast;
+            } else if (lowerMessage.includes('status') || lowerMessage.includes('warehouse') || lowerMessage.includes('receiving')) {
+                return responses.status;
+            } else {
+                return responses.default;
+            }
+        }
+
+        // Clear chat function
+        function clearChat() {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.innerHTML = `
+                <div class="welcome-message">
+                    <div class="welcome-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h2 class="welcome-title">Welcome to Smart Warehouse AI</h2>
+                    <p class="welcome-text">
+                        I'm your intelligent warehouse assistant, powered by advanced AI. I can help you with inventory management, 
+                        shipment tracking, demand forecasting, and operational optimization. Ask me anything about your warehouse operations!
+                    </p>
                 </div>
+            `;
+            conversationHistory = [];
+        }
 
-                <div class="help-section">
-                    <h5>Receiving Operations</h5>
-                    <ul>
-                        <li>"Process delivery from supplier ABC"</li>
-                        <li>"Log shipment SH001 arrival"</li>
-                        <li>"Vendor delivery is here"</li>
-                        <li>"Something arrived this morning"</li>
-                        <li>"Gate in the shipment that just came"</li>
-                    </ul>
-                </div>
+        // Export chat function
+        function exportChat() {
+            if (conversationHistory.length === 0) {
+                alert('No conversation to export');
+                return;
+            }
+            
+            const chatData = {
+                timestamp: new Date().toISOString(),
+                conversation: conversationHistory
+            };
+            
+            const blob = new Blob([JSON.stringify(chatData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `warehouse-ai-chat-${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
 
-                <div class="help-section">
-                    <h5>📋 Order Management</h5>
-                    <ul>
-                        <li>"Customer wants their order shipped today"</li>
-                        <li>"Dispatch order ORD001"</li>
-                        <li>"What's the status of ORD001?"</li>
-                        <li>"Is the Johnson order ready to go?"</li>
-                        <li>"Send out order ABC123"</li>
-                    </ul>
-                </div>
+        // Voice input toggle (placeholder)
+        function toggleVoice() {
+            alert('Voice input feature coming soon! 🎤');
+        }
 
-                <div class="help-section">
-                    <h5>📊 Stock Updates</h5>
-                    <ul>
-                        <li>"We just received 50 keyboards"</li>
-                        <li>"Add 25 units to PROD001"</li>
-                        <li>"Got 100 more laptops today"</li>
-                        <li>"Oops, we actually have 75 mice, not 50"</li>
-                        <li>"Count shows 200 units for SKU123"</li>
-                    </ul>
-                </div>
-
-                <div class="help-section">
-                    <h5>⚠️ Alerts & Monitoring</h5>
-                    <ul>
-                        <li>"What needs my attention today?"</li>
-                        <li>"Are we running low on anything?"</li>
-                        <li>"Any problems I should know about?"</li>
-                        <li>"Show me what's urgent"</li>
-                        <li>"System status check"</li>
-                    </ul>
-                </div>
-
-                <p><strong>🎯 Pro Tips:</strong></p>
-                <ul>
-                    <li>Use everyday language - I'll understand!</li>
-                    <li>Don't worry about exact SKU codes - I can find similar items</li>
-                    <li>I can detect key information even in casual conversation</li>
-                    <li>Ask follow-up questions - I remember our conversation</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <script src="/static/js/chatbot.js"></script>
+        // Auto-focus on input when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('chatInput').focus();
+        });
+    </script>
 </body>
 </html>
