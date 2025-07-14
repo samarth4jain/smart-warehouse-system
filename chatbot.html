@@ -80,6 +80,34 @@
             color: var(--accent-green);
             font-size: 0.9rem;
             font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .connection-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+            font-size: 0.8rem;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-item span:first-child {
+            color: var(--text-muted);
+        }
+
+        .info-item span:last-child {
+            color: var(--text-primary);
+            font-weight: 500;
         }
 
         .status-indicator {
@@ -88,6 +116,16 @@
             background: var(--accent-green);
             border-radius: 50%;
             animation: pulse 2s infinite;
+        }
+
+        .status-indicator.connecting {
+            background: var(--accent-orange);
+            animation: pulse 1s infinite;
+        }
+
+        .status-indicator.offline {
+            background: #ff4444;
+            animation: none;
         }
 
         @keyframes pulse {
@@ -451,8 +489,19 @@
                     AI Assistant
                 </div>
                 <div class="ai-status">
-                    <div class="status-indicator"></div>
-                    <span>Online & Ready</span>
+                    <div class="status-indicator" id="connectionStatus"></div>
+                    <span id="statusText">Connecting...</span>
+                </div>
+                
+                <div class="connection-info" id="connectionInfo">
+                    <div class="info-item">
+                        <span>Backend:</span>
+                        <span id="backendStatus">Checking...</span>
+                    </div>
+                    <div class="info-item">
+                        <span>Mode:</span>
+                        <span id="operationMode">Initializing...</span>
+                    </div>
                 </div>
             </div>
             
@@ -597,18 +646,30 @@
             // Show typing indicator
             showTypingIndicator();
             
-            // Simulate AI response
-            setTimeout(() => {
+            try {
+                // Get AI response from backend
+                const response = await generateAIResponse(message);
                 hideTypingIndicator();
-                const response = generateAIResponse(message);
                 addMessage(response, 'ai');
-            }, 1500 + Math.random() * 1000);
+                
+                // Store in conversation history
+                conversationHistory.push({
+                    user: message,
+                    ai: response,
+                    timestamp: new Date().toISOString()
+                });
+                
+            } catch (error) {
+                hideTypingIndicator();
+                console.error('Error getting AI response:', error);
+                addMessage('Sorry, I encountered an error processing your request. Please try again.', 'ai');
+            }
         }
 
         // Quick message function
-        function sendQuickMessage(message) {
+        async function sendQuickMessage(message) {
             document.getElementById('chatInput').value = message;
-            sendMessage();
+            await sendMessage();
         }
 
         // Add message to chat
@@ -637,8 +698,6 @@
             if (welcomeMessage) {
                 welcomeMessage.remove();
             }
-            
-            conversationHistory.push({ sender, content, timestamp: now });
         }
 
         // Show typing indicator
@@ -671,133 +730,194 @@
             }
         }
 
-        // Generate AI response (simulation)
-        function generateAIResponse(userMessage) {
-            const responses = {
-                'inventory': `📦 **Current Inventory Overview:**
+        // Backend API configuration
+        const API_BASE_URL = 'http://localhost:8000/api';
+        let sessionId = generateSessionId();
+        let isBackendConnected = false;
+
+        function generateSessionId() {
+            return 'session_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+        }
+
+        // Check backend connection status
+        async function checkBackendConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/chat/status`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    isBackendConnected = true;
+                    updateConnectionStatus('connected', 'Connected & Ready', 'Online', 'Live Backend');
+                } else {
+                    throw new Error('Backend not responding');
+                }
+            } catch (error) {
+                isBackendConnected = false;
+                updateConnectionStatus('offline', 'Offline Mode', 'Offline', 'Fallback Mode');
+            }
+        }
+
+        // Update connection status UI
+        function updateConnectionStatus(status, statusText, backendStatus, operationMode) {
+            const indicator = document.getElementById('connectionStatus');
+            const text = document.getElementById('statusText');
+            const backend = document.getElementById('backendStatus');
+            const mode = document.getElementById('operationMode');
+
+            indicator.className = `status-indicator ${status}`;
+            text.textContent = statusText;
+            backend.textContent = backendStatus;
+            mode.textContent = operationMode;
+        }
+
+        // Initialize connection status
+        async function initializeConnection() {
+            updateConnectionStatus('connecting', 'Connecting...', 'Checking...', 'Initializing...');
+            await checkBackendConnection();
+            
+            // Recheck connection every 30 seconds
+            setInterval(checkBackendConnection, 30000);
+        }
+
+        // Generate AI response using real backend API
+        async function generateAIResponse(userMessage) {
+            // If backend is not connected, use fallback immediately
+            if (!isBackendConnected) {
+                return generateFallbackResponse(userMessage, new Error('Backend not connected'));
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/chat/message`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: userMessage,
+                        session_id: sessionId,
+                        user_id: 'frontend_user'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
                 
-• **Total Items**: 15,847 units across 5 categories
-• **Electronics**: 4,754 units (30% of total)
-• **Automotive**: 3,962 units (25% of total)  
-• **Medical Supplies**: 3,169 units (20% of total)
-• **Office Supplies**: 2,377 units (15% of total)
-• **Industrial Equipment**: 1,585 units (10% of total)
-
-🔄 **Real-time Status**: All systems operational, inventory tracking active`,
-
-                'low stock': `⚠️ **Low Stock Alerts (Updated 2 minutes ago):**
+                // Format the response with additional context if available
+                let formattedMessage = data.message;
                 
-🔴 **Critical (< 50 units):**
-• Medical Supplies - Emergency Kits: 12 units
-• Electronics - Wireless Chargers: 23 units
-• Office - Printer Cartridges: 8 units
+                if (data.data) {
+                    // Add structured data presentation for specific intents
+                    if (data.intent === 'inventory_check' && data.data.sku) {
+                        formattedMessage += `\n\n📊 **Quick Stats:**\n• SKU: ${data.data.sku}\n• Available: ${data.data.available}\n• Total: ${data.data.total}`;
+                    }
+                }
 
-🟡 **Warning (< 100 units):**
-• Automotive - Brake Pads Model X: 67 units
-• Industrial - Safety Helmets: 89 units
+                if (data.actions && data.actions.length > 0) {
+                    formattedMessage += `\n\n🎯 **Suggested Actions:** ${data.actions.join(', ')}`;
+                }
 
-📋 **Recommendation**: Initiate reorder process for critical items immediately.`,
+                if (data.suggestions && data.suggestions.length > 0) {
+                    formattedMessage += `\n\n💡 **Try asking:** "${data.suggestions[0]}"`;
+                }
 
-                'shipment': `🚛 **Today's Shipment Schedule:**
+                return formattedMessage;
+
+            } catch (error) {
+                console.error('API Error:', error);
                 
-✅ **Completed (9 shipments):**
-• 06:30 - Electronics Bulk Order → Customer A
-• 08:15 - Medical Supplies → Hospital Network
-• 09:45 - Automotive Parts → Dealer Network
-
-🔄 **In Progress (3 shipments):**
-• 11:30 - Office Supplies → Corporate Campus
-• 13:00 - Industrial Equipment → Manufacturing Plant
-
-⏰ **Scheduled (5 shipments):**
-• 14:30 - Mixed Category → Distribution Center
-• 16:00 - Electronics → Retail Chain
-
-📊 **Daily Target**: 17/20 shipments (85% completion rate)`,
-
-                'efficiency': `📈 **Warehouse Efficiency Report:**
+                // Update connection status and use fallback
+                isBackendConnected = false;
+                updateConnectionStatus('offline', 'Connection Lost', 'Offline', 'Fallback Mode');
                 
-🎯 **Overall Performance**: 98.2% efficiency (+2.1% vs last week)
+                return generateFallbackResponse(userMessage, error);
+            }
+        }
 
-⚡ **Key Metrics:**
-• **Pick Accuracy**: 99.7% (Target: 99.5%)
-• **Order Fulfillment**: 96.8% same-day completion
-• **Inventory Turnover**: 8.2x annually
-• **Space Utilization**: 87.3% optimal usage
-
-🔧 **AI Optimizations Active:**
-• Dynamic routing algorithms
-• Predictive maintenance scheduling
-• Automated quality control
-• Smart inventory placement
-
-🏆 **Performance Ranking**: Top 5% in industry benchmarks`,
-
-                'forecast': `🔮 **7-Day Demand Forecast (AI-Powered):**
-                
-📊 **Predicted Demand Trends:**
-• **Electronics**: ↗️ +15% increase (seasonal demand)
-• **Medical Supplies**: ↗️ +8% steady growth
-• **Automotive**: ↔️ Stable demand patterns
-• **Office Supplies**: ↘️ -5% slight decrease
-• **Industrial**: ↗️ +12% project-driven surge
-
-🎯 **Confidence Level**: 94.7% accuracy rate
-
-📋 **Recommended Actions:**
-1. Increase Electronics stock by 200 units
-2. Prepare for Medical surge capacity
-3. Monitor Industrial equipment lead times
-
-🤖 **AI Insight**: Historical data + market trends + seasonal patterns analyzed`,
-
-                'status': `🏢 **Warehouse Status Dashboard:**
-                
-🟢 **All Systems Operational**
-• **Receiving Bays**: 3/4 active, 1 scheduled maintenance
-• **Storage Zones**: All 12 zones operational
-• **Picking Stations**: 8/8 active with full staff
-• **Quality Control**: 2 stations running efficiently
-• **Loading Docks**: 5/6 available, 1 in use
-
-👥 **Staff Status**: 94% attendance (47/50 staff present)
-🌡️ **Environmental**: Temperature & humidity optimal
-🔒 **Security**: All access points secured, no alerts
-
-📱 **Real-time Monitoring**: IoT sensors active across facility`,
-
-                'default': `🤖 **AI Assistant Ready**
-                
-I understand you're asking about warehouse operations. I can help with:
-
-📦 **Inventory Management**: Stock levels, product locations, reorder alerts
-🚛 **Shipping & Receiving**: Schedules, tracking, logistics coordination  
-📊 **Analytics & Reports**: Performance metrics, efficiency analysis
-🔮 **Forecasting**: Demand prediction, trend analysis
-⚠️ **Alerts & Monitoring**: System status, low stock warnings
-🎯 **Optimization**: Process improvements, cost reduction
-
-Could you be more specific about what you'd like to know? I'm here to provide detailed, real-time insights about your warehouse operations.`
-            };
-
-            // Simple keyword matching for demo
+        // Enhanced fallback response system
+        function generateFallbackResponse(userMessage, error) {
             const lowerMessage = userMessage.toLowerCase();
             
-            if (lowerMessage.includes('inventory') || lowerMessage.includes('stock level')) {
-                return responses.inventory;
-            } else if (lowerMessage.includes('low stock') || lowerMessage.includes('running low')) {
-                return responses['low stock'];
-            } else if (lowerMessage.includes('shipment') || lowerMessage.includes('shipping') || lowerMessage.includes('delivery')) {
-                return responses.shipment;
-            } else if (lowerMessage.includes('efficiency') || lowerMessage.includes('performance') || lowerMessage.includes('report')) {
-                return responses.efficiency;
-            } else if (lowerMessage.includes('forecast') || lowerMessage.includes('predict') || lowerMessage.includes('demand')) {
-                return responses.forecast;
-            } else if (lowerMessage.includes('status') || lowerMessage.includes('warehouse') || lowerMessage.includes('receiving')) {
-                return responses.status;
-            } else {
-                return responses.default;
+            // Check if it's a connectivity issue
+            if (error.message.includes('fetch') || error.message.includes('network')) {
+                return `🔄 **Connection Issue Detected**
+                
+I'm currently having trouble connecting to the warehouse database. Here's what I can help with offline:
+
+� **For Inventory Queries**: Try "Check stock SKU: PROD001"
+📦 **For Stock Updates**: Try "Add 50 units SKU: PROD001" 
+🚛 **For Orders**: Try "Check order status ORD001"
+📊 **For Reports**: Try "Show warehouse efficiency report"
+
+� **Tip**: Make sure the backend server is running on localhost:8000
+Please try your request again in a moment.`;
             }
+
+            // Enhanced pattern matching for better offline experience
+            if (lowerMessage.includes('sku') || lowerMessage.includes('product') || lowerMessage.includes('item')) {
+                return `📦 **Inventory Query Format**
+                
+To check specific products, use:
+• "Check stock SKU: PROD001"
+• "How much inventory for SKU: ABC123"
+• "Show product details LAPTOP001"
+
+📋 **Available Commands:**
+• Inventory checks with SKU
+• Stock updates with quantities
+• Order status lookups
+• Shipment tracking
+• Performance reports
+
+💡 **Example**: "Check stock SKU: LAPTOP001" or "Add 25 units SKU: PHONE123"`;
+            }
+
+            if (lowerMessage.includes('add') || lowerMessage.includes('update') || lowerMessage.includes('stock')) {
+                return `📝 **Stock Update Format**
+                
+To update inventory, use:
+• "Add 50 units SKU: PROD001"
+• "Update stock SKU: ABC123 quantity 25"
+• "Received 100 units SKU: LAPTOP001"
+
+⚡ **Quick Examples:**
+• "Add 25 units SKU: PHONE123"
+• "Update stock SKU: TABLET001 quantity 75"
+• "Received 200 units SKU: HEADSET001"
+
+💡 **Note**: Always include SKU and quantity for accurate processing.`;
+            }
+
+            // Default enhanced help
+            return `🤖 **Smart Warehouse AI Assistant**
+            
+I can help you with:
+
+📦 **Inventory Management**
+• "Check stock SKU: PROD001"
+• "Show inventory summary"
+• "What items are low on stock?"
+
+📝 **Stock Operations**  
+• "Add 50 units SKU: PROD001"
+• "Update stock SKU: ABC123 quantity 25"
+
+🚛 **Logistics**
+• "Check order status ORD001" 
+• "Gate in shipment SH001"
+• "Dispatch order ORD001"
+
+📊 **Analytics**
+• "Show warehouse efficiency"
+• "Generate performance report"
+
+💡 **Tip**: Always include specific SKUs, order numbers, or shipment IDs for best results!`;
         }
 
         // Clear chat function
@@ -844,9 +964,10 @@ Could you be more specific about what you'd like to know? I'm here to provide de
             alert('Voice input feature coming soon! 🎤');
         }
 
-        // Auto-focus on input when page loads
-        document.addEventListener('DOMContentLoaded', () => {
+        // Auto-focus on input when page loads and initialize connection
+        document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('chatInput').focus();
+            await initializeConnection();
         });
     </script>
 </body>
