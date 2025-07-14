@@ -45,6 +45,33 @@
             overflow-x: hidden;
         }
 
+        /* ANKA SPACE DESIGN INDICATOR - Visible confirmation of new design */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            z-index: 10000;
+            animation: dashboardIndicator 5s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.7);
+        }
+
+        @keyframes dashboardIndicator {
+            0%, 100% { 
+                opacity: 0.9; 
+                transform: scaleX(1);
+                box-shadow: 0 0 20px rgba(255, 107, 53, 0.7);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scaleX(1.02);
+                box-shadow: 0 0 40px rgba(255, 107, 53, 1);
+            }
+        }
+
         /* Layout Structure */
         .dashboard-layout {
             display: grid;
