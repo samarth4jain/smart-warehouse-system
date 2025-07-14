@@ -510,6 +510,74 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--accent-orange-dark);
         }
+
+        /* Hero Stats Section */
+        .hero-stats {
+            margin-top: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .hero-stats.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px 10px;
+            border-radius: 15px;
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 107, 53, 0.3);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
             background: var(--gradient-primary);
@@ -823,12 +891,34 @@
             <div class="cta-buttons">
                 <a href="enterprise_dashboard.html" class="btn btn-primary">
                     <i class="fas fa-rocket"></i>
-                    Launch Dashboard
+                    Launch Mission
                 </a>
                 <a href="chatbot.html" class="btn btn-secondary">
                     <i class="fas fa-robot"></i>
-                    Try AI Assistant
+                    Explore Technology
                 </a>
+            </div>
+            
+            <!-- Stats Section -->
+            <div class="hero-stats fade-in">
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">99.7%</div>
+                        <div class="stat-label">Pick Accuracy</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Cost Reduction</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">AI Operations</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Scalability</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
