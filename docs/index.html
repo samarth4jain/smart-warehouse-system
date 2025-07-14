@@ -3,227 +3,1144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Warehouse Management System</title>
-    <meta name="description" content="Professional warehouse management system with real-time inventory tracking, demand forecasting, and intelligent assistant">
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Smart Warehouse - Building the Future of Logistics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Enhanced Anka Space Inspired Design System */
+        :root {
+            --primary-bg: #000000;
+            --secondary-bg: #0a0a0a;
+            --card-bg: #111111;
+            --accent-orange: #ff6b35;
+            --accent-orange-light: #ff8561;
+            --accent-orange-dark: #e55a2b;
+            --accent-blue: #4a9eff;
+            --accent-green: #00d084;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #666666;
+            --gradient-primary: linear-gradient(135deg, #ff6b35 0%, #ff8561 50%, #ffb347 100%);
+            --gradient-secondary: linear-gradient(135deg, #4a9eff 0%, #6bb6ff 100%);
+            --gradient-dark: linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #000000 100%);
+            --gradient-hero: radial-gradient(ellipse at top, #1a1a1a 0%, #000000 70%);
+            --border-glow: rgba(255, 107, 53, 0.3);
+            --shadow-glow: 0 0 40px rgba(255, 107, 53, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            position: relative;
+        }
+
+        /* ANKA SPACE DESIGN INDICATOR - Visible confirmation of new design */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            z-index: 10000;
+            animation: pulseIndicator 4s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.6);
+        }
+
+        @keyframes pulseIndicator {
+            0%, 100% { 
+                opacity: 0.8; 
+                transform: scaleY(1);
+                box-shadow: 0 0 20px rgba(255, 107, 53, 0.6);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scaleY(1.5);
+                box-shadow: 0 0 40px rgba(255, 107, 53, 0.9);
+            }
+        }
+
+        /* Enhanced Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(20px) saturate(180%);
+            z-index: 1000;
+            padding: 20px 40px;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .navbar.scrolled {
+            background: rgba(0, 0, 0, 0.98);
+            padding: 15px 40px;
+            border-bottom-color: rgba(255, 107, 53, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .logo i {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2rem;
+        }
+
+        .logo:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 8px 0;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section Enhancement */
+        .hero-section {
+            min-height: 100vh;
+            background: var(--gradient-hero);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 40px;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><radialGradient id="grad"><stop offset="0%" stop-color="%23ff6b35" stop-opacity="0.1"/><stop offset="100%" stop-color="%23ff6b35" stop-opacity="0"/></radialGradient></defs><circle cx="200" cy="200" r="3" fill="url(%23grad)"/><circle cx="800" cy="300" r="2" fill="url(%23grad)"/><circle cx="400" cy="700" r="2" fill="url(%23grad)"/><circle cx="900" cy="800" r="3" fill="url(%23grad)"/></svg>');
+            animation: drift 20s ease-in-out infinite;
+        }
+
+        @keyframes drift {
+            0%, 100% { transform: translateX(0) translateY(0); }
+            25% { transform: translateX(20px) translateY(-20px); }
+            50% { transform: translateX(-10px) translateY(30px); }
+            75% { transform: translateX(30px) translateY(10px); }
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1200px;
+            z-index: 2;
+            animation: heroFadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes heroFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            font-size: clamp(3.5rem, 10vw, 7rem);
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #ff6b35 30%, #ff8561 70%, #ffffff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+            text-shadow: 0 0 40px rgba(255, 107, 53, 0.3);
+            animation: titleGlow 6s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { 
+                filter: brightness(1) drop-shadow(0 0 20px rgba(255, 107, 53, 0.3));
+            }
+            50% { 
+                filter: brightness(1.1) drop-shadow(0 0 40px rgba(255, 107, 53, 0.6));
+            }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-weight: 400;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 5rem;
+        }
+
+        .btn {
+            padding: 18px 36px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            min-width: 200px;
+            justify-content: center;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-glow);
+            border: 2px solid transparent;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 50px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--accent-orange);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+        }
+
+        /* Features Section Enhancement */
+        .features-section {
+            padding: 120px 40px;
+            background: linear-gradient(180deg, var(--primary-bg) 0%, var(--secondary-bg) 100%);
+            position: relative;
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: clamp(1.1rem, 2vw, 1.3rem);
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 4rem;
+            line-height: 1.8;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            border-radius: 20px;
+            padding: 40px 30px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-orange);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-primary);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* Footer Enhancement */
+        .footer {
+            background: var(--primary-bg);
+            padding: 80px 40px 40px;
+            border-top: 1px solid rgba(255, 107, 53, 0.1);
+            position: relative;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--gradient-primary);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .footer-logo i {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-text {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            font-size: 16px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 10px 15px;
+            border-radius: 25px;
+        }
+
+        .footer-link:hover {
+            color: var(--accent-orange);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 20px;
+            }
+            
+            .nav-menu {
+                gap: 20px;
+            }
+            
+            .hero-section, .features-section {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--primary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gradient-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-orange-dark);
+        }
+
+        /* Hero Stats Section */
+        .hero-stats {
+            margin-top: 60px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 1s ease;
+        }
+
+        .hero-stats.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 40px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 20px 10px;
+            border-radius: 15px;
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 107, 53, 0.3);
+            background: rgba(255, 107, 53, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 768px) {
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 2px solid var(--accent-orange);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-orange);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.3);
+        }
+
+        /* Floating Elements */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-icon {
+            position: absolute;
+            opacity: 0.6;
+            animation: float 6s ease-in-out infinite;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            color: var(--accent-orange);
+            filter: drop-shadow(0 0 20px rgba(255, 107, 53, 0.4));
+            transition: all 0.3s ease;
+        }
+
+        .floating-icon:hover {
+            opacity: 1;
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 30px rgba(255, 107, 53, 0.7));
+        }
+
+        .floating-icon:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .floating-icon:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; }
+        .floating-icon:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
+        .floating-icon:nth-child(4) { top: 40%; right: 25%; animation-delay: 1s; }
+        .floating-icon:nth-child(5) { bottom: 20%; right: 10%; animation-delay: 3s; }
+
+        /* Feature Cards Section */
+        .features-section {
+            padding: 100px 20px;
+            background: var(--secondary-bg);
+            position: relative;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            background: var(--gradient-secondary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .feature-card {
+            background: var(--gradient-dark);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 107, 53, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-orange);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(10, 10, 10, 0.95);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--accent-orange);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-bg);
+            padding: 60px 20px 20px;
+            border-top: 1px solid rgba(255, 107, 53, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-orange);
+            margin-bottom: 1rem;
+        }
+
+        .footer-text {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-link:hover {
+            color: var(--accent-orange);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            25% { transform: translateY(-20px) rotate(5deg); }
+            50% { transform: translateY(-10px) rotate(-5deg); }
+            75% { transform: translateY(-15px) rotate(3deg); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 107, 53, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 107, 53, 0.6); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 <body>
-    <header class="hero">
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo">
-                    <h2>WMS Enterprise</h2>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="#features">Capabilities</a></li>
-                    <li><a href="#demo">System Access</a></li>
-                    <li><a href="#docs">Documentation</a></li>
-                    <li><a href="https://github.com/samarth4jain/smart-warehouse-system" target="_blank">Repository</a></li>
-                </ul>
-            </div>
-        </nav>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <i class="fas fa-industry"></i> Smart Warehouse
+            </a>
+            <ul class="nav-menu">
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="chatbot.html" class="nav-link">AI Assistant</a></li>
+                <li><a href="enterprise_dashboard.html" class="nav-link">Dashboard</a></li>
+                <li><a href="docs/index.html" class="nav-link">Docs</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="floating-elements">
+            <div class="floating-icon"><i class="fas fa-boxes"></i></div>
+            <div class="floating-icon"><i class="fas fa-truck"></i></div>
+            <div class="floating-icon"><i class="fas fa-chart-line"></i></div>
+            <div class="floating-icon"><i class="fas fa-robot"></i></div>
+            <div class="floating-icon"><i class="fas fa-warehouse"></i></div>
+        </div>
         
         <div class="hero-content">
-            <div class="hero-text">
-                <h1>Enterprise Warehouse Management System</h1>
-                <p class="hero-subtitle">Professional warehouse operations platform with advanced analytics, automation, financial intelligence, and enterprise features including AMR fleet management and IoT integration.</p>
-                <div class="hero-buttons">
-                    <a href="#demo" class="btn-primary">Access System</a>
-                    <a href="https://github.com/samarth4jain/smart-warehouse-system" class="btn-secondary" target="_blank">View Source</a>
-                </div>
+            <h1 class="hero-title">Building the Future of<br>Smart Logistics</h1>
+            <p class="hero-subtitle">
+                Revolutionary warehouse management powered by AI, real-time analytics,<br>
+                and intelligent automation for the next generation of supply chain excellence.
+            </p>
+            
+            <div class="cta-buttons">
+                <a href="enterprise_dashboard.html" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    Launch Mission
+                </a>
+                <a href="chatbot.html" class="btn btn-secondary">
+                    <i class="fas fa-robot"></i>
+                    Explore Technology
+                </a>
             </div>
-            <div class="hero-image">
-                <div class="dashboard-preview">
-                    <img src="https://via.placeholder.com/600x400/4f46e5/ffffff?text=Dashboard+Preview" alt="Dashboard Preview">
+            
+            <!-- Stats Section -->
+            <div class="hero-stats fade-in">
+                <div class="stat-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">99.7%</div>
+                        <div class="stat-label">Pick Accuracy</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Cost Reduction</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">AI Operations</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Scalability</div>
+                    </div>
                 </div>
             </div>
         </div>
-    </header>
+    </section>
 
-    <section id="features" class="features">
-        <div class="container">
-            <h2>Core Capabilities</h2>
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <div class="features-container">
+            <h2 class="section-title fade-in">What We Do</h2>
+            <p class="section-subtitle fade-in">
+                Smart Warehouse is pioneering the future of intelligent logistics. Our goal is to build sustainable, 
+                cost-effective warehouse systems that enable businesses to manage inventory with unprecedented efficiency.
+            </p>
+            
             <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-boxes"></i></div>
-                    <h3>Real-time Inventory Management</h3>
-                    <p>Track stock levels, manage products, and monitor warehouse operations in real-time with automated alerts and low-stock notifications.</p>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="feature-title">AI-Powered Intelligence</h3>
+                    <p class="feature-description">
+                        Advanced machine learning algorithms optimize inventory levels, predict demand patterns, 
+                        and automate complex logistics decisions in real-time.
+                    </p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-robot"></i></div>
-                    <h3>AI Assistant</h3>
-                    <p>Natural language interface for warehouse operations, queries, and intelligent recommendations with advanced NLP capabilities.</p>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3 class="feature-title">Real-Time Analytics</h3>
+                    <p class="feature-description">
+                        Comprehensive dashboards provide instant insights into warehouse performance, 
+                        inventory turnover, and operational efficiency metrics.
+                    </p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-                    <h3>Advanced Analytics</h3>
-                    <p>Demand forecasting, space optimization, and performance insights powered by machine learning algorithms.</p>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title">Intelligent Automation</h3>
+                    <p class="feature-description">
+                        Smart automation systems handle routine tasks, optimize workflows, 
+                        and ensure seamless integration across all warehouse operations.
+                    </p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-truck"></i></div>
-                    <h3>Complete Workflows</h3>
-                    <p>End-to-end inbound/outbound operations with shipment tracking, order processing, and logistics management.</p>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="feature-title">Global Scalability</h3>
+                    <p class="feature-description">
+                        Multi-location support with centralized management enables global 
+                        supply chain coordination and standardized operations.
+                    </p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-bullseye"></i></div>
-                    <h3>Optimization Engine</h3>
-                    <p>Intelligent space allocation, route optimization, and automated reorder recommendations for maximum efficiency.</p>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Enterprise Security</h3>
+                    <p class="feature-description">
+                        Bank-level security protocols protect sensitive data while ensuring 
+                        compliance with international logistics and data protection standards.
+                    </p>
                 </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-desktop"></i></div>
-                    <h3>Modern Interface</h3>
-                    <p>Professional, responsive design optimized for desktop, tablet, and mobile devices with intuitive navigation.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-industry"></i></div>
-                    <h3>Enterprise-Grade</h3>
-                    <p>Commercial features including AMR fleet management, computer vision quality control, and IoT sensor integration.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-dollar-sign"></i></div>
-                    <h3>Financial Analytics</h3>
-                    <p>ROI tracking, cost analysis, profit margins, and comprehensive financial reporting for business intelligence.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon"><i class="fas fa-cogs"></i></div>
-                    <h3>Process Automation</h3>
-                    <p>Workflow automation, smart alerts, compliance monitoring, and intelligent process optimization systems.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="demo" class="demo">
-        <div class="container">
-            <h2>System Access</h2>
-            <p class="demo-subtitle">Access the Warehouse Management System modules</p>
-            
-            <div class="demo-grid">
-                <div class="demo-card">
-                    <h3>Operations Dashboard</h3>
-                    <p>Comprehensive warehouse dashboard with real-time metrics, inventory management, and operational oversight</p>
-                    <a href="./dashboard.html" class="demo-link" target="_blank">Access Dashboard</a>
-                </div>
-                <div class="demo-card">
-                    <h3>AI Assistant</h3>
-                    <p>Intelligent warehouse assistant with natural language processing, query handling, and operational support</p>
-                    <a href="./chatbot.html" class="demo-link" target="_blank">Launch Assistant</a>
-                </div>
-                <div class="demo-card">
-                    <h3>Enterprise Console</h3>
-                    <p>Executive-level analytics with business insights, financial metrics, and strategic automation controls</p>
-                    <a href="../frontend/enterprise_dashboard.html" class="demo-link" target="_blank">Enterprise Access</a>
-                </div>
-                <div class="demo-card">
-                    <h3>Analytics Platform</h3>
-                    <p>Business intelligence dashboard with interactive charts, performance metrics, and data export capabilities</p>
-                    <a href="./analytics.html" class="demo-link" target="_blank">View Analytics</a>
-                </div>
-                <div class="demo-card">
-                    <h3>Intelligence Center</h3>
-                    <p>Advanced AI-powered strategic intelligence with predictive analytics and cognitive business insights</p>
-                    <a href="./ultra_intelligence_dashboard.html" class="demo-link" target="_blank">Intelligence Center</a>
-                </div>
-                <div class="demo-card">
-                    <h3>API Documentation</h3>
-                    <p>Complete REST API reference with integration guides and technical documentation</p>
-                    <a href="./api-docs.html" class="demo-link" target="_blank">API Reference</a>
-                </div>
-            </div>
-            
-            <div class="demo-note">
-                <p><strong>System Status:</strong> All features are fully operational and ready for production use. For complete backend integration, refer to the deployment documentation.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="tech-stack">
-        <div class="container">
-            <h2>Built With Modern Technology</h2>
-            <div class="tech-grid">
-                <div class="tech-item">
-                    <h4>Backend</h4>
-                    <p>Python FastAPI with SQLite/PostgreSQL database</p>
-                </div>
-                <div class="tech-item">
-                    <h4>Frontend</h4>
-                    <p>HTML5, CSS3, JavaScript with responsive design</p>
-                </div>
-                <div class="tech-item">
-                    <h4>AI/ML</h4>
-                    <p>Integrated language models for intelligent assistance</p>
-                </div>
-                <div class="tech-item">
-                    <h4>Deployment</h4>
-                    <p>Docker containerization with CI/CD pipelines</p>
+                
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3 class="feature-title">Mobile-First Design</h3>
+                    <p class="feature-description">
+                        Responsive interfaces work seamlessly across all devices, enabling 
+                        warehouse management from anywhere, anytime.
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="docs" class="documentation">
-        <div class="container">
-            <h2>Documentation & Resources</h2>
-            <div class="docs-grid">
-                <div class="doc-card">
-                    <h3>📚 Getting Started</h3>
-                    <p>Quick setup guide to get your warehouse system running in minutes</p>
-                    <a href="https://github.com/samarth4jain/smart-warehouse-system#installation" target="_blank">Read Guide</a>
-                </div>
-                <div class="doc-card">
-                    <h3>🚀 Deployment</h3>
-                    <p>Deploy to cloud platforms like Heroku, AWS, GCP, or Azure</p>
-                    <a href="https://github.com/samarth4jain/smart-warehouse-system/blob/main/DEPLOYMENT.md" target="_blank">Deployment Guide</a>
-                </div>
-                <div class="doc-card">
-                    <h3>🔧 API Reference</h3>
-                    <p>Complete API documentation with interactive examples</p>
-                    <a href="./api-docs.html" target="_blank">API Docs</a>
-                </div>
-                <div class="doc-card">
-                    <h3>🤝 Contributing</h3>
-                    <p>Join the community and contribute to the project</p>
-                    <a href="https://github.com/samarth4jain/smart-warehouse-system/blob/main/CONTRIBUTING.md" target="_blank">Contribute</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
+    <!-- Footer -->
     <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-info">
-                    <h3>Smart Warehouse Management System</h3>
-                    <p>Open source warehouse management solution built for modern businesses.</p>
-                    <div class="footer-links">
-                        <a href="https://github.com/samarth4jain/smart-warehouse-system" target="_blank">GitHub</a>
-                        <a href="https://github.com/samarth4jain/smart-warehouse-system/issues" target="_blank">Issues</a>
-                        <a href="https://github.com/samarth4jain/smart-warehouse-system/blob/main/LICENSE" target="_blank">License</a>
-                    </div>
-                </div>
-                <div class="footer-stats">
-                    <div class="stat">
-                        <div class="stat-number">10K+</div>
-                        <div class="stat-label">Products Managed</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">Real-time</div>
-                        <div class="stat-label">Updates</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-number">AI-Powered</div>
-                        <div class="stat-label">Intelligence</div>
-                    </div>
-                </div>
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-industry"></i> Smart Warehouse
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 Samarth Jain. Licensed under MIT License.</p>
+            <p class="footer-text">
+                Pioneering the future of logistics technology with innovative warehouse systems and cutting-edge solutions.
+            </p>
+            <div class="footer-links">
+                <a href="enterprise_dashboard.html" class="footer-link">Dashboard</a>
+                <a href="chatbot.html" class="footer-link">AI Assistant</a>
+                <a href="advanced_dashboard.html" class="footer-link">Analytics</a>
+                <a href="docs/index.html" class="footer-link">Documentation</a>
             </div>
+            <p class="footer-text">&copy; 2025 Smart Warehouse - All Rights Reserved.</p>
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive particle effects
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.style.position = 'fixed';
+            particle.style.width = '4px';
+            particle.style.height = '4px';
+            particle.style.background = '#ff6b35';
+            particle.style.borderRadius = '50%';
+            particle.style.pointerEvents = 'none';
+            particle.style.opacity = '0.6';
+            particle.style.left = Math.random() * window.innerWidth + 'px';
+            particle.style.top = window.innerHeight + 'px';
+            particle.style.zIndex = '1';
+            
+            document.body.appendChild(particle);
+            
+            const animation = particle.animate([
+                { transform: 'translateY(0px)', opacity: 0.6 },
+                { transform: `translateY(-${window.innerHeight + 100}px)`, opacity: 0 }
+            ], {
+                duration: 3000 + Math.random() * 2000,
+                easing: 'linear'
+            });
+            
+            animation.onfinish = () => particle.remove();
+        }
+
+        // Create particles occasionally
+        setInterval(createParticle, 2000);
+    </script>
 </body>
 </html>
