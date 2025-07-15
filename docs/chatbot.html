@@ -750,10 +750,10 @@
             }
         }
 
-        // Backend API configuration
+        // Backend API configuration - Enhanced for GitHub Pages
         const API_BASE_URL = window.location.hostname === 'localhost' ? 
             'http://localhost:8000/api' : 
-            'https://smart-warehouse-api-production.herokuapp.com/api';
+            null; // Force offline mode for GitHub Pages
         let sessionId = generateSessionId();
         let isBackendConnected = false;
 
@@ -763,6 +763,13 @@
 
         // Check backend connection status
         async function checkBackendConnection() {
+            // For GitHub Pages, always use demo mode
+            if (window.location.hostname !== 'localhost') {
+                isBackendConnected = false;
+                updateConnectionStatus('offline', 'Demo Mode Active', 'Demo Data', 'Intelligent Responses');
+                return;
+            }
+
             try {
                 const response = await fetch(`${API_BASE_URL}/chat/status`, {
                     method: 'GET',
@@ -773,13 +780,13 @@
 
                 if (response.ok) {
                     isBackendConnected = true;
-                    updateConnectionStatus('connected', 'Connected & Ready', 'Online', 'Live Backend');
+                    updateConnectionStatus('connected', 'Connected & Ready', 'Live Backend', 'Real-Time Data');
                 } else {
                     throw new Error('Backend not responding');
                 }
             } catch (error) {
                 isBackendConnected = false;
-                updateConnectionStatus('offline', 'Offline Mode', 'Offline', 'Fallback Mode');
+                updateConnectionStatus('offline', 'Demo Mode Active', 'Demo Data', 'Intelligent Responses');
             }
         }
 
@@ -798,18 +805,30 @@
 
         // Initialize connection status
         async function initializeConnection() {
+            // For GitHub Pages, immediately set demo mode
+            if (window.location.hostname !== 'localhost') {
+                isBackendConnected = false;
+                updateConnectionStatus('offline', 'Demo Mode Ready', 'Smart Responses', 'AI Powered');
+                return;
+            }
+
             updateConnectionStatus('connecting', 'Connecting...', 'Checking...', 'Initializing...');
             await checkBackendConnection();
             
-            // Recheck connection every 30 seconds
+            // Recheck connection every 30 seconds for localhost
             setInterval(checkBackendConnection, 30000);
         }
 
-        // Generate AI response using real backend API
+        // Generate AI response using enhanced offline intelligence
         async function generateAIResponse(userMessage) {
-            // If backend is not connected, use fallback immediately
+            // For GitHub Pages, always use enhanced offline mode
+            if (window.location.hostname !== 'localhost') {
+                return generateIntelligentOfflineResponse(userMessage);
+            }
+
+            // For localhost, try backend first
             if (!isBackendConnected) {
-                return generateFallbackResponse(userMessage, new Error('Backend not connected'));
+                return generateIntelligentOfflineResponse(userMessage);
             }
 
             try {
@@ -830,35 +849,13 @@
                 }
 
                 const data = await response.json();
-                
-                // Format the response with additional context if available
-                let formattedMessage = data.message;
-                
-                if (data.data) {
-                    // Add structured data presentation for specific intents
-                    if (data.intent === 'inventory_check' && data.data.sku) {
-                        formattedMessage += `\n\n📊 **Quick Stats:**\n• SKU: ${data.data.sku}\n• Available: ${data.data.available}\n• Total: ${data.data.total}`;
-                    }
-                }
-
-                if (data.actions && data.actions.length > 0) {
-                    formattedMessage += `\n\n🎯 **Suggested Actions:** ${data.actions.join(', ')}`;
-                }
-
-                if (data.suggestions && data.suggestions.length > 0) {
-                    formattedMessage += `\n\n💡 **Try asking:** "${data.suggestions[0]}"`;
-                }
-
-                return formattedMessage;
+                return data.message || data.response || generateIntelligentOfflineResponse(userMessage);
 
             } catch (error) {
                 console.error('API Error:', error);
-                
-                // Update connection status and use fallback
                 isBackendConnected = false;
-                updateConnectionStatus('offline', 'Connection Lost', 'Offline', 'Fallback Mode');
-                
-                return generateFallbackResponse(userMessage, error);
+                updateConnectionStatus('offline', 'Offline Mode', 'Demo Mode', 'Smart Responses');
+                return generateIntelligentOfflineResponse(userMessage);
             }
         }
 
@@ -940,6 +937,272 @@ I can help you with:
 • "Generate performance report"
 
 💡 **Tip**: Always include specific SKUs, order numbers, or shipment IDs for best results!`;
+        }
+
+        // Enhanced intelligent offline response system with comprehensive warehouse AI
+        function generateIntelligentOfflineResponse(userMessage) {
+            const lowerMessage = userMessage.toLowerCase();
+            const messageWords = lowerMessage.split(' ');
+            
+            // Extract entities from the message
+            const skuMatch = userMessage.match(/sku:?\s*([A-Z0-9-]+)/i);
+            const orderMatch = userMessage.match(/ord\w*:?\s*([A-Z0-9-]+)/i);
+            const shipmentMatch = userMessage.match(/sh\w*:?\s*([A-Z0-9-]+)/i);
+            const quantityMatch = userMessage.match(/(\d+)\s*units?/i);
+            
+            // Generate realistic demo data
+            const currentTime = new Date();
+            const randomStock = Math.floor(Math.random() * 200) + 50;
+            const randomValue = Math.floor(Math.random() * 10000) + 1000;
+            
+            // INVENTORY MANAGEMENT - Detailed stock checking
+            if (lowerMessage.includes('stock') || lowerMessage.includes('inventory')) {
+                if (skuMatch) {
+                    const sku = skuMatch[1];
+                    const stock = randomStock;
+                    const reserved = Math.floor(stock * 0.1);
+                    const available = stock - reserved;
+                    
+                    return `📦 **Stock Report for ${sku}**
+
+**Current Status:**
+• Available: ${available} units
+• Reserved: ${reserved} units  
+• Total Stock: ${stock} units
+• Location: Warehouse A, Bay ${Math.floor(Math.random() * 20) + 1}
+
+**Inventory Details:**
+• Last Restock: ${Math.floor(Math.random() * 7) + 1} days ago
+• Reorder Point: ${Math.floor(stock * 0.2)} units
+• Status: ${available > 50 ? '✅ Well Stocked' : available > 20 ? '⚠️ Monitor' : '🔴 Low Stock'}
+• Value: $${randomValue.toLocaleString()}
+
+**Recent Activity:**
+• Received: ${Math.floor(Math.random() * 50) + 10} units (3 days ago)
+• Shipped: ${Math.floor(Math.random() * 30) + 5} units (today)
+• Next Delivery: ${Math.floor(Math.random() * 100) + 50} units (in 2 days)
+
+💡 *This is intelligent demo data. Connect to live backend for real inventory.*`;
+                }
+                
+                if (lowerMessage.includes('low') || lowerMessage.includes('shortage')) {
+                    return `⚠️ **Low Stock Alert Dashboard**
+
+**🔴 Critical Items (Immediate Action Required):**
+• LAPTOP001 - 8 units left (Reorder: 25)
+• PHONE_PRO - 12 units left (Reorder: 30)  
+• TABLET_X1 - 5 units left (Reorder: 20)
+
+**🟡 Warning Level (Monitor Closely):**
+• HEADSET_BT - 22 units left (Reorder: 25)
+• MOUSE_WIRELESS - 18 units left (Reorder: 20)
+• KEYBOARD_MECH - 28 units left (Reorder: 30)
+
+**📊 Summary Statistics:**
+• Total SKUs monitored: 1,247
+• Below reorder point: 6 items (0.5%)
+• Critical shortage: 3 items
+• Estimated stockout risk: Low
+
+**🔄 Auto-Actions Triggered:**
+• Purchase orders generated for critical items
+• Supplier notifications sent
+• Alternative suppliers contacted
+• Rush delivery arranged for LAPTOP001
+
+💡 *Connect to live system for real-time alerts and automatic reordering.*`;
+                }
+                
+                return `📊 **Warehouse Inventory Overview**
+
+**📈 Key Metrics (Real-Time):**
+• Total SKUs: 1,247 products
+• Total Value: $2.3M inventory
+• Fill Rate: 98.5%
+• Turnover: 4.2x annually
+
+**📦 Today's Activity:**
+• Items Received: 142 units (15 SKUs)
+• Items Shipped: 289 units (67 orders)
+• Stock Adjustments: 8 corrections
+• Cycle Counts: 23 completed
+
+💡 *Demo mode active. Real system provides live data integration.*`;
+            }
+
+            // STOCK OPERATIONS - Add/Update inventory
+            if ((lowerMessage.includes('add') || lowerMessage.includes('update') || lowerMessage.includes('received')) && 
+                (lowerMessage.includes('units') || lowerMessage.includes('stock'))) {
+                
+                if (skuMatch && quantityMatch) {
+                    const sku = skuMatch[1];
+                    const quantity = parseInt(quantityMatch[1]);
+                    const newTotal = randomStock + quantity;
+                    const transactionId = `TXN${Date.now().toString().slice(-6)}`;
+                    
+                    return `✅ **Stock Update Processed Successfully**
+
+**Transaction Details:**
+• SKU: ${sku}
+• Operation: Stock Addition
+• Quantity: +${quantity} units
+• Previous Stock: ${randomStock} units
+• New Total: ${newTotal} units
+
+**System Updates:**
+• Transaction ID: ${transactionId}
+• Timestamp: ${currentTime.toLocaleString()}
+• Location: Auto-assigned to optimal bay
+• Status: ✅ Confirmed
+
+💡 *Demo transaction completed. Live system would update all connected platforms.*`;
+                }
+            }
+
+            // ORDER MANAGEMENT
+            if (lowerMessage.includes('order')) {
+                if (orderMatch) {
+                    const orderId = orderMatch[1];
+                    const statuses = ['Processing', 'Picking', 'Ready to Ship', 'Shipped', 'Delivered'];
+                    const currentStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                    
+                    return `📋 **Order Status: ${orderId}**
+
+**Current Status: ${currentStatus}**
+Progress: ${'█'.repeat(Math.floor(Math.random() * 8) + 2)}${'░'.repeat(10-Math.floor(Math.random() * 8) + 2)} ${Math.floor(Math.random() * 60) + 40}%
+
+**Order Details:**
+• Items: ${Math.floor(Math.random() * 8) + 1} products
+• Value: $${(Math.random() * 500 + 100).toFixed(2)}
+• Priority: ${Math.random() > 0.7 ? '🔴 High' : '🟢 Standard'}
+• Est. Delivery: ${new Date(Date.now() + Math.floor(Math.random() * 3 + 1)*24*60*60*1000).toLocaleDateString()}
+
+💡 *Demo tracking active. Live system provides real-time order updates.*`;
+                }
+                
+                return `📊 **Today's Order Summary**
+
+**Order Volume:**
+• New Orders: 47 orders
+• Processing: 23 orders
+• Shipped: 38 orders
+• Total Value: $89,450
+
+**Performance:**
+• Pick Accuracy: 99.1%
+• Avg Processing: 2.4 hours
+• On-time Rate: 97.8%
+
+💡 *Demo dashboard. Connect for live order management.*`;
+            }
+
+            // HELP SYSTEM
+            if (lowerMessage.includes('help') || lowerMessage.includes('what can') || lowerMessage.includes('commands')) {
+                return `🤖 **Smart Warehouse AI - Complete Guide**
+
+**🔥 Most Popular Commands:**
+
+**📦 INVENTORY:**
+• \`Check stock SKU: PROD001\` - Detailed stock info
+• \`What items are low on stock?\` - Shortage alerts
+• \`Show inventory summary\` - Warehouse overview
+• \`Add 50 units SKU: PROD001\` - Update stock
+
+**📋 ORDERS:**
+• \`Check order ORD001\` - Track specific order
+• \`Today's orders\` - Daily summary
+• \`Order performance\` - Fulfillment metrics
+
+**🚛 SHIPMENTS:**
+• \`Track shipment SH001\` - Real-time tracking
+• \`Today's shipments\` - Daily schedule
+• \`Shipping status\` - Logistics overview
+
+**📊 ANALYTICS:**
+• \`Show warehouse efficiency\` - Performance metrics
+• \`Demand forecast\` - AI predictions
+• \`Generate report\` - Custom analysis
+
+**💡 SMART FEATURES:**
+• Natural language understanding
+• Context-aware responses  
+• Predictive recommendations
+• Multi-step workflows
+
+**🎯 TRY THESE:**
+• "Show today's performance"
+• "What inventory needs attention?"
+• "Check recent orders"
+• "Generate efficiency report"
+
+I understand natural language - just ask me anything! 🚀`;
+            }
+
+            // GREETING
+            if (lowerMessage.includes('hello') || lowerMessage.includes('hi ') || lowerMessage.includes('hey')) {
+                return `👋 **Hello! Welcome to Smart Warehouse AI**
+
+I'm your intelligent warehouse assistant, ready to help optimize your operations!
+
+**🚀 What I can help with:**
+
+**📦 Inventory Management:**
+• Check stock levels and locations
+• Monitor low stock alerts
+• Update inventory quantities
+• Track item movements
+
+**📋 Order Processing:**
+• Track order status and progress
+• Monitor fulfillment performance
+• Manage order priorities
+• Generate shipping labels
+
+**📊 Performance Analytics:**
+• Real-time efficiency metrics
+• Demand forecasting
+• Cost analysis
+• Productivity reports
+
+**💡 Quick Start Examples:**
+• \`Show inventory summary\`
+• \`Check stock SKU: LAPTOP001\`
+• \`Today's performance\`
+• \`What needs attention?\`
+
+Just ask me anything in plain English! How can I help you today? 🚀`;
+            }
+
+            // DEFAULT INTELLIGENT RESPONSE
+            return `🤖 **I understand you're asking about warehouse operations!**
+
+Based on your message: "${userMessage.length > 50 ? userMessage.substring(0, 50) + '...' : userMessage}"
+
+**🎯 Here's how I can help:**
+
+**If you need inventory info:**
+• \`Check stock SKU: [product code]\`
+• \`Show inventory summary\`
+• \`What items are low?\`
+
+**If you need order info:**
+• \`Check order [ORDER_ID]\`
+• \`Today's orders\`
+• \`Order status\`
+
+**If you want performance data:**
+• \`Show efficiency report\`
+• \`Today's metrics\`
+• \`Performance analysis\`
+
+**💡 Smart Suggestions:**
+${lowerMessage.includes('show') ? '• Try "Show inventory summary"' : ''}
+${lowerMessage.includes('check') ? '• Try "Check stock SKU: [code]"' : ''}
+${lowerMessage.includes('status') ? '• Try "Order status" or "Warehouse status"' : ''}
+
+**🆘 Need help?** Type "help" for complete command guide!
+
+Just ask me in plain English - I understand context! 🚀`;
         }
 
         // Clear chat function
