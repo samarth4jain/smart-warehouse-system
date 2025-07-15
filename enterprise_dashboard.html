@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WMS Enterprise - Management Console</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .status-bar {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(5px);
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-healthy { background: #27AE60; }
+        .status-warning { background: #F39C12; }
+        .status-critical { background: #E74C3C; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+        }
+
+        .navigation {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-tab {
+            padding: 12px 24px;
+            background: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+        }
+
+        .nav-tab:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .metric-card.inventory { border-left-color: #3498DB; }
+        .metric-card.forecasting { border-left-color: #9B59B6; }
+        .metric-card.alerts { border-left-color: #E74C3C; }
+        .metric-card.performance { border-left-color: #27AE60; }
+
+        .metric-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .metric-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .metric-icon.inventory { background: #3498DB; }
+        .metric-icon.forecasting { background: #9B59B6; }
+        .metric-icon.alerts { background: #E74C3C; }
+        .metric-icon.performance { background: #27AE60; }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2C3E50;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #7F8C8D;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-trend {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .trend-up { color: #27AE60; }
+        .trend-down { color: #E74C3C; }
+        .trend-stable { color: #F39C12; }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2C3E50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-container {
+            height: 300px;
+            max-height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-container[style*="height: 400px"] {
+            height: 400px !important;
+            max-height: 400px !important;
+        }
+        
+        .js-plotly-plot {
+            width: 100% !important;
+            height: 100% !important;
+            max-width: 100% !important;
+            max-height: 100% !important;
+        }
+        
+        .js-plotly-plot .plotly .main-svg {
+            max-width: 100% !important;
+            max-height: 100% !important;
+        }
+        
+        .plotly-graph-div {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .full-width-chart {
+            grid-column: 1 / -1;
+        }
+
+        .data-table {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            margin-top: 30px;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .table-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+
+        .search-box {
+            padding: 10px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 25px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box:focus {
+            border-color: #667eea;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2C3E50;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6C757D;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28A745;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 200px;
+            color: #7F8C8D;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin-right: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            background: #2C3E50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .refresh-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .status-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Header Section -->
+        <div class="header">
+            <h1><i class="fas fa-warehouse"></i> Smart Warehouse Management</h1>
+            <div class="subtitle">Enterprise-Grade Analytics Dashboard v4.0</div>
+            <div class="status-bar">
+                <div class="status-item">
+                    <div class="status-indicator status-healthy"></div>
+                    <span>System: Healthy</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-indicator status-healthy"></div>
+                    <span>AI Services: Active</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-indicator status-healthy"></div>
+                    <span>Database: Connected</span>
+                </div>
+                <div class="status-item">
+                    <div class="status-indicator status-healthy"></div>
+                    <span>Phase 3: Operational</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('overview')">
+                    <i class="fas fa-tachometer-alt"></i> Overview
+                </button>
+                <button class="nav-tab" onclick="showTab('inventory')">
+                    <i class="fas fa-boxes"></i> Inventory
+                </button>
+                <button class="nav-tab" onclick="showTab('forecasting')">
+                    <i class="fas fa-chart-line"></i> Forecasting
+                </button>
+                <button class="nav-tab" onclick="showTab('optimization')">
+                    <i class="fas fa-cogs"></i> Optimization
+                </button>
+                <button class="nav-tab" onclick="showTab('analytics')">
+                    <i class="fas fa-chart-bar"></i> Analytics
+                </button>
+                <button class="nav-tab" onclick="showTab('executive')">
+                    <i class="fas fa-crown"></i> Executive
+                </button>
+                <button class="nav-tab" onclick="showTab('commercial')">
+                    <i class="fas fa-industry"></i> Commercial
+                </button>
+                <button class="nav-tab" onclick="showTab('automation')">
+                    <i class="fas fa-robot"></i> Automation
+                </button>
+                <button class="nav-tab" onclick="showTab('financial')">
+                    <i class="fas fa-dollar-sign"></i> Financial
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content">
+            <!-- Overview Tab -->
+            <div id="overview-tab" class="tab-content">
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="metric-card inventory">
+                        <div class="metric-header">
+                            <div class="metric-icon inventory">
+                                <i class="fas fa-boxes"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="total-products">Loading...</div>
+                                <div class="metric-label">Total Products</div>
+                                <div class="metric-trend trend-up">
+                                    <i class="fas fa-arrow-up"></i> +12% this month
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card forecasting">
+                        <div class="metric-header">
+                            <div class="metric-icon forecasting">
+                                <i class="fas fa-crystal-ball"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="active-forecasts">Loading...</div>
+                                <div class="metric-label">Active Forecasts</div>
+                                <div class="metric-trend trend-up">
+                                    <i class="fas fa-arrow-up"></i> 95% accuracy
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card alerts">
+                        <div class="metric-header">
+                            <div class="metric-icon alerts">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="active-alerts">Loading...</div>
+                                <div class="metric-label">Active Alerts</div>
+                                <div class="metric-trend trend-down">
+                                    <i class="fas fa-arrow-down"></i> -8% this week
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card performance">
+                        <div class="metric-header">
+                            <div class="metric-icon performance">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value">98.7%</div>
+                                <div class="metric-label">System Uptime</div>
+                                <div class="metric-trend trend-stable">
+                                    <i class="fas fa-minus"></i> Stable
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Product Velocity Distribution
+                        </div>
+                        <div class="chart-container">
+                            <div id="velocity-chart"></div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i class="fas fa-chart-line"></i>
+                            Inventory Trends
+                        </div>
+                        <div class="chart-container">
+                            <div id="inventory-trend-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Analytics -->
+                <div class="chart-card full-width-chart">
+                    <div class="chart-title">
+                        <i class="fas fa-chart-area"></i>
+                        Real-time Performance Dashboard
+                    </div>
+                    <div class="chart-container" style="height: 400px;">
+                        <div id="realtime-chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other tabs content (hidden by default) -->
+            <div id="inventory-tab" class="tab-content" style="display: none;">
+                <div class="data-table">
+                    <div class="table-header">
+                        <div class="table-title">
+                            <i class="fas fa-boxes"></i> Inventory Management
+                        </div>
+                        <input type="text" class="search-box" placeholder="Search products...">
+                    </div>
+                    <div id="inventory-loading" class="loading">
+                        <div class="spinner"></div>
+                        Loading inventory data...
+                    </div>
+                    <div id="inventory-table" style="display: none;">
+                        <!-- Table will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Dashboard Tab -->
+            <div id="executive-tab" class="tab-content" style="display: none;">
+                <div class="metrics-grid">
+                    <div class="metric-card performance">
+                        <div class="metric-header">
+                            <div class="metric-icon performance">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="revenue-metric">$0</div>
+                                <div class="metric-label">Monthly Revenue</div>
+                                <div class="metric-trend trend-up">
+                                    <i class="fas fa-arrow-up"></i> <span id="revenue-change">+0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card inventory">
+                        <div class="metric-header">
+                            <div class="metric-icon inventory">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="roi-metric">0%</div>
+                                <div class="metric-label">ROI</div>
+                                <div class="metric-trend trend-up">
+                                    <i class="fas fa-arrow-up"></i> <span id="roi-change">+0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card forecasting">
+                        <div class="metric-header">
+                            <div class="metric-icon forecasting">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="efficiency-metric">0%</div>
+                                <div class="metric-label">Operational Efficiency</div>
+                                <div class="metric-trend trend-up">
+                                    <i class="fas fa-arrow-up"></i> <span id="efficiency-change">+0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card alerts">
+                        <div class="metric-header">
+                            <div class="metric-icon alerts">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="risk-score">Low</div>
+                                <div class="metric-label">Risk Score</div>
+                                <div class="metric-trend trend-stable">
+                                    <i class="fas fa-shield-alt"></i> Stable
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i class="fas fa-chart-area"></i>
+                            Financial Performance
+                        </div>
+                        <div class="chart-container">
+                            <div id="financial-chart"></div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i class="fas fa-chart-bar"></i>
+                            KPI Dashboard
+                        </div>
+                        <div class="chart-container">
+                            <div id="kpi-chart"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commercial Features Tab -->
+            <div id="commercial-tab" class="tab-content" style="display: none;">
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i class="fas fa-robot"></i>
+                            AMR Fleet Status
+                        </div>
+                        <div class="chart-container">
+                            <div id="amr-status-chart"></div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i class="fas fa-eye"></i>
+                            Computer Vision QC
+                        </div>
+                        <div class="chart-container">
+                            <div id="cv-qc-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <div class="table-header">
+                        <div class="table-title">
+                            <i class="fas fa-wifi"></i> IoT Sensor Network
+                        </div>
+                    </div>
+                    <div id="iot-sensors-table">
+                        <!-- IoT sensors table will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="chart-card full-width-chart">
+                    <div class="chart-title">
+                        <i class="fas fa-qrcode"></i>
+                        QR Code & Barcode Management
+                    </div>
+                    <div class="chart-container" style="height: 300px;">
+                        <div id="qr-management-chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Automation Hub Tab -->
+            <div id="automation-tab" class="tab-content" style="display: none;">
+                <div class="metrics-grid">
+                    <div class="metric-card performance">
+                        <div class="metric-header">
+                            <div class="metric-icon performance">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="automated-tasks">0</div>
+                                <div class="metric-label">Automated Tasks</div>
+                                <div class="metric-trend trend-up">
+                                    <i class="fas fa-arrow-up"></i> +15% efficiency
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card inventory">
+                        <div class="metric-header">
+                            <div class="metric-icon inventory">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="workflows-active">0</div>
+                                <div class="metric-label">Active Workflows</div>
+                                <div class="metric-trend trend-stable">
+                                    <i class="fas fa-check-circle"></i> Running
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card forecasting">
+                        <div class="metric-header">
+                            <div class="metric-icon forecasting">
+                                <i class="fas fa-bell"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="smart-alerts">0</div>
+                                <div class="metric-label">Smart Alerts</div>
+                                <div class="metric-trend trend-down">
+                                    <i class="fas fa-arrow-down"></i> -25% false positives
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card alerts">
+                        <div class="metric-header">
+                            <div class="metric-icon alerts">
+                                <i class="fas fa-shield-check"></i>
+                            </div>
+                            <div>
+                                <div class="metric-value" id="compliance-score">100%</div>
+                                <div class="metric-label">Compliance Score</div>
+                                <div class="metric-trend trend-up">
+                                    <i class="fas fa-certificate"></i> Certified
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card full-width-chart">
+                    <div class="chart-title">
+                        <i class="fas fa-network-wired"></i>
+                        Automation Workflow Overview
+                    </div>
+                    <div class="chart-container" style="height: 400px;">
+                        <div id="automation-workflow-chart"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Analytics Tab -->
+            <div id="financial-tab" class="tab-content" style="display: none;">
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i class="fas fa-chart-pie"></i>
+                            Cost Breakdown
+                        </div>
+                        <div class="chart-container">
+                            <div id="cost-breakdown-chart"></div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-title">
+                            <i class="fas fa-chart-line"></i>
+                            Profit Margins
+                        </div>
+                        <div class="chart-container">
+                            <div id="profit-margins-chart"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <div class="table-header">
+                        <div class="table-title">
+                            <i class="fas fa-file-invoice-dollar"></i> Financial Reports
+                        </div>
+                        <button class="btn btn-primary" onclick="generateFinancialReport()">
+                            <i class="fas fa-file-pdf"></i> Generate Report
+                        </button>
+                    </div>
+                    <div id="financial-reports-table">
+                        <!-- Financial reports table will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/chatbot" class="btn btn-primary">
+                    <i class="fas fa-robot"></i> AI Assistant
+                </a>
+                <a href="/docs" class="btn btn-secondary">
+                    <i class="fas fa-book"></i> API Documentation
+                </a>
+                <button class="btn btn-success" onclick="exportData()">
+                    <i class="fas fa-download"></i> Export Data
+                </button>
+                <button class="btn btn-primary" onclick="refreshDashboard()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            <!-- Auto-refresh Info -->
+            <div class="refresh-info">
+                <i class="fas fa-sync-alt"></i>
+                Dashboard automatically refreshes every 30 seconds | Last updated: <span id="last-updated">Loading...</span>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>&copy; 2025 Smart Warehouse Management System | Enterprise Edition v4.0 | All Rights Reserved</p>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let dashboardData = {};
+        let refreshInterval;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            startAutoRefresh();
+        });
+
+        async function initializeDashboard() {
+            try {
+                await loadDashboardData();
+                updateMetrics();
+                createCharts();
+                updateTimestamp();
+            } catch (error) {
+                console.error('Failed to initialize dashboard:', error);
+                showErrorMessage('Failed to load dashboard data');
+            }
+        }
+
+        async function loadDashboardData() {
+            try {
+                // Load overview data
+                const overviewResponse = await fetch('/api/phase3/dashboard/overview');
+                const overviewData = await overviewResponse.json();
+                
+                // Load inventory data
+                const inventoryResponse = await fetch('/api/inventory');
+                const inventoryData = await inventoryResponse.json();
+                
+                // Load velocity data
+                const velocityResponse = await fetch('/api/phase3/space/analyze-velocity');
+                const velocityData = await velocityResponse.json();
+
+                // Load commercial data
+                try {
+                    const executiveResponse = await fetch('/api/commercial/executive-dashboard');
+                    const executiveData = await executiveResponse.json();
+                    
+                    const financialResponse = await fetch('/api/commercial/financial-metrics');
+                    const financialData = await financialResponse.json();
+                    
+                    const amrResponse = await fetch('/api/commercial/amr-fleet-status');
+                    const amrData = await amrResponse.json();
+                    
+                    const iotResponse = await fetch('/api/commercial/iot-sensors-status');
+                    const iotData = await iotResponse.json();
+
+                    dashboardData = {
+                        overview: overviewData,
+                        inventory: inventoryData,
+                        velocity: velocityData,
+                        executive: executiveData,
+                        financial: financialData,
+                        amr: amrData,
+                        iot: iotData,
+                        timestamp: new Date().toISOString()
+                    };
+                } catch (commercialError) {
+                    console.warn('Commercial features not available:', commercialError);
+                    dashboardData = {
+                        overview: overviewData,
+                        inventory: inventoryData,
+                        velocity: velocityData,
+                        timestamp: new Date().toISOString()
+                    };
+                }
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                throw error;
+            }
+        }
+
+        function updateMetrics() {
+            if (dashboardData.inventory) {
+                document.getElementById('total-products').textContent = dashboardData.inventory.length || 0;
+            }
+
+            if (dashboardData.overview && dashboardData.overview.overview) {
+                document.getElementById('active-forecasts').textContent = dashboardData.overview.overview.total_forecasts || 0;
+                document.getElementById('active-alerts').textContent = dashboardData.overview.overview.active_alerts || 0;
+            }
+
+            // Update executive metrics
+            if (dashboardData.executive) {
+                const exec = dashboardData.executive;
+                document.getElementById('revenue-metric').textContent = `$${(exec.revenue || 0).toLocaleString()}`;
+                document.getElementById('roi-metric').textContent = `${(exec.roi || 0).toFixed(1)}%`;
+                document.getElementById('efficiency-metric').textContent = `${(exec.efficiency || 0).toFixed(1)}%`;
+                document.getElementById('risk-score').textContent = exec.risk_level || 'Low';
+                
+                document.getElementById('revenue-change').textContent = `+${(exec.revenue_change || 0).toFixed(1)}%`;
+                document.getElementById('roi-change').textContent = `+${(exec.roi_change || 0).toFixed(1)}%`;
+                document.getElementById('efficiency-change').textContent = `+${(exec.efficiency_change || 0).toFixed(1)}%`;
+            }
+
+            // Update automation metrics
+            if (dashboardData.executive) {
+                document.getElementById('automated-tasks').textContent = dashboardData.executive.automated_tasks || 0;
+                document.getElementById('workflows-active').textContent = dashboardData.executive.active_workflows || 0;
+                document.getElementById('smart-alerts').textContent = dashboardData.executive.smart_alerts || 0;
+                document.getElementById('compliance-score').textContent = `${(dashboardData.executive.compliance_score || 100).toFixed(1)}%`;
+            }
+        }
+
+        function createCharts() {
+            createVelocityChart();
+            createInventoryTrendChart();
+            createRealtimeChart();
+            createFinancialChart();
+            createKPIChart();
+            createAMRStatusChart();
+            createCVQCChart();
+            createQRManagementChart();
+            createCostBreakdownChart();
+            createProfitMarginsChart();
+            createAutomationWorkflowChart();
+        }
+
+        function createVelocityChart() {
+            if (!dashboardData.overview || !dashboardData.overview.overview || !dashboardData.overview.overview.velocity_distribution) {
+                return;
+            }
+
+            const velocityData = dashboardData.overview.overview.velocity_distribution;
+            
+            const data = [{
+                labels: Object.keys(velocityData),
+                values: Object.values(velocityData),
+                type: 'pie',
+                marker: {
+                    colors: ['#27AE60', '#3498DB', '#F39C12', '#E74C3C']
+                },
+                textinfo: 'label+percent',
+                textposition: 'outside'
+            }];
+
+            const layout = {
+                title: '',
+                showlegend: true,
+                margin: { t: 0, b: 0, l: 0, r: 0 },
+                legend: {
+                    orientation: 'h',
+                    x: 0.5,
+                    xanchor: 'center',
+                    y: -0.1
+                }
+            };
+
+            Plotly.newPlot('velocity-chart', data, layout, {responsive: true});
+        }
+
+        function createInventoryTrendChart() {
+            const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+            const accuracy = [85, 92, 88, 95];
+            const efficiency = [78, 85, 82, 90];
+
+            const trace1 = {
+                x: weeks,
+                y: accuracy,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Accuracy %',
+                line: { color: '#3498DB', width: 3 },
+                marker: { size: 8 }
+            };
+
+            const trace2 = {
+                x: weeks,
+                y: efficiency,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Efficiency %',
+                line: { color: '#27AE60', width: 3 },
+                marker: { size: 8 }
+            };
+
+            const layout = {
+                title: '',
+                xaxis: { title: 'Time Period' },
+                yaxis: { title: 'Percentage (%)' },
+                margin: { t: 0, b: 50, l: 50, r: 20 },
+                legend: { x: 0, y: 1 }
+            };
+
+            Plotly.newPlot('inventory-trend-chart', [trace1, trace2], layout, {responsive: true});
+        }
+
+        function createRealtimeChart() {
+            // Generate sample real-time data
+            const hours = [];
+            const requests = [];
+            const responseTime = [];
+
+            for (let i = 23; i >= 0; i--) {
+                const hour = new Date();
+                hour.setHours(hour.getHours() - i);
+                hours.push(hour.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }));
+                requests.push(Math.floor(Math.random() * 100) + 50);
+                responseTime.push(Math.random() * 2 + 0.5);
+            }
+
+            const trace1 = {
+                x: hours,
+                y: requests,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'API Requests',
+                yaxis: 'y',
+                line: { color: '#667eea', width: 2 }
+            };
+
+            const trace2 = {
+                x: hours,
+                y: responseTime,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Response Time (s)',
+                yaxis: 'y2',
+                line: { color: '#764ba2', width: 2 }
+            };
+
+            const layout = {
+                title: '',
+                xaxis: { title: 'Time (24h)' },
+                yaxis: {
+                    title: 'API Requests',
+                    side: 'left'
+                },
+                yaxis2: {
+                    title: 'Response Time (seconds)',
+                    side: 'right',
+                    overlaying: 'y'
+                },
+                margin: { t: 20, b: 50, l: 50, r: 50 },
+                legend: { x: 0, y: 1 }
+            };
+
+            Plotly.newPlot('realtime-chart', [trace1, trace2], layout, {responsive: true});
+        }
+
+        function createFinancialChart() {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const revenue = [150000, 180000, 165000, 220000, 195000, 240000];
+            const costs = [120000, 140000, 135000, 170000, 155000, 180000];
+            const profit = revenue.map((r, i) => r - costs[i]);
+
+            const trace1 = {
+                x: months,
+                y: revenue,
+                type: 'bar',
+                name: 'Revenue',
+                marker: { color: '#27AE60' }
+            };
+
+            const trace2 = {
+                x: months,
+                y: costs,
+                type: 'bar',
+                name: 'Costs',
+                marker: { color: '#E74C3C' }
+            };
+
+            const trace3 = {
+                x: months,
+                y: profit,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Profit',
+                yaxis: 'y2',
+                line: { color: '#3498DB', width: 3 }
+            };
+
+            const layout = {
+                title: '',
+                xaxis: { title: 'Month' },
+                yaxis: { title: 'Amount ($)' },
+                yaxis2: {
+                    title: 'Profit ($)',
+                    side: 'right',
+                    overlaying: 'y'
+                },
+                margin: { t: 20, b: 50, l: 50, r: 50 },
+                legend: { x: 0, y: 1 }
+            };
+
+            Plotly.newPlot('financial-chart', [trace1, trace2, trace3], layout, {responsive: true});
+        }
+
+        function createKPIChart() {
+            const kpis = ['Efficiency', 'Quality', 'Safety', 'Productivity', 'Cost Control'];
+            const scores = [92, 88, 96, 85, 90];
+            const targets = [90, 90, 95, 85, 88];
+
+            const trace1 = {
+                x: kpis,
+                y: scores,
+                type: 'bar',
+                name: 'Current',
+                marker: { color: '#667eea' }
+            };
+
+            const trace2 = {
+                x: kpis,
+                y: targets,
+                type: 'scatter',
+                mode: 'markers',
+                name: 'Target',
+                marker: { 
+                    color: '#E74C3C',
+                    size: 12,
+                    symbol: 'diamond'
+                }
+            };
+
+            const layout = {
+                title: '',
+                xaxis: { title: 'KPI Categories' },
+                yaxis: { title: 'Score (%)' },
+                margin: { t: 20, b: 50, l: 50, r: 20 },
+                legend: { x: 0, y: 1 }
+            };
+
+            Plotly.newPlot('kpi-chart', [trace1, trace2], layout, {responsive: true});
+        }
+
+        function createAMRStatusChart() {
+            const amrData = dashboardData.amr || {
+                active: 8, idle: 2, maintenance: 1, charging: 3
+            };
+
+            const data = [{
+                labels: ['Active', 'Idle', 'Maintenance', 'Charging'],
+                values: [amrData.active, amrData.idle, amrData.maintenance, amrData.charging],
+                type: 'pie',
+                marker: {
+                    colors: ['#27AE60', '#F39C12', '#E74C3C', '#3498DB']
+                },
+                textinfo: 'label+percent',
+                textposition: 'outside'
+            }];
+
+            const layout = {
+                title: '',
+                showlegend: true,
+                margin: { t: 0, b: 0, l: 0, r: 0 },
+                legend: {
+                    orientation: 'h',
+                    x: 0.5,
+                    xanchor: 'center',
+                    y: -0.1
+                }
+            };
+
+            Plotly.newPlot('amr-status-chart', data, layout, {responsive: true});
+        }
+
+        function createCVQCChart() {
+            const hours = [];
+            const passRate = [];
+            const defectRate = [];
+
+            for (let i = 11; i >= 0; i--) {
+                const hour = new Date();
+                hour.setHours(hour.getHours() - i);
+                hours.push(hour.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }));
+                passRate.push(95 + Math.random() * 4);
+                defectRate.push(Math.random() * 3);
+            }
+
+            const trace1 = {
+                x: hours,
+                y: passRate,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Pass Rate (%)',
+                line: { color: '#27AE60', width: 2 }
+            };
+
+            const trace2 = {
+                x: hours,
+                y: defectRate,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Defect Rate (%)',
+                yaxis: 'y2',
+                line: { color: '#E74C3C', width: 2 }
+            };
+
+            const layout = {
+                title: '',
+                xaxis: { title: 'Time' },
+                yaxis: { title: 'Pass Rate (%)' },
+                yaxis2: {
+                    title: 'Defect Rate (%)',
+                    side: 'right',
+                    overlaying: 'y'
+                },
+                margin: { t: 20, b: 50, l: 50, r: 50 },
+                legend: { x: 0, y: 1 }
+            };
+
+            Plotly.newPlot('cv-qc-chart', [trace1, trace2], layout, {responsive: true});
+        }
+
+        function createQRManagementChart() {
+            const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+            const qrScans = [1250, 1380, 1150, 1420, 1680, 980, 720];
+            const barcodeScans = [850, 920, 780, 950, 1120, 650, 480];
+
+            const trace1 = {
+                x: days,
+                y: qrScans,
+                type: 'bar',
+                name: 'QR Code Scans',
+                marker: { color: '#667eea' }
+            };
+
+            const trace2 = {
+                x: days,
+                y: barcodeScans,
+                type: 'bar',
+                name: 'Barcode Scans',
+                marker: { color: '#764ba2' }
+            };
+
+            const layout = {
+                title: '',
+                xaxis: { title: 'Day of Week' },
+                yaxis: { title: 'Number of Scans' },
+                margin: { t: 20, b: 50, l: 50, r: 20 },
+                legend: { x: 0, y: 1 },
+                barmode: 'group'
+            };
+
+            Plotly.newPlot('qr-management-chart', [trace1, trace2], layout, {responsive: true});
+        }
+
+        function createCostBreakdownChart() {
+            const categories = ['Labor', 'Equipment', 'Utilities', 'Maintenance', 'Technology', 'Other'];
+            const costs = [45000, 25000, 12000, 8000, 15000, 5000];
+
+            const data = [{
+                labels: categories,
+                values: costs,
+                type: 'pie',
+                marker: {
+                    colors: ['#E74C3C', '#F39C12', '#3498DB', '#27AE60', '#9B59B6', '#95A5A6']
+                },
+                textinfo: 'label+percent',
+                textposition: 'outside'
+            }];
+
+            const layout = {
+                title: '',
+                showlegend: true,
+                margin: { t: 0, b: 0, l: 0, r: 0 },
+                legend: {
+                    orientation: 'h',
+                    x: 0.5,
+                    xanchor: 'center',
+                    y: -0.1
+                }
+            };
+
+            Plotly.newPlot('cost-breakdown-chart', data, layout, {responsive: true});
+        }
+
+        function createProfitMarginsChart() {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const grossMargin = [25, 28, 22, 30, 26, 32];
+            const netMargin = [15, 18, 12, 20, 16, 22];
+
+            const trace1 = {
+                x: months,
+                y: grossMargin,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Gross Margin',
+                line: { color: '#27AE60', width: 3 }
+            };
+
+            const trace2 = {
+                x: months,
+                y: netMargin,
+                type: 'scatter',
+                mode: 'lines+markers',
+                name: 'Net Margin',
+                line: { color: '#3498DB', width: 3 }
+            };
+
+            const layout = {
+                title: '',
+                xaxis: { title: 'Month' },
+                yaxis: { title: 'Margin (%)' },
+                margin: { t: 20, b: 50, l: 50, r: 20 },
+                legend: { x: 0, y: 1 }
+            };
+
+            Plotly.newPlot('profit-margins-chart', [trace1, trace2], layout, {responsive: true});
+        }
+
+        function createAutomationWorkflowChart() {
+            // Create a workflow diagram using Plotly
+            const processes = ['Receiving', 'Quality Check', 'Storage', 'Picking', 'Packing', 'Shipping'];
+            const automation = [85, 95, 70, 90, 80, 75];
+            const manual = processes.map((_, i) => 100 - automation[i]);
+
+            const trace1 = {
+                x: processes,
+                y: automation,
+                type: 'bar',
+                name: 'Automated',
+                marker: { color: '#27AE60' }
+            };
+
+            const trace2 = {
+                x: processes,
+                y: manual,
+                type: 'bar',
+                name: 'Manual',
+                marker: { color: '#95A5A6' }
+            };
+
+            const layout = {
+                title: '',
+                xaxis: { title: 'Process' },
+                yaxis: { title: 'Percentage (%)' },
+                margin: { t: 20, b: 50, l: 50, r: 20 },
+                legend: { x: 0, y: 1 },
+                barmode: 'stack'
+            };
+
+            Plotly.newPlot('automation-workflow-chart', [trace1, trace2], layout, {responsive: true});
+        }
+
+        function showTab(tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.style.display = 'none');
+
+            // Remove active class from all nav tabs
+            const navTabs = document.querySelectorAll('.nav-tab');
+            navTabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').style.display = 'block';
+
+            // Add active class to clicked nav tab
+            event.target.classList.add('active');
+
+            // Load tab-specific content
+            if (tabName === 'inventory') {
+                loadInventoryTable();
+            } else if (tabName === 'commercial') {
+                loadIoTSensorsTable();
+            } else if (tabName === 'financial') {
+                loadFinancialReportsTable();
+            }
+        }
+
+        async function loadInventoryTable() {
+            const loadingDiv = document.getElementById('inventory-loading');
+            const tableDiv = document.getElementById('inventory-table');
+
+            loadingDiv.style.display = 'block';
+            tableDiv.style.display = 'none';
+
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate loading
+                
+                let tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Stock Level</th>
+                                <th>Status</th>
+                                <th>Last Updated</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                if (dashboardData.inventory && dashboardData.inventory.length > 0) {
+                    dashboardData.inventory.forEach(product => {
+                        const status = product.stock_level > 20 ? 'In Stock' : 
+                                     product.stock_level > 5 ? 'Low Stock' : 'Critical';
+                        const statusClass = status === 'In Stock' ? 'trend-up' : 
+                                          status === 'Low Stock' ? 'trend-stable' : 'trend-down';
+                        
+                        tableHTML += `
+                            <tr>
+                                <td>${product.product_id}</td>
+                                <td>${product.name}</td>
+                                <td>${product.category || 'General'}</td>
+                                <td>${product.stock_level}</td>
+                                <td><span class="${statusClass}">${status}</span></td>
+                                <td>${new Date().toLocaleDateString()}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tableHTML += `
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #7F8C8D;">
+                                No inventory data available
+                            </td>
+                        </tr>
+                    `;
+                }
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+
+                tableDiv.innerHTML = tableHTML;
+                loadingDiv.style.display = 'none';
+                tableDiv.style.display = 'block';
+            } catch (error) {
+                console.error('Error loading inventory table:', error);
+                loadingDiv.innerHTML = '<div class="error">Failed to load inventory data</div>';
+            }
+        }
+
+        async function loadIoTSensorsTable() {
+            const iotData = dashboardData.iot || {
+                sensors: [
+                    { id: 'TEMP_001', type: 'Temperature', location: 'Zone A', status: 'Active', value: '22.5°C' },
+                    { id: 'HUM_002', type: 'Humidity', location: 'Zone B', status: 'Active', value: '45%' },
+                    { id: 'PRES_003', type: 'Pressure', location: 'Zone C', status: 'Warning', value: '1.2 bar' },
+                    { id: 'MOT_004', type: 'Motion', location: 'Entry', status: 'Active', value: 'Detected' },
+                    { id: 'LIGHT_005', type: 'Light', location: 'Zone D', status: 'Active', value: '850 lux' }
+                ]
+            };
+
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sensor ID</th>
+                            <th>Type</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Current Value</th>
+                            <th>Last Update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            iotData.sensors.forEach(sensor => {
+                const statusClass = sensor.status === 'Active' ? 'trend-up' : 
+                                  sensor.status === 'Warning' ? 'trend-stable' : 'trend-down';
+                
+                tableHTML += `
+                    <tr>
+                        <td>${sensor.id}</td>
+                        <td>${sensor.type}</td>
+                        <td>${sensor.location}</td>
+                        <td><span class="${statusClass}">${sensor.status}</span></td>
+                        <td>${sensor.value}</td>
+                        <td>${new Date().toLocaleString()}</td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('iot-sensors-table').innerHTML = tableHTML;
+        }
+
+        async function loadFinancialReportsTable() {
+            const reports = [
+                { name: 'Monthly P&L', type: 'Profit & Loss', date: '2025-01-15', status: 'Ready' },
+                { name: 'Cost Analysis', type: 'Cost Report', date: '2025-01-14', status: 'Ready' },
+                { name: 'ROI Dashboard', type: 'ROI Analysis', date: '2025-01-13', status: 'Ready' },
+                { name: 'Budget Variance', type: 'Budget Report', date: '2025-01-12', status: 'Ready' },
+                { name: 'Cash Flow', type: 'Financial Flow', date: '2025-01-11', status: 'Ready' }
+            ];
+
+            let tableHTML = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Report Name</th>
+                            <th>Type</th>
+                            <th>Generated</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            reports.forEach(report => {
+                tableHTML += `
+                    <tr>
+                        <td>${report.name}</td>
+                        <td>${report.type}</td>
+                        <td>${report.date}</td>
+                        <td><span class="trend-up">${report.status}</span></td>
+                        <td>
+                            <button class="btn btn-secondary" style="padding: 5px 10px; font-size: 0.8em;" onclick="downloadReport('${report.name}')">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('financial-reports-table').innerHTML = tableHTML;
+        }
+
+        function generateFinancialReport() {
+            showSuccessMessage('Financial report generation started. You will be notified when ready.');
+            // Simulate report generation
+            setTimeout(() => {
+                showSuccessMessage('Financial report generated successfully!');
+            }, 3000);
+        }
+
+        function downloadReport(reportName) {
+            showSuccessMessage(`Downloading ${reportName}...`);
+        }
+
+        function updateTimestamp() {
+            const now = new Date();
+            document.getElementById('last-updated').textContent = now.toLocaleString();
+        }
+
+        function startAutoRefresh() {
+            refreshInterval = setInterval(async () => {
+                try {
+                    await loadDashboardData();
+                    updateMetrics();
+                    updateTimestamp();
+                    console.log('Dashboard refreshed automatically');
+                } catch (error) {
+                    console.error('Auto-refresh failed:', error);
+                }
+            }, 30000); // Refresh every 30 seconds
+        }
+
+        async function refreshDashboard() {
+            try {
+                await initializeDashboard();
+                showSuccessMessage('Dashboard refreshed successfully');
+            } catch (error) {
+                showErrorMessage('Failed to refresh dashboard');
+            }
+        }
+
+        function exportData() {
+            if (!dashboardData.overview || !dashboardData.inventory) {
+                showErrorMessage('No data available to export');
+                return;
+            }
+
+            const exportData = {
+                timestamp: new Date().toISOString(),
+                overview: dashboardData.overview,
+                inventory: dashboardData.inventory,
+                velocity: dashboardData.velocity
+            };
+
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = `warehouse_data_${new Date().toISOString().split('T')[0]}.json`;
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+
+            showSuccessMessage('Data exported successfully');
+        }
+
+        function showSuccessMessage(message) {
+            // Simple success notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #27AE60;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 3000);
+        }
+
+        function showErrorMessage(message) {
+            // Simple error notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #E74C3C;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 5px;
+                z-index: 1000;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                document.body.removeChild(notification);
+            }, 5000);
+        }
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            if (refreshInterval) {
+                clearInterval(refreshInterval);
+            }
+        });
+    </script>
+</body>
+</html>
