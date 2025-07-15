@@ -939,270 +939,152 @@ I can help you with:
 💡 **Tip**: Always include specific SKUs, order numbers, or shipment IDs for best results!`;
         }
 
-        // Enhanced intelligent offline response system with comprehensive warehouse AI
+        // Simple working AI response generator
         function generateIntelligentOfflineResponse(userMessage) {
-            const lowerMessage = userMessage.toLowerCase();
-            const messageWords = lowerMessage.split(' ');
+            const lower = userMessage.toLowerCase();
             
-            // Extract entities from the message
-            const skuMatch = userMessage.match(/sku:?\s*([A-Z0-9-]+)/i);
-            const orderMatch = userMessage.match(/ord\w*:?\s*([A-Z0-9-]+)/i);
-            const shipmentMatch = userMessage.match(/sh\w*:?\s*([A-Z0-9-]+)/i);
-            const quantityMatch = userMessage.match(/(\d+)\s*units?/i);
-            
-            // Generate realistic demo data
-            const currentTime = new Date();
-            const randomStock = Math.floor(Math.random() * 200) + 50;
-            const randomValue = Math.floor(Math.random() * 10000) + 1000;
-            
-            // INVENTORY MANAGEMENT - Detailed stock checking
-            if (lowerMessage.includes('stock') || lowerMessage.includes('inventory')) {
-                if (skuMatch) {
-                    const sku = skuMatch[1];
-                    const stock = randomStock;
-                    const reserved = Math.floor(stock * 0.1);
-                    const available = stock - reserved;
-                    
-                    return `📦 **Stock Report for ${sku}**
+            // SKU-based inventory check
+            if (lower.includes('stock') && (lower.includes('sku:') || lower.includes('sku '))) {
+                const sku = userMessage.match(/sku:?\s*([A-Z0-9-]+)/i)?.[1] || 'UNKNOWN';
+                const stock = Math.floor(Math.random() * 200) + 50;
+                
+                return `📦 **Stock Report for ${sku}**
 
-**Current Status:**
-• Available: ${available} units
-• Reserved: ${reserved} units  
-• Total Stock: ${stock} units
+• Available: ${stock} units
 • Location: Warehouse A, Bay ${Math.floor(Math.random() * 20) + 1}
+• Status: ${stock > 50 ? '✅ In Stock' : '⚠️ Low Stock'}
+• Last Updated: ${new Date().toLocaleDateString()}
 
-**Inventory Details:**
-• Last Restock: ${Math.floor(Math.random() * 7) + 1} days ago
-• Reorder Point: ${Math.floor(stock * 0.2)} units
-• Status: ${available > 50 ? '✅ Well Stocked' : available > 20 ? '⚠️ Monitor' : '🔴 Low Stock'}
-• Value: $${randomValue.toLocaleString()}
-
-**Recent Activity:**
-• Received: ${Math.floor(Math.random() * 50) + 10} units (3 days ago)
-• Shipped: ${Math.floor(Math.random() * 30) + 5} units (today)
-• Next Delivery: ${Math.floor(Math.random() * 100) + 50} units (in 2 days)
-
-💡 *This is intelligent demo data. Connect to live backend for real inventory.*`;
-                }
-                
-                if (lowerMessage.includes('low') || lowerMessage.includes('shortage')) {
-                    return `⚠️ **Low Stock Alert Dashboard**
-
-**🔴 Critical Items (Immediate Action Required):**
-• LAPTOP001 - 8 units left (Reorder: 25)
-• PHONE_PRO - 12 units left (Reorder: 30)  
-• TABLET_X1 - 5 units left (Reorder: 20)
-
-**🟡 Warning Level (Monitor Closely):**
-• HEADSET_BT - 22 units left (Reorder: 25)
-• MOUSE_WIRELESS - 18 units left (Reorder: 20)
-• KEYBOARD_MECH - 28 units left (Reorder: 30)
-
-**📊 Summary Statistics:**
-• Total SKUs monitored: 1,247
-• Below reorder point: 6 items (0.5%)
-• Critical shortage: 3 items
-• Estimated stockout risk: Low
-
-**🔄 Auto-Actions Triggered:**
-• Purchase orders generated for critical items
-• Supplier notifications sent
-• Alternative suppliers contacted
-• Rush delivery arranged for LAPTOP001
-
-💡 *Connect to live system for real-time alerts and automatic reordering.*`;
-                }
-                
-                return `📊 **Warehouse Inventory Overview**
-
-**📈 Key Metrics (Real-Time):**
-• Total SKUs: 1,247 products
-• Total Value: $2.3M inventory
-• Fill Rate: 98.5%
-• Turnover: 4.2x annually
-
-**📦 Today's Activity:**
-• Items Received: 142 units (15 SKUs)
-• Items Shipped: 289 units (67 orders)
-• Stock Adjustments: 8 corrections
-• Cycle Counts: 23 completed
-
-💡 *Demo mode active. Real system provides live data integration.*`;
+💡 Demo data - connect to live system for real inventory.`;
             }
+            
+            // Low stock alerts
+            if (lower.includes('low') && lower.includes('stock')) {
+                return `⚠️ **Low Stock Alerts**
 
-            // STOCK OPERATIONS - Add/Update inventory
-            if ((lowerMessage.includes('add') || lowerMessage.includes('update') || lowerMessage.includes('received')) && 
-                (lowerMessage.includes('units') || lowerMessage.includes('stock'))) {
-                
-                if (skuMatch && quantityMatch) {
-                    const sku = skuMatch[1];
-                    const quantity = parseInt(quantityMatch[1]);
-                    const newTotal = randomStock + quantity;
-                    const transactionId = `TXN${Date.now().toString().slice(-6)}`;
-                    
-                    return `✅ **Stock Update Processed Successfully**
+Critical Items:
+• LAPTOP001 - 8 units (Reorder: 25)
+• PHONE123 - 15 units (Reorder: 30)
+• TABLET456 - 22 units (Reorder: 25)
 
-**Transaction Details:**
-• SKU: ${sku}
-• Operation: Stock Addition
-• Quantity: +${quantity} units
-• Previous Stock: ${randomStock} units
-• New Total: ${newTotal} units
-
-**System Updates:**
-• Transaction ID: ${transactionId}
-• Timestamp: ${currentTime.toLocaleString()}
-• Location: Auto-assigned to optimal bay
-• Status: ✅ Confirmed
-
-💡 *Demo transaction completed. Live system would update all connected platforms.*`;
-                }
+💡 Demo alerts - live system provides real-time monitoring.`;
             }
+            
+            // Order tracking
+            if (lower.includes('order') && (lower.includes('ord') || lower.includes('check'))) {
+                const orderId = userMessage.match(/ord\w*:?\s*([A-Z0-9-]+)/i)?.[1] || 'ORD001';
+                return `📋 **Order Status: ${orderId}**
 
-            // ORDER MANAGEMENT
-            if (lowerMessage.includes('order')) {
-                if (orderMatch) {
-                    const orderId = orderMatch[1];
-                    const statuses = ['Processing', 'Picking', 'Ready to Ship', 'Shipped', 'Delivered'];
-                    const currentStatus = statuses[Math.floor(Math.random() * statuses.length)];
-                    
-                    return `📋 **Order Status: ${orderId}**
-
-**Current Status: ${currentStatus}**
-Progress: ${'█'.repeat(Math.floor(Math.random() * 8) + 2)}${'░'.repeat(10-Math.floor(Math.random() * 8) + 2)} ${Math.floor(Math.random() * 60) + 40}%
-
-**Order Details:**
-• Items: ${Math.floor(Math.random() * 8) + 1} products
+• Status: In Transit
+• Items: ${Math.floor(Math.random() * 5) + 1} products
 • Value: $${(Math.random() * 500 + 100).toFixed(2)}
-• Priority: ${Math.random() > 0.7 ? '🔴 High' : '🟢 Standard'}
-• Est. Delivery: ${new Date(Date.now() + Math.floor(Math.random() * 3 + 1)*24*60*60*1000).toLocaleDateString()}
+• Expected: ${new Date(Date.now() + 2*24*60*60*1000).toLocaleDateString()}
 
-💡 *Demo tracking active. Live system provides real-time order updates.*`;
-                }
-                
-                return `📊 **Today's Order Summary**
-
-**Order Volume:**
-• New Orders: 47 orders
-• Processing: 23 orders
-• Shipped: 38 orders
-• Total Value: $89,450
-
-**Performance:**
-• Pick Accuracy: 99.1%
-• Avg Processing: 2.4 hours
-• On-time Rate: 97.8%
-
-💡 *Demo dashboard. Connect for live order management.*`;
+💡 Demo tracking - connect for live order updates.`;
             }
+            
+            // Performance reports
+            if (lower.includes('performance') || lower.includes('efficiency') || lower.includes('report')) {
+                return `� **Warehouse Performance Report**
 
-            // HELP SYSTEM
-            if (lowerMessage.includes('help') || lowerMessage.includes('what can') || lowerMessage.includes('commands')) {
-                return `🤖 **Smart Warehouse AI - Complete Guide**
+Today's Metrics:
+• Pick Accuracy: 98.5%
+• Orders Processed: 47
+• Efficiency Score: 94/100
+• Revenue: $89,450
 
-**🔥 Most Popular Commands:**
+Trending: ↗️ All metrics improving!
 
-**📦 INVENTORY:**
-• \`Check stock SKU: PROD001\` - Detailed stock info
-• \`What items are low on stock?\` - Shortage alerts
-• \`Show inventory summary\` - Warehouse overview
-• \`Add 50 units SKU: PROD001\` - Update stock
+💡 Demo dashboard - live system provides real-time analytics.`;
+            }
+            
+            // Inventory summary
+            if (lower.includes('inventory') && lower.includes('summary')) {
+                return `📊 **Inventory Overview**
 
-**📋 ORDERS:**
-• \`Check order ORD001\` - Track specific order
-• \`Today's orders\` - Daily summary
-• \`Order performance\` - Fulfillment metrics
+• Total SKUs: 1,247
+• Total Value: $2.3M
+• Fill Rate: 98.5%
+• Active Locations: 3 warehouses
 
-**🚛 SHIPMENTS:**
-• \`Track shipment SH001\` - Real-time tracking
-• \`Today's shipments\` - Daily schedule
-• \`Shipping status\` - Logistics overview
+Today's Activity:
+• Received: 142 units
+• Shipped: 289 units
+• Adjustments: 8
 
-**📊 ANALYTICS:**
-• \`Show warehouse efficiency\` - Performance metrics
-• \`Demand forecast\` - AI predictions
-• \`Generate report\` - Custom analysis
+💡 Demo overview - connect for live inventory data.`;
+            }
+            
+            // Help system
+            if (lower.includes('help') || lower.includes('commands')) {
+                return `🤖 **Smart Warehouse AI Commands**
 
-**💡 SMART FEATURES:**
-• Natural language understanding
-• Context-aware responses  
-• Predictive recommendations
-• Multi-step workflows
+**📦 Inventory:**
+• "Check stock SKU: LAPTOP001"
+• "What items are low on stock?"
+• "Show inventory summary"
 
-**🎯 TRY THESE:**
-• "Show today's performance"
-• "What inventory needs attention?"
-• "Check recent orders"
+**📋 Orders:**
+• "Check order ORD123"
+• "Today's orders"
+
+**� Reports:**
+• "Show warehouse performance"
 • "Generate efficiency report"
 
-I understand natural language - just ask me anything! 🚀`;
+**💡 Just ask naturally:**
+• "How many laptops do we have?"
+• "What needs attention today?"
+• "Show me today's numbers"
+
+Try any of these commands! 🚀`;
             }
+            
+            // Greetings
+            if (lower.includes('hello') || lower.includes('hi ') || lower.includes('hey')) {
+                return `👋 **Hello! I'm Smart Warehouse AI**
 
-            // GREETING
-            if (lowerMessage.includes('hello') || lowerMessage.includes('hi ') || lowerMessage.includes('hey')) {
-                return `👋 **Hello! Welcome to Smart Warehouse AI**
+I can help you with:
+• 📦 Inventory management
+• 📋 Order tracking  
+• 📊 Performance analytics
+• 🚛 Shipment monitoring
 
-I'm your intelligent warehouse assistant, ready to help optimize your operations!
+**Quick Start:**
+• "Check stock SKU: LAPTOP001"
+• "Show warehouse performance"
+• "What items are low on stock?"
 
-**🚀 What I can help with:**
-
-**📦 Inventory Management:**
-• Check stock levels and locations
-• Monitor low stock alerts
-• Update inventory quantities
-• Track item movements
-
-**📋 Order Processing:**
-• Track order status and progress
-• Monitor fulfillment performance
-• Manage order priorities
-• Generate shipping labels
-
-**📊 Performance Analytics:**
-• Real-time efficiency metrics
-• Demand forecasting
-• Cost analysis
-• Productivity reports
-
-**💡 Quick Start Examples:**
-• \`Show inventory summary\`
-• \`Check stock SKU: LAPTOP001\`
-• \`Today's performance\`
-• \`What needs attention?\`
-
-Just ask me anything in plain English! How can I help you today? 🚀`;
+What would you like to know? 🚀`;
             }
+            
+            // Stock updates
+            if ((lower.includes('add') || lower.includes('update')) && lower.includes('units')) {
+                const sku = userMessage.match(/sku:?\s*([A-Z0-9-]+)/i)?.[1] || 'UNKNOWN';
+                const qty = userMessage.match(/(\d+)\s*units?/i)?.[1] || '0';
+                
+                return `✅ **Stock Update Processed**
 
-            // DEFAULT INTELLIGENT RESPONSE
-            return `🤖 **I understand you're asking about warehouse operations!**
+• SKU: ${sku}
+• Added: ${qty} units
+• New Total: ${Math.floor(Math.random() * 200) + parseInt(qty)} units
+• Updated: ${new Date().toLocaleString()}
 
-Based on your message: "${userMessage.length > 50 ? userMessage.substring(0, 50) + '...' : userMessage}"
+💡 Demo transaction - live system would update all platforms.`;
+            }
+            
+            // Default response
+            return `🤖 **I'm here to help with warehouse operations!**
 
-**🎯 Here's how I can help:**
+You asked: "${userMessage.substring(0, 60)}${userMessage.length > 60 ? '...' : ''}"
 
-**If you need inventory info:**
-• \`Check stock SKU: [product code]\`
-• \`Show inventory summary\`
-• \`What items are low?\`
+**Try these commands:**
+• "Check stock SKU: LAPTOP001"
+• "Show warehouse performance"  
+• "What items are low on stock?"
+• "Help" - for full command list
 
-**If you need order info:**
-• \`Check order [ORDER_ID]\`
-• \`Today's orders\`
-• \`Order status\`
-
-**If you want performance data:**
-• \`Show efficiency report\`
-• \`Today's metrics\`
-• \`Performance analysis\`
-
-**💡 Smart Suggestions:**
-${lowerMessage.includes('show') ? '• Try "Show inventory summary"' : ''}
-${lowerMessage.includes('check') ? '• Try "Check stock SKU: [code]"' : ''}
-${lowerMessage.includes('status') ? '• Try "Order status" or "Warehouse status"' : ''}
-
-**🆘 Need help?** Type "help" for complete command guide!
-
-Just ask me in plain English - I understand context! 🚀`;
+I understand natural language, so just ask! 🚀`;
         }
 
         // Clear chat function
