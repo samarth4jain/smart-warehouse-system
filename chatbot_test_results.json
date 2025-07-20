@@ -1,0 +1,3648 @@
+{
+  "test_metadata": {
+    "timestamp": "2025-07-20T14:25:36.304691",
+    "session_id": "test_session_1753001476",
+    "base_url": "http://localhost:8000",
+    "total_queries": 118
+  },
+  "results": [
+    {
+      "query": "hello",
+      "description": "Basic greeting",
+      "success": true,
+      "response_time_ms": 2119.25,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:18.399782",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "hi there",
+      "description": "Casual greeting",
+      "success": true,
+      "response_time_ms": 2073.79,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:20.579502",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "good morning",
+      "description": "Time-specific greeting",
+      "success": true,
+      "response_time_ms": 2072.8,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:22.754522",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "hey",
+      "description": "Very casual greeting",
+      "success": true,
+      "response_time_ms": 2089.38,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:24.945192",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "hi",
+      "description": "Simple greeting",
+      "success": true,
+      "response_time_ms": 2116.41,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:27.162552",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "good afternoon",
+      "description": "Afternoon greeting",
+      "success": true,
+      "response_time_ms": 2108.17,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:29.376787",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "what's up?",
+      "description": "Slang greeting",
+      "success": true,
+      "response_time_ms": 2107.71,
+      "intent": "general_query",
+      "confidence": 0.3,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'm here to help with your warehouse operations! 🏭\n\nI can check stock, process orders, handle deliveries, and much more.\n\nTry asking me something like:\n• 'Do we have any laptops?'\n• 'Process the delivery that just arrived'\n• 'Show me low stock alerts'\n\nOr just type 'help' to see everything I can do!",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Ask about stock levels",
+        "Check order status",
+        "Process a delivery",
+        "View alerts",
+        "Get help"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:31.592820",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "how are you?",
+      "description": "Personal inquiry",
+      "success": true,
+      "response_time_ms": 2088.03,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:33.786954",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "thanks",
+      "description": "Gratitude expression",
+      "success": true,
+      "response_time_ms": 2117.85,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:36.000150",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "thank you",
+      "description": "Formal thanks",
+      "success": true,
+      "response_time_ms": 2103.83,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:38.206240",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "bye",
+      "description": "Farewell",
+      "success": true,
+      "response_time_ms": 2108.15,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:40.425541",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "goodbye",
+      "description": "Formal farewell",
+      "success": true,
+      "response_time_ms": 2134.19,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:42.657690",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "see you later",
+      "description": "Casual farewell",
+      "success": true,
+      "response_time_ms": 2070.22,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:44.835376",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Basic Greetings & Conversation"
+    },
+    {
+      "query": "show low stock",
+      "description": "Direct low stock query",
+      "success": true,
+      "response_time_ms": 2125.28,
+      "intent": "alerts_monitoring",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's what needs attention in our warehouse! 🔔\n\n⚠️ **LOW STOCK:**\n• **Bluetooth Headphones** - 8 Each left\n• **Office Chair** - 3 Each left\n\n💡 **Action needed**: Consider reordering 2 items",
+      "entities": {},
+      "data": {
+        "low_stock_count": 2,
+        "critical_count": 0,
+        "low_count": 2,
+        "items": [
+          {
+            "name": "Bluetooth Headphones",
+            "sku": "HEAD001",
+            "available": 8,
+            "status": "low"
+          },
+          {
+            "name": "Office Chair",
+            "sku": "CHAIR001",
+            "available": 3,
+            "status": "low"
+          }
+        ]
+      },
+      "suggestions": [
+        "Reorder critical items",
+        "View specific product",
+        "Update stock levels"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:47.067019",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": true,
+      "category": "Inventory Management Queries"
+    },
+    {
+      "query": "check inventory",
+      "description": "General inventory check",
+      "success": true,
+      "response_time_ms": 2074.52,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "**PRODUCT SEARCH RESULT**: No matches found\n\nSearch term: 'Inventory'\nRecommendations:\n• Verify product name or SKU code\n• Use exact product naming\n• Check product database integrity",
+      "entities": {
+        "product_name": "Inventory"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:49.242582",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Inventory Management Queries"
+    },
+    {
+      "query": "what's in stock?",
+      "description": "Casual stock inquiry",
+      "success": true,
+      "response_time_ms": 2110.52,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:51.455061",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Inventory Management Queries"
+    },
+    {
+      "query": "show me all products",
+      "description": "Product listing request",
+      "success": true,
+      "response_time_ms": 2076.85,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:53.634749",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Inventory Management Queries"
+    },
+    {
+      "query": "check stock levels",
+      "description": "Stock level inquiry",
+      "success": true,
+      "response_time_ms": 2096.97,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "Hmm, I couldn't find anything for 'Stock Levels' 🤔\n\n💡 **Try these instead:**\n• Use the exact product name\n• Try a SKU code (like PROD001)\n• Check for typos\n• Ask me to 'show all products'",
+      "entities": {
+        "product_name": "Stock Levels"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:55.835769",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Inventory Management Queries"
+    },
+    {
+      "query": "what products do we have?",
+      "description": "Product catalog request",
+      "success": true,
+      "response_time_ms": 2115.86,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:51:58.056551",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Inventory Management Queries"
+    },
+    {
+      "query": "show inventory summary",
+      "description": "Inventory overview",
+      "success": true,
+      "response_time_ms": 2094.07,
+      "intent": "inventory_check",
+      "confidence": 0.9,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "**INVENTORY QUERY** - Additional information required\n\nPlease provide:\n• Product name or SKU code\n• Specific product identifier\n\nFormat examples:\n• 'Check stock SKU: PROD001'\n• 'Inventory status for Product Name'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:00.250814",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Inventory Management Queries"
+    },
+    {
+      "query": "check warehouse inventory",
+      "description": "Warehouse inventory check",
+      "success": true,
+      "response_time_ms": 2124.17,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "**PRODUCT SEARCH RESULT**: No matches found\n\nSearch term: 'Warehouse'\nRecommendations:\n• Verify product name or SKU code\n• Use exact product naming\n• Check product database integrity",
+      "entities": {
+        "product_name": "Warehouse"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:02.476488",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Inventory Management Queries"
+    },
+    {
+      "query": "what items are available?",
+      "description": "Availability inquiry",
+      "success": true,
+      "response_time_ms": 2090.91,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:04.672721",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Inventory Management Queries"
+    },
+    {
+      "query": "display current stock",
+      "description": "Stock display request",
+      "success": true,
+      "response_time_ms": 2123.43,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:06.901212",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Inventory Management Queries"
+    },
+    {
+      "query": "check bluetooth headphones",
+      "description": "Specific product search",
+      "success": true,
+      "response_time_ms": 2079.29,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Heads up! We're running low on **Bluetooth Headphones** 🔔\n\n📦 Available: 8 Each\n🔒 Reserved: 0 Each\n📍 Location: A1-03\n⚠️ Reorder level: 15 Each\n\n💡 **Suggestion**: Might want to reorder soon!",
+      "entities": {
+        "product_name": "Bluetooth Headphones"
+      },
+      "data": {
+        "product": "Bluetooth Headphones",
+        "sku": "HEAD001",
+        "available": 8,
+        "reserved": 0,
+        "total": 8,
+        "status": "low",
+        "reorder_level": 15
+      },
+      "suggestions": [
+        "Reorder this product soon",
+        "Check usage patterns",
+        "Adjust reorder levels",
+        "Review supplier lead times"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:09.081900",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Product Search Queries"
+    },
+    {
+      "query": "find wireless mouse",
+      "description": "Product search with 'find'",
+      "success": true,
+      "response_time_ms": 2096.77,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:11.280633",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Product Search Queries"
+    },
+    {
+      "query": "look for laptop",
+      "description": "Product search with 'look for'",
+      "success": true,
+      "response_time_ms": 2113.38,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:13.495307",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Product Search Queries"
+    },
+    {
+      "query": "search for keyboard",
+      "description": "Product search with 'search'",
+      "success": true,
+      "response_time_ms": 2077.75,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:15.678000",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Product Search Queries"
+    },
+    {
+      "query": "do we have monitors?",
+      "description": "Casual product inquiry",
+      "success": true,
+      "response_time_ms": 2112.57,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "Hmm, I couldn't find anything for 'Monitors?' 🤔\n\n💡 **Try these instead:**\n• Use the exact product name\n• Try a SKU code (like PROD001)\n• Check for typos\n• Ask me to 'show all products'",
+      "entities": {
+        "product_name": "Monitors?"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:17.890582",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Product Search Queries"
+    },
+    {
+      "query": "check office chair",
+      "description": "Office furniture search",
+      "success": true,
+      "response_time_ms": 2118.18,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Heads up! We're running low on **Office Chair** 🔔\n\n📦 Available: 3 Each\n🔒 Reserved: 0 Each\n📍 Location: B1-01\n⚠️ Reorder level: 5 Each\n\n💡 **Suggestion**: Might want to reorder soon!",
+      "entities": {
+        "product_name": "Office Chair"
+      },
+      "data": {
+        "product": "Office Chair",
+        "sku": "CHAIR001",
+        "available": 3,
+        "reserved": 0,
+        "total": 3,
+        "status": "low",
+        "reorder_level": 5
+      },
+      "suggestions": [
+        "Reorder this product soon",
+        "Check usage patterns",
+        "Adjust reorder levels",
+        "Review supplier lead times"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:20.114860",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Product Search Queries"
+    },
+    {
+      "query": "where is the laptop?",
+      "description": "Product location inquiry",
+      "success": true,
+      "response_time_ms": 2096.94,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Good news! We've got plenty of **Laptop** ✅\n\n📦 Available: 25 Each\n🔒 Reserved: 0 Each\n📍 Location: A1-01\n\n💡 **Status**: Stock levels look healthy!",
+      "entities": {
+        "product_name": "Laptop?"
+      },
+      "data": {
+        "product": "Laptop",
+        "sku": "LAPTOP001",
+        "available": 25,
+        "reserved": 0,
+        "total": 25,
+        "status": "good",
+        "reorder_level": 10
+      },
+      "suggestions": [
+        "Update stock count if needed",
+        "Check product location",
+        "Review product details",
+        "Set up automated reordering"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:22.314787",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Product Search Queries"
+    },
+    {
+      "query": "show me wireless mouse details",
+      "description": "Detailed product info",
+      "success": true,
+      "response_time_ms": 2095.28,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:24.514419",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Product Search Queries"
+    },
+    {
+      "query": "what about bluetooth devices?",
+      "description": "Category search",
+      "success": true,
+      "response_time_ms": 2113.8,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:26.727212",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Product Search Queries"
+    },
+    {
+      "query": "check electronic items",
+      "description": "Category-based search",
+      "success": true,
+      "response_time_ms": 2100.13,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "Hmm, I couldn't find anything for 'Electronic Items' 🤔\n\n💡 **Try these instead:**\n• Use the exact product name\n• Try a SKU code (like PROD001)\n• Check for typos\n• Ask me to 'show all products'",
+      "entities": {
+        "product_name": "Electronic Items"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:28.932402",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Product Search Queries"
+    },
+    {
+      "query": "what items are running low?",
+      "description": "Natural language low stock",
+      "success": true,
+      "response_time_ms": 2120.6,
+      "intent": "alerts_monitoring",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's what needs attention in our warehouse! 🔔\n\n⚠️ **LOW STOCK:**\n• **Bluetooth Headphones** - 8 Each left\n• **Office Chair** - 3 Each left\n\n💡 **Action needed**: Consider reordering 2 items",
+      "entities": {},
+      "data": {
+        "low_stock_count": 2,
+        "critical_count": 0,
+        "low_count": 2,
+        "items": [
+          {
+            "name": "Bluetooth Headphones",
+            "sku": "HEAD001",
+            "available": 8,
+            "status": "low"
+          },
+          {
+            "name": "Office Chair",
+            "sku": "CHAIR001",
+            "available": 3,
+            "status": "low"
+          }
+        ]
+      },
+      "suggestions": [
+        "Reorder critical items",
+        "View specific product",
+        "Update stock levels"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:31.159673",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": true,
+      "category": "Natural Language Alert Queries"
+    },
+    {
+      "query": "what needs attention?",
+      "description": "General attention query",
+      "success": true,
+      "response_time_ms": 2092.52,
+      "intent": "alerts_monitoring",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's what needs attention in our warehouse! 🔔\n\n⚠️ **LOW STOCK:**\n• **Bluetooth Headphones** - 8 Each left\n• **Office Chair** - 3 Each left\n\n💡 **Action needed**: Consider reordering 2 items",
+      "entities": {},
+      "data": {
+        "low_stock_count": 2,
+        "critical_count": 0,
+        "low_count": 2,
+        "items": [
+          {
+            "name": "Bluetooth Headphones",
+            "sku": "HEAD001",
+            "available": 8,
+            "status": "low"
+          },
+          {
+            "name": "Office Chair",
+            "sku": "CHAIR001",
+            "available": 3,
+            "status": "low"
+          }
+        ]
+      },
+      "suggestions": [
+        "Reorder critical items",
+        "View specific product",
+        "Update stock levels"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:33.357371",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": true,
+      "category": "Natural Language Alert Queries"
+    },
+    {
+      "query": "any items need reordering?",
+      "description": "Reorder inquiry",
+      "success": true,
+      "response_time_ms": 2090.78,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:35.549938",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": false,
+      "category": "Natural Language Alert Queries"
+    },
+    {
+      "query": "show me problem areas",
+      "description": "Problem identification",
+      "success": true,
+      "response_time_ms": 2078.51,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:37.732341",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": false,
+      "category": "Natural Language Alert Queries"
+    },
+    {
+      "query": "what's critically low?",
+      "description": "Critical stock inquiry",
+      "success": true,
+      "response_time_ms": 2130.46,
+      "intent": "alerts_monitoring",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's what needs attention in our warehouse! 🔔\n\n⚠️ **LOW STOCK:**\n• **Bluetooth Headphones** - 8 Each left\n• **Office Chair** - 3 Each left\n\n💡 **Action needed**: Consider reordering 2 items",
+      "entities": {},
+      "data": {
+        "low_stock_count": 2,
+        "critical_count": 0,
+        "low_count": 2,
+        "items": [
+          {
+            "name": "Bluetooth Headphones",
+            "sku": "HEAD001",
+            "available": 8,
+            "status": "low"
+          },
+          {
+            "name": "Office Chair",
+            "sku": "CHAIR001",
+            "available": 3,
+            "status": "low"
+          }
+        ]
+      },
+      "suggestions": [
+        "Reorder critical items",
+        "View specific product",
+        "Update stock levels"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:39.965316",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": true,
+      "category": "Natural Language Alert Queries"
+    },
+    {
+      "query": "are we running out of anything?",
+      "description": "Stock depletion check",
+      "success": true,
+      "response_time_ms": 2116.11,
+      "intent": "alerts_monitoring",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! Here's what needs attention in our warehouse! 🔔\n\n⚠️ **LOW STOCK:**\n• **Bluetooth Headphones** - 8 Each left\n• **Office Chair** - 3 Each left\n\n💡 **Action needed**: Consider reordering 2 items",
+      "entities": {},
+      "data": {
+        "low_stock_count": 2,
+        "critical_count": 0,
+        "low_count": 2,
+        "items": [
+          {
+            "name": "Bluetooth Headphones",
+            "sku": "HEAD001",
+            "available": 8,
+            "status": "low"
+          },
+          {
+            "name": "Office Chair",
+            "sku": "CHAIR001",
+            "available": 3,
+            "status": "low"
+          }
+        ]
+      },
+      "suggestions": [
+        "Reorder critical items",
+        "View specific product",
+        "Update stock levels"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:42.185014",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": true,
+      "category": "Natural Language Alert Queries"
+    },
+    {
+      "query": "what should I be worried about?",
+      "description": "Concern-based query",
+      "success": true,
+      "response_time_ms": 2126.49,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:44.416059",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": false,
+      "category": "Natural Language Alert Queries"
+    },
+    {
+      "query": "which products need attention?",
+      "description": "Product attention query",
+      "success": true,
+      "response_time_ms": 2063.16,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:46.583583",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": false,
+      "category": "Natural Language Alert Queries"
+    },
+    {
+      "query": "any red flags in inventory?",
+      "description": "Alert metaphor query",
+      "success": true,
+      "response_time_ms": 2108.84,
+      "intent": "alerts_monitoring",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's what needs attention in our warehouse! 🔔\n\n⚠️ **LOW STOCK:**\n• **Bluetooth Headphones** - 8 Each left\n• **Office Chair** - 3 Each left\n\n💡 **Action needed**: Consider reordering 2 items",
+      "entities": {},
+      "data": {
+        "low_stock_count": 2,
+        "critical_count": 0,
+        "low_count": 2,
+        "items": [
+          {
+            "name": "Bluetooth Headphones",
+            "sku": "HEAD001",
+            "available": 8,
+            "status": "low"
+          },
+          {
+            "name": "Office Chair",
+            "sku": "CHAIR001",
+            "available": 3,
+            "status": "low"
+          }
+        ]
+      },
+      "suggestions": [
+        "Reorder critical items",
+        "View specific product",
+        "Update stock levels"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:48.797846",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": true,
+      "category": "Natural Language Alert Queries"
+    },
+    {
+      "query": "what items are in trouble?",
+      "description": "Trouble identification",
+      "success": true,
+      "response_time_ms": 2210.01,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:51.087541",
+      "expected_intent": "alerts_monitoring",
+      "intent_match": false,
+      "category": "Natural Language Alert Queries"
+    },
+    {
+      "query": "do we have any laptops?",
+      "description": "Casual availability check",
+      "success": true,
+      "response_time_ms": 2067.9,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Good news! We've got plenty of **Laptop** ✅\n\n📦 Available: 25 Each\n🔒 Reserved: 0 Each\n📍 Location: A1-01\n\n💡 **Status**: Stock levels look healthy!",
+      "entities": {
+        "product_name": "Laptops?"
+      },
+      "data": {
+        "product": "Laptop",
+        "sku": "LAPTOP001",
+        "available": 25,
+        "reserved": 0,
+        "total": 25,
+        "status": "good",
+        "reorder_level": 10
+      },
+      "suggestions": [
+        "Update stock count if needed",
+        "Check product location",
+        "Review product details",
+        "Set up automated reordering"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:53.321615",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Casual & Conversational Queries"
+    },
+    {
+      "query": "got any wireless mice?",
+      "description": "Slang availability check",
+      "success": true,
+      "response_time_ms": 2131.65,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Good news! We've got plenty of **Wireless Mouse** ✅\n\n📦 Available: 45 Each\n🔒 Reserved: 0 Each\n📍 Location: A1-02\n\n💡 **Status**: Stock levels look healthy!",
+      "entities": {
+        "product_name": "Wireless Mice?"
+      },
+      "data": {
+        "product": "Wireless Mouse",
+        "sku": "MOUSE001",
+        "available": 45,
+        "reserved": 0,
+        "total": 45,
+        "status": "good",
+        "reorder_level": 25
+      },
+      "suggestions": [
+        "Update stock count if needed",
+        "Check product location",
+        "Review product details",
+        "Set up automated reordering"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:55.552440",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Casual & Conversational Queries"
+    },
+    {
+      "query": "how many keyboards are there?",
+      "description": "Quantity inquiry",
+      "success": true,
+      "response_time_ms": 2102.83,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:57.757068",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Casual & Conversational Queries"
+    },
+    {
+      "query": "are there enough office chairs?",
+      "description": "Sufficiency inquiry",
+      "success": true,
+      "response_time_ms": 2093.85,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:52:59.953870",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Casual & Conversational Queries"
+    },
+    {
+      "query": "do we still have bluetooth headphones?",
+      "description": "Continuing availability",
+      "success": true,
+      "response_time_ms": 2085.57,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:02.146219",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Casual & Conversational Queries"
+    },
+    {
+      "query": "is there any laptop left?",
+      "description": "Remaining stock inquiry",
+      "success": true,
+      "response_time_ms": 2074.36,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:04.320964",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Casual & Conversational Queries"
+    },
+    {
+      "query": "how much stuff do we have?",
+      "description": "General quantity inquiry",
+      "success": true,
+      "response_time_ms": 2100.0,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "Hmm, I couldn't find anything for 'Stuff' 🤔\n\n💡 **Try these instead:**\n• Use the exact product name\n• Try a SKU code (like PROD001)\n• Check for typos\n• Ask me to 'show all products'",
+      "entities": {
+        "product_name": "Stuff"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:06.529622",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Casual & Conversational Queries"
+    },
+    {
+      "query": "what's the deal with monitors?",
+      "description": "Casual status inquiry",
+      "success": true,
+      "response_time_ms": 2080.85,
+      "intent": "general_query",
+      "confidence": 0.3,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'm here to help with your warehouse operations! 🏭\n\nI can check stock, process orders, handle deliveries, and much more.\n\nTry asking me something like:\n• 'Do we have any laptops?'\n• 'Process the delivery that just arrived'\n• 'Show me low stock alerts'\n\nOr just type 'help' to see everything I can do!",
+      "entities": {
+        "product_type": "monitor"
+      },
+      "data": null,
+      "suggestions": [
+        "Ask about stock levels",
+        "Check order status",
+        "Process a delivery",
+        "View alerts",
+        "Get help"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:08.705353",
+      "expected_intent": "inventory_check",
+      "intent_match": false,
+      "category": "Casual & Conversational Queries"
+    },
+    {
+      "query": "tell me about our mouse inventory",
+      "description": "Narrative inquiry",
+      "success": true,
+      "response_time_ms": 2093.53,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "**INVENTORY QUERY** - Additional information required\n\nPlease provide:\n• Product name or SKU code\n• Specific product identifier\n\nFormat examples:\n• 'Check stock SKU: PROD001'\n• 'Inventory status for Product Name'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:10.909890",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "Casual & Conversational Queries"
+    },
+    {
+      "query": "give me the lowdown on headphones",
+      "description": "Informal information request",
+      "success": true,
+      "response_time_ms": 2099.9,
+      "intent": "alerts_monitoring",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's what needs attention in our warehouse! 🔔\n\n⚠️ **LOW STOCK:**\n• **Bluetooth Headphones** - 8 Each left\n• **Office Chair** - 3 Each left\n\n💡 **Action needed**: Consider reordering 2 items",
+      "entities": {},
+      "data": {
+        "low_stock_count": 2,
+        "critical_count": 0,
+        "low_count": 2,
+        "items": [
+          {
+            "name": "Bluetooth Headphones",
+            "sku": "HEAD001",
+            "available": 8,
+            "status": "low"
+          },
+          {
+            "name": "Office Chair",
+            "sku": "CHAIR001",
+            "available": 3,
+            "status": "low"
+          }
+        ]
+      },
+      "suggestions": [
+        "Reorder critical items",
+        "View specific product",
+        "Update stock levels"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:13.119045",
+      "expected_intent": "inventory_check",
+      "intent_match": false,
+      "category": "Casual & Conversational Queries"
+    },
+    {
+      "query": "check SKU LAPTOP001",
+      "description": "Direct SKU query",
+      "success": true,
+      "response_time_ms": 2095.63,
+      "intent": "inventory_check",
+      "confidence": 0.9,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "**INVENTORY REPORT - STOCK ADEQUATE**\n\nProduct: Laptop\nSKU: LAPTOP001\nAvailable Quantity: 25 Each\nReserved Quantity: 0 Each\nTotal Inventory: 25 Each\nLocation: A1-01\nReorder Level: 10 Each\n\nStatus: STOCK ADEQUATE",
+      "entities": {
+        "product_name": "Sku Laptop001",
+        "sku": "LAPTOP001"
+      },
+      "data": {
+        "product": "Laptop",
+        "sku": "LAPTOP001",
+        "available": 25,
+        "reserved": 0,
+        "total": 25,
+        "status": "good",
+        "reorder_level": 10
+      },
+      "suggestions": [
+        "Update stock count if needed",
+        "Check product location",
+        "Review product details",
+        "Set up automated reordering"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:15.323002",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "SKU & Code-based Queries"
+    },
+    {
+      "query": "show me MOUSE001",
+      "description": "SKU display request",
+      "success": true,
+      "response_time_ms": 2107.91,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Good news! We've got plenty of **Wireless Mouse** ✅\n\n📦 Available: 45 Each\n🔒 Reserved: 0 Each\n📍 Location: A1-02\n\n💡 **Status**: Stock levels look healthy!",
+      "entities": {
+        "sku": "MOUSE001"
+      },
+      "data": {
+        "product": "Wireless Mouse",
+        "sku": "MOUSE001",
+        "available": 45,
+        "reserved": 0,
+        "total": 45,
+        "status": "good",
+        "reorder_level": 25
+      },
+      "suggestions": [
+        "Update stock count if needed",
+        "Check product location",
+        "Review product details",
+        "Set up automated reordering"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:17.529608",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "SKU & Code-based Queries"
+    },
+    {
+      "query": "what's the status of HEAD001?",
+      "description": "SKU status inquiry",
+      "success": true,
+      "response_time_ms": 2124.12,
+      "intent": "reporting_analytics",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's how things are looking in our warehouse!\n\n📦 **Inventory Overview:**\n• Total Products: 5\n• Total Value: $29,598.44\n• Low Stock Items: 2\n\n🚛 **Operations:**\n• Pending Inbound: 0 shipments\n• Pending Outbound: 0 orders\n• Recent Activity: 0 movements (7 days)\n\n👍 **Status**: Operations looking good!",
+      "entities": {},
+      "data": {
+        "inventory": {
+          "inventory": [
+            {
+              "product_id": 1,
+              "sku": "LAPTOP001",
+              "name": "Laptop",
+              "category": "Electronics",
+              "location": "A1-01",
+              "quantity": 25,
+              "reserved_quantity": 0,
+              "available_quantity": 25,
+              "reorder_level": 10,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            },
+            {
+              "product_id": 2,
+              "sku": "MOUSE001",
+              "name": "Wireless Mouse",
+              "category": "Electronics",
+              "location": "A1-02",
+              "quantity": 45,
+              "reserved_quantity": 0,
+              "available_quantity": 45,
+              "reorder_level": 25,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            },
+            {
+              "product_id": 3,
+              "sku": "HEAD001",
+              "name": "Bluetooth Headphones",
+              "category": "Electronics",
+              "location": "A1-03",
+              "quantity": 8,
+              "reserved_quantity": 0,
+              "available_quantity": 8,
+              "reorder_level": 15,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 4,
+              "sku": "CHAIR001",
+              "name": "Office Chair",
+              "category": "Furniture",
+              "location": "B1-01",
+              "quantity": 3,
+              "reserved_quantity": 0,
+              "available_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 5,
+              "sku": "WIDGET001",
+              "name": "Blue Widget",
+              "category": "Widgets",
+              "location": "C1-01",
+              "quantity": 75,
+              "reserved_quantity": 0,
+              "available_quantity": 75,
+              "reorder_level": 50,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            }
+          ],
+          "low_stock_alerts": [
+            {
+              "product_id": 3,
+              "sku": "HEAD001",
+              "name": "Bluetooth Headphones",
+              "category": "Electronics",
+              "location": "A1-03",
+              "quantity": 8,
+              "reserved_quantity": 0,
+              "available_quantity": 8,
+              "reorder_level": 15,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 4,
+              "sku": "CHAIR001",
+              "name": "Office Chair",
+              "category": "Furniture",
+              "location": "B1-01",
+              "quantity": 3,
+              "reserved_quantity": 0,
+              "available_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            }
+          ],
+          "total_products": 5,
+          "low_stock_count": 2
+        },
+        "operations": {
+          "pending_inbound": 0,
+          "pending_outbound": 0,
+          "recent_movements": 0
+        },
+        "total_value": 29598.44
+      },
+      "suggestions": [
+        "Check low stock",
+        "View detailed reports",
+        "Check operations"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:19.761991",
+      "expected_intent": "inventory_check",
+      "intent_match": false,
+      "category": "SKU & Code-based Queries"
+    },
+    {
+      "query": "look up product CHAIR001",
+      "description": "SKU lookup",
+      "success": true,
+      "response_time_ms": 2100.63,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Heads up! We're running low on **Office Chair** 🔔\n\n📦 Available: 3 Each\n🔒 Reserved: 0 Each\n📍 Location: B1-01\n⚠️ Reorder level: 5 Each\n\n💡 **Suggestion**: Might want to reorder soon!",
+      "entities": {
+        "sku": "CHAIR001"
+      },
+      "data": {
+        "product": "Office Chair",
+        "sku": "CHAIR001",
+        "available": 3,
+        "reserved": 0,
+        "total": 3,
+        "status": "low",
+        "reorder_level": 5
+      },
+      "suggestions": [
+        "Reorder this product soon",
+        "Check usage patterns",
+        "Adjust reorder levels",
+        "Review supplier lead times"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:21.964761",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "SKU & Code-based Queries"
+    },
+    {
+      "query": "check stock for LAPTOP001",
+      "description": "SKU stock check",
+      "success": true,
+      "response_time_ms": 2110.16,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Good news! We've got plenty of **Laptop** ✅\n\n📦 Available: 25 Each\n🔒 Reserved: 0 Each\n📍 Location: A1-01\n\n💡 **Status**: Stock levels look healthy!",
+      "entities": {
+        "product_name": "Stock For Laptop001",
+        "sku": "LAPTOP001"
+      },
+      "data": {
+        "product": "Laptop",
+        "sku": "LAPTOP001",
+        "available": 25,
+        "reserved": 0,
+        "total": 25,
+        "status": "good",
+        "reorder_level": 10
+      },
+      "suggestions": [
+        "Update stock count if needed",
+        "Check product location",
+        "Review product details",
+        "Set up automated reordering"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:24.176752",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "SKU & Code-based Queries"
+    },
+    {
+      "query": "show details for MOUSE001",
+      "description": "SKU details request",
+      "success": true,
+      "response_time_ms": 2121.2,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Good news! We've got plenty of **Wireless Mouse** ✅\n\n📦 Available: 45 Each\n🔒 Reserved: 0 Each\n📍 Location: A1-02\n\n💡 **Status**: Stock levels look healthy!",
+      "entities": {
+        "sku": "MOUSE001"
+      },
+      "data": {
+        "product": "Wireless Mouse",
+        "sku": "MOUSE001",
+        "available": 45,
+        "reserved": 0,
+        "total": 45,
+        "status": "good",
+        "reorder_level": 25
+      },
+      "suggestions": [
+        "Update stock count if needed",
+        "Check product location",
+        "Review product details",
+        "Set up automated reordering"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:26.403336",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "SKU & Code-based Queries"
+    },
+    {
+      "query": "find product with code HEAD001",
+      "description": "Code-based search",
+      "success": true,
+      "response_time_ms": 2079.0,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Heads up! We're running low on **Bluetooth Headphones** 🔔\n\n📦 Available: 8 Each\n🔒 Reserved: 0 Each\n📍 Location: A1-03\n⚠️ Reorder level: 15 Each\n\n💡 **Suggestion**: Might want to reorder soon!",
+      "entities": {
+        "sku": "HEAD001"
+      },
+      "data": {
+        "product": "Bluetooth Headphones",
+        "sku": "HEAD001",
+        "available": 8,
+        "reserved": 0,
+        "total": 8,
+        "status": "low",
+        "reorder_level": 15
+      },
+      "suggestions": [
+        "Reorder this product soon",
+        "Check usage patterns",
+        "Adjust reorder levels",
+        "Review supplier lead times"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:28.584229",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "SKU & Code-based Queries"
+    },
+    {
+      "query": "check item CHAIR001",
+      "description": "Item code check",
+      "success": true,
+      "response_time_ms": 2112.84,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Heads up! We're running low on **Office Chair** 🔔\n\n📦 Available: 3 Each\n🔒 Reserved: 0 Each\n📍 Location: B1-01\n⚠️ Reorder level: 5 Each\n\n💡 **Suggestion**: Might want to reorder soon!",
+      "entities": {
+        "product_name": "Item Chair001",
+        "sku": "CHAIR001"
+      },
+      "data": {
+        "product": "Office Chair",
+        "sku": "CHAIR001",
+        "available": 3,
+        "reserved": 0,
+        "total": 3,
+        "status": "low",
+        "reorder_level": 5
+      },
+      "suggestions": [
+        "Reorder this product soon",
+        "Check usage patterns",
+        "Adjust reorder levels",
+        "Review supplier lead times"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:30.804180",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "SKU & Code-based Queries"
+    },
+    {
+      "query": "what about SKU LAPTOP001?",
+      "description": "Casual SKU inquiry",
+      "success": true,
+      "response_time_ms": 2100.42,
+      "intent": "inventory_check",
+      "confidence": 0.9,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "**INVENTORY REPORT - STOCK ADEQUATE**\n\nProduct: Laptop\nSKU: LAPTOP001\nAvailable Quantity: 25 Each\nReserved Quantity: 0 Each\nTotal Inventory: 25 Each\nLocation: A1-01\nReorder Level: 10 Each\n\nStatus: STOCK ADEQUATE",
+      "entities": {
+        "sku": "LAPTOP001"
+      },
+      "data": {
+        "product": "Laptop",
+        "sku": "LAPTOP001",
+        "available": 25,
+        "reserved": 0,
+        "total": 25,
+        "status": "good",
+        "reorder_level": 10
+      },
+      "suggestions": [
+        "Update stock count if needed",
+        "Check product location",
+        "Review product details",
+        "Set up automated reordering"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:33.004283",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "SKU & Code-based Queries"
+    },
+    {
+      "query": "tell me about product MOUSE001",
+      "description": "Narrative SKU request",
+      "success": true,
+      "response_time_ms": 2107.74,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Good news! We've got plenty of **Wireless Mouse** ✅\n\n📦 Available: 45 Each\n🔒 Reserved: 0 Each\n📍 Location: A1-02\n\n💡 **Status**: Stock levels look healthy!",
+      "entities": {
+        "sku": "MOUSE001"
+      },
+      "data": {
+        "product": "Wireless Mouse",
+        "sku": "MOUSE001",
+        "available": 45,
+        "reserved": 0,
+        "total": 45,
+        "status": "good",
+        "reorder_level": 25
+      },
+      "suggestions": [
+        "Update stock count if needed",
+        "Check product location",
+        "Review product details",
+        "Set up automated reordering"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:35.217941",
+      "expected_intent": "inventory_check",
+      "intent_match": true,
+      "category": "SKU & Code-based Queries"
+    },
+    {
+      "query": "show me warehouse status",
+      "description": "Warehouse overview",
+      "success": true,
+      "response_time_ms": 2121.34,
+      "intent": "reporting_analytics",
+      "confidence": 0.9,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's how things are looking in our warehouse!\n\n📦 **Inventory Overview:**\n• Total Products: 5\n• Total Value: $29,598.44\n• Low Stock Items: 2\n\n🚛 **Operations:**\n• Pending Inbound: 0 shipments\n• Pending Outbound: 0 orders\n• Recent Activity: 0 movements (7 days)\n\n👍 **Status**: Operations looking good!",
+      "entities": {},
+      "data": {
+        "inventory": {
+          "inventory": [
+            {
+              "product_id": 1,
+              "sku": "LAPTOP001",
+              "name": "Laptop",
+              "category": "Electronics",
+              "location": "A1-01",
+              "quantity": 25,
+              "reserved_quantity": 0,
+              "available_quantity": 25,
+              "reorder_level": 10,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            },
+            {
+              "product_id": 2,
+              "sku": "MOUSE001",
+              "name": "Wireless Mouse",
+              "category": "Electronics",
+              "location": "A1-02",
+              "quantity": 45,
+              "reserved_quantity": 0,
+              "available_quantity": 45,
+              "reorder_level": 25,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            },
+            {
+              "product_id": 3,
+              "sku": "HEAD001",
+              "name": "Bluetooth Headphones",
+              "category": "Electronics",
+              "location": "A1-03",
+              "quantity": 8,
+              "reserved_quantity": 0,
+              "available_quantity": 8,
+              "reorder_level": 15,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 4,
+              "sku": "CHAIR001",
+              "name": "Office Chair",
+              "category": "Furniture",
+              "location": "B1-01",
+              "quantity": 3,
+              "reserved_quantity": 0,
+              "available_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 5,
+              "sku": "WIDGET001",
+              "name": "Blue Widget",
+              "category": "Widgets",
+              "location": "C1-01",
+              "quantity": 75,
+              "reserved_quantity": 0,
+              "available_quantity": 75,
+              "reorder_level": 50,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            }
+          ],
+          "low_stock_alerts": [
+            {
+              "product_id": 3,
+              "sku": "HEAD001",
+              "name": "Bluetooth Headphones",
+              "category": "Electronics",
+              "location": "A1-03",
+              "quantity": 8,
+              "reserved_quantity": 0,
+              "available_quantity": 8,
+              "reorder_level": 15,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 4,
+              "sku": "CHAIR001",
+              "name": "Office Chair",
+              "category": "Furniture",
+              "location": "B1-01",
+              "quantity": 3,
+              "reserved_quantity": 0,
+              "available_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            }
+          ],
+          "total_products": 5,
+          "low_stock_count": 2
+        },
+        "operations": {
+          "pending_inbound": 0,
+          "pending_outbound": 0,
+          "recent_movements": 0
+        },
+        "total_value": 29598.44
+      },
+      "suggestions": [
+        "Check low stock",
+        "View detailed reports",
+        "Check operations"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:37.450688",
+      "expected_intent": "reporting_analytics",
+      "intent_match": true,
+      "category": "Analytics & Reporting Queries"
+    },
+    {
+      "query": "generate inventory report",
+      "description": "Report generation",
+      "success": true,
+      "response_time_ms": 2111.54,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "**INVENTORY QUERY** - Additional information required\n\nPlease provide:\n• Product name or SKU code\n• Specific product identifier\n\nFormat examples:\n• 'Check stock SKU: PROD001'\n• 'Inventory status for Product Name'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:39.665008",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Analytics & Reporting Queries"
+    },
+    {
+      "query": "what's our warehouse performance?",
+      "description": "Performance inquiry",
+      "success": true,
+      "response_time_ms": 2106.28,
+      "intent": "general_query",
+      "confidence": 0.3,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'm here to help with your warehouse operations! 🏭\n\nI can check stock, process orders, handle deliveries, and much more.\n\nTry asking me something like:\n• 'Do we have any laptops?'\n• 'Process the delivery that just arrived'\n• 'Show me low stock alerts'\n\nOr just type 'help' to see everything I can do!",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Ask about stock levels",
+        "Check order status",
+        "Process a delivery",
+        "View alerts",
+        "Get help"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:41.875369",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Analytics & Reporting Queries"
+    },
+    {
+      "query": "show me the analytics",
+      "description": "Analytics request",
+      "success": true,
+      "response_time_ms": 2090.62,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:44.069017",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Analytics & Reporting Queries"
+    },
+    {
+      "query": "give me a summary",
+      "description": "Summary request",
+      "success": true,
+      "response_time_ms": 2115.75,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:46.283848",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Analytics & Reporting Queries"
+    },
+    {
+      "query": "how are we doing today?",
+      "description": "Performance check",
+      "success": true,
+      "response_time_ms": 2104.29,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {
+        "time_reference": "today"
+      },
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:48.490334",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Analytics & Reporting Queries"
+    },
+    {
+      "query": "show dashboard",
+      "description": "Dashboard request",
+      "success": true,
+      "response_time_ms": 2106.99,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:50.703636",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Analytics & Reporting Queries"
+    },
+    {
+      "query": "what are the metrics?",
+      "description": "Metrics inquiry",
+      "success": true,
+      "response_time_ms": 2090.6,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:52.890037",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Analytics & Reporting Queries"
+    },
+    {
+      "query": "display warehouse overview",
+      "description": "Overview request",
+      "success": true,
+      "response_time_ms": 2074.59,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:55.077539",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Analytics & Reporting Queries"
+    },
+    {
+      "query": "show me key statistics",
+      "description": "Statistics request",
+      "success": true,
+      "response_time_ms": 2060.49,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:57.239172",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Analytics & Reporting Queries"
+    },
+    {
+      "query": "how are operations today?",
+      "description": "Daily operations check",
+      "success": true,
+      "response_time_ms": 2099.97,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {
+        "time_reference": "today"
+      },
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:53:59.441668",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Operations & Status Queries"
+    },
+    {
+      "query": "what's happening in the warehouse?",
+      "description": "Activity inquiry",
+      "success": true,
+      "response_time_ms": 2093.99,
+      "intent": "reporting_analytics",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's how things are looking in our warehouse!\n\n📦 **Inventory Overview:**\n• Total Products: 5\n• Total Value: $29,598.44\n• Low Stock Items: 2\n\n🚛 **Operations:**\n• Pending Inbound: 0 shipments\n• Pending Outbound: 0 orders\n• Recent Activity: 0 movements (7 days)\n\n👍 **Status**: Operations looking good!",
+      "entities": {},
+      "data": {
+        "inventory": {
+          "inventory": [
+            {
+              "product_id": 1,
+              "sku": "LAPTOP001",
+              "name": "Laptop",
+              "category": "Electronics",
+              "location": "A1-01",
+              "quantity": 25,
+              "reserved_quantity": 0,
+              "available_quantity": 25,
+              "reorder_level": 10,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            },
+            {
+              "product_id": 2,
+              "sku": "MOUSE001",
+              "name": "Wireless Mouse",
+              "category": "Electronics",
+              "location": "A1-02",
+              "quantity": 45,
+              "reserved_quantity": 0,
+              "available_quantity": 45,
+              "reorder_level": 25,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            },
+            {
+              "product_id": 3,
+              "sku": "HEAD001",
+              "name": "Bluetooth Headphones",
+              "category": "Electronics",
+              "location": "A1-03",
+              "quantity": 8,
+              "reserved_quantity": 0,
+              "available_quantity": 8,
+              "reorder_level": 15,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 4,
+              "sku": "CHAIR001",
+              "name": "Office Chair",
+              "category": "Furniture",
+              "location": "B1-01",
+              "quantity": 3,
+              "reserved_quantity": 0,
+              "available_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 5,
+              "sku": "WIDGET001",
+              "name": "Blue Widget",
+              "category": "Widgets",
+              "location": "C1-01",
+              "quantity": 75,
+              "reserved_quantity": 0,
+              "available_quantity": 75,
+              "reorder_level": 50,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            }
+          ],
+          "low_stock_alerts": [
+            {
+              "product_id": 3,
+              "sku": "HEAD001",
+              "name": "Bluetooth Headphones",
+              "category": "Electronics",
+              "location": "A1-03",
+              "quantity": 8,
+              "reserved_quantity": 0,
+              "available_quantity": 8,
+              "reorder_level": 15,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 4,
+              "sku": "CHAIR001",
+              "name": "Office Chair",
+              "category": "Furniture",
+              "location": "B1-01",
+              "quantity": 3,
+              "reserved_quantity": 0,
+              "available_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            }
+          ],
+          "total_products": 5,
+          "low_stock_count": 2
+        },
+        "operations": {
+          "pending_inbound": 0,
+          "pending_outbound": 0,
+          "recent_movements": 0
+        },
+        "total_value": 29598.44
+      },
+      "suggestions": [
+        "Check low stock",
+        "View detailed reports",
+        "Check operations"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:01.634256",
+      "expected_intent": "reporting_analytics",
+      "intent_match": true,
+      "category": "Operations & Status Queries"
+    },
+    {
+      "query": "show me today's activities",
+      "description": "Daily activity request",
+      "success": true,
+      "response_time_ms": 2073.27,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {
+        "time_reference": "today"
+      },
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:03.812766",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Operations & Status Queries"
+    },
+    {
+      "query": "any deliveries today?",
+      "description": "Delivery inquiry",
+      "success": true,
+      "response_time_ms": 2081.08,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {
+        "time_reference": "today"
+      },
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:05.997165",
+      "expected_intent": "operations_check",
+      "intent_match": false,
+      "category": "Operations & Status Queries"
+    },
+    {
+      "query": "what's the warehouse status?",
+      "description": "Status inquiry",
+      "success": true,
+      "response_time_ms": 2073.5,
+      "intent": "reporting_analytics",
+      "confidence": 0.9,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's how things are looking in our warehouse!\n\n📦 **Inventory Overview:**\n• Total Products: 5\n• Total Value: $29,598.44\n• Low Stock Items: 2\n\n🚛 **Operations:**\n• Pending Inbound: 0 shipments\n• Pending Outbound: 0 orders\n• Recent Activity: 0 movements (7 days)\n\n👍 **Status**: Operations looking good!",
+      "entities": {},
+      "data": {
+        "inventory": {
+          "inventory": [
+            {
+              "product_id": 1,
+              "sku": "LAPTOP001",
+              "name": "Laptop",
+              "category": "Electronics",
+              "location": "A1-01",
+              "quantity": 25,
+              "reserved_quantity": 0,
+              "available_quantity": 25,
+              "reorder_level": 10,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            },
+            {
+              "product_id": 2,
+              "sku": "MOUSE001",
+              "name": "Wireless Mouse",
+              "category": "Electronics",
+              "location": "A1-02",
+              "quantity": 45,
+              "reserved_quantity": 0,
+              "available_quantity": 45,
+              "reorder_level": 25,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            },
+            {
+              "product_id": 3,
+              "sku": "HEAD001",
+              "name": "Bluetooth Headphones",
+              "category": "Electronics",
+              "location": "A1-03",
+              "quantity": 8,
+              "reserved_quantity": 0,
+              "available_quantity": 8,
+              "reorder_level": 15,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 4,
+              "sku": "CHAIR001",
+              "name": "Office Chair",
+              "category": "Furniture",
+              "location": "B1-01",
+              "quantity": 3,
+              "reserved_quantity": 0,
+              "available_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 5,
+              "sku": "WIDGET001",
+              "name": "Blue Widget",
+              "category": "Widgets",
+              "location": "C1-01",
+              "quantity": 75,
+              "reserved_quantity": 0,
+              "available_quantity": 75,
+              "reorder_level": 50,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            }
+          ],
+          "low_stock_alerts": [
+            {
+              "product_id": 3,
+              "sku": "HEAD001",
+              "name": "Bluetooth Headphones",
+              "category": "Electronics",
+              "location": "A1-03",
+              "quantity": 8,
+              "reserved_quantity": 0,
+              "available_quantity": 8,
+              "reorder_level": 15,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 4,
+              "sku": "CHAIR001",
+              "name": "Office Chair",
+              "category": "Furniture",
+              "location": "B1-01",
+              "quantity": 3,
+              "reserved_quantity": 0,
+              "available_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            }
+          ],
+          "total_products": 5,
+          "low_stock_count": 2
+        },
+        "operations": {
+          "pending_inbound": 0,
+          "pending_outbound": 0,
+          "recent_movements": 0
+        },
+        "total_value": 29598.44
+      },
+      "suggestions": [
+        "Check low stock",
+        "View detailed reports",
+        "Check operations"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:08.174936",
+      "expected_intent": "reporting_analytics",
+      "intent_match": true,
+      "category": "Operations & Status Queries"
+    },
+    {
+      "query": "how is everything running?",
+      "description": "General operations check",
+      "success": true,
+      "response_time_ms": 2107.64,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:10.379536",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Operations & Status Queries"
+    },
+    {
+      "query": "show me current operations",
+      "description": "Operations overview",
+      "success": true,
+      "response_time_ms": 2107.27,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:12.595213",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Operations & Status Queries"
+    },
+    {
+      "query": "what's going on today?",
+      "description": "Activity summary",
+      "success": true,
+      "response_time_ms": 2103.79,
+      "intent": "general_query",
+      "confidence": 0.3,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'm here to help with your warehouse operations! 🏭\n\nI can check stock, process orders, handle deliveries, and much more.\n\nTry asking me something like:\n• 'Do we have any laptops?'\n• 'Process the delivery that just arrived'\n• 'Show me low stock alerts'\n\nOr just type 'help' to see everything I can do!",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Ask about stock levels",
+        "Check order status",
+        "Process a delivery",
+        "View alerts",
+        "Get help"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:14.808807",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Operations & Status Queries"
+    },
+    {
+      "query": "any issues with operations?",
+      "description": "Issue identification",
+      "success": true,
+      "response_time_ms": 2097.79,
+      "intent": "alerts_monitoring",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's what needs attention in our warehouse! 🔔\n\n⚠️ **LOW STOCK:**\n• **Bluetooth Headphones** - 8 Each left\n• **Office Chair** - 3 Each left\n\n💡 **Action needed**: Consider reordering 2 items",
+      "entities": {},
+      "data": {
+        "low_stock_count": 2,
+        "critical_count": 0,
+        "low_count": 2,
+        "items": [
+          {
+            "name": "Bluetooth Headphones",
+            "sku": "HEAD001",
+            "available": 8,
+            "status": "low"
+          },
+          {
+            "name": "Office Chair",
+            "sku": "CHAIR001",
+            "available": 3,
+            "status": "low"
+          }
+        ]
+      },
+      "suggestions": [
+        "Reorder critical items",
+        "View specific product",
+        "Update stock levels"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:17.007734",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Operations & Status Queries"
+    },
+    {
+      "query": "how smooth are operations?",
+      "description": "Operations quality check",
+      "success": true,
+      "response_time_ms": 2108.8,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:19.217777",
+      "expected_intent": "reporting_analytics",
+      "intent_match": false,
+      "category": "Operations & Status Queries"
+    },
+    {
+      "query": "help",
+      "description": "Basic help request",
+      "success": true,
+      "response_time_ms": 2112.12,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:21.440808",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "what can you do?",
+      "description": "Capability inquiry",
+      "success": true,
+      "response_time_ms": 2103.04,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd be happy to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:23.646208",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "how do I use this?",
+      "description": "Usage inquiry",
+      "success": true,
+      "response_time_ms": 2104.32,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:25.854996",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "what features are available?",
+      "description": "Feature inquiry",
+      "success": true,
+      "response_time_ms": 2085.31,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:28.042773",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "can you help me?",
+      "description": "Help request",
+      "success": true,
+      "response_time_ms": 2095.64,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd be happy to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:30.240786",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "what commands work?",
+      "description": "Command inquiry",
+      "success": true,
+      "response_time_ms": 2124.18,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:32.466351",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "show me examples",
+      "description": "Example request",
+      "success": true,
+      "response_time_ms": 2087.96,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:34.658632",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "how does this work?",
+      "description": "Functionality inquiry",
+      "success": true,
+      "response_time_ms": 2097.9,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:36.857265",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "what are your capabilities?",
+      "description": "Capability question",
+      "success": true,
+      "response_time_ms": 2089.14,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:39.058680",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "guide me",
+      "description": "Guidance request",
+      "success": true,
+      "response_time_ms": 2082.87,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:41.245480",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "I need assistance",
+      "description": "Assistance request",
+      "success": true,
+      "response_time_ms": 2107.0,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:43.455323",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "what can I ask you?",
+      "description": "Query scope inquiry",
+      "success": true,
+      "response_time_ms": 2095.82,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:45.657767",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "show me what you can do",
+      "description": "Demonstration request",
+      "success": true,
+      "response_time_ms": 2079.64,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:47.840684",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Help & Support Queries"
+    },
+    {
+      "query": "",
+      "description": "Empty query",
+      "success": true,
+      "response_time_ms": 2061.93,
+      "intent": "empty_input",
+      "confidence": 1.0,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "I didn't receive a message. Please try asking me something about your warehouse operations.",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Check inventory",
+        "View alerts",
+        "Get help",
+        "System status"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:50.004346",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "check nonexistent product",
+      "description": "Non-existent product",
+      "success": true,
+      "response_time_ms": 2099.47,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "Hmm, I couldn't find anything for 'Nonexistent Product' 🤔\n\n💡 **Try these instead:**\n• Use the exact product name\n• Try a SKU code (like PROD001)\n• Check for typos\n• Ask me to 'show all products'",
+      "entities": {
+        "product_name": "Nonexistent Product"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:52.207457",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "find product XYZ123",
+      "description": "Invalid product code",
+      "success": true,
+      "response_time_ms": 2105.59,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "Hmm, I couldn't find anything for 'XYZ123' 🤔\n\n💡 **Try these instead:**\n• Use the exact product name\n• Try a SKU code (like PROD001)\n• Check for typos\n• Ask me to 'show all products'",
+      "entities": {
+        "sku": "XYZ123"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:54.415262",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "show me unicorns",
+      "description": "Nonsense product",
+      "success": true,
+      "response_time_ms": 2120.24,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:56.634955",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "asdfghjkl",
+      "description": "Random characters",
+      "success": true,
+      "response_time_ms": 2100.95,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:54:58.840954",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "check product with very long name that doesn't exist",
+      "description": "Long non-existent product",
+      "success": true,
+      "response_time_ms": 2075.37,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "Hmm, I couldn't find anything for 'Product With Very Long Name That Doesn'T Exist' 🤔\n\n💡 **Try these instead:**\n• Use the exact product name\n• Try a SKU code (like PROD001)\n• Check for typos\n• Ask me to 'show all products'",
+      "entities": {
+        "product_name": "Product With Very Long Name That Doesn'T Exist"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:01.017361",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "find something",
+      "description": "Vague request",
+      "success": true,
+      "response_time_ms": 2085.31,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:03.204985",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "show me everything about nothing",
+      "description": "Contradictory request",
+      "success": true,
+      "response_time_ms": 2080.56,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:05.390603",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "check inventory for mars rovers",
+      "description": "Impossible product",
+      "success": true,
+      "response_time_ms": 2065.17,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "**PRODUCT SEARCH RESULT**: No matches found\n\nSearch term: 'Inventory For Mars Rovers'\nRecommendations:\n• Verify product name or SKU code\n• Use exact product naming\n• Check product database integrity",
+      "entities": {
+        "product_name": "Inventory For Mars Rovers"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:07.554795",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "123456789",
+      "description": "Numbers only",
+      "success": true,
+      "response_time_ms": 2090.07,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:09.749855",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "!@#$%^&*()",
+      "description": "Special characters only",
+      "success": true,
+      "response_time_ms": 2097.52,
+      "intent": "general_query",
+      "confidence": 0.3,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'm here to help with your warehouse operations! 🏭\n\nI can check stock, process orders, handle deliveries, and much more.\n\nTry asking me something like:\n• 'Do we have any laptops?'\n• 'Process the delivery that just arrived'\n• 'Show me low stock alerts'\n\nOr just type 'help' to see everything I can do!",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Ask about stock levels",
+        "Check order status",
+        "Process a delivery",
+        "View alerts",
+        "Get help"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:11.945947",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "find . . . .",
+      "description": "Dots only",
+      "success": true,
+      "response_time_ms": 2101.09,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:14.156816",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Edge Cases & Error Handling"
+    },
+    {
+      "query": "show me low stock items and generate a report",
+      "description": "Multi-intent query",
+      "success": true,
+      "response_time_ms": 2136.17,
+      "intent": "alerts_monitoring",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's what needs attention in our warehouse! 🔔\n\n⚠️ **LOW STOCK:**\n• **Bluetooth Headphones** - 8 Each left\n• **Office Chair** - 3 Each left\n\n💡 **Action needed**: Consider reordering 2 items",
+      "entities": {},
+      "data": {
+        "low_stock_count": 2,
+        "critical_count": 0,
+        "low_count": 2,
+        "items": [
+          {
+            "name": "Bluetooth Headphones",
+            "sku": "HEAD001",
+            "available": 8,
+            "status": "low"
+          },
+          {
+            "name": "Office Chair",
+            "sku": "CHAIR001",
+            "available": 3,
+            "status": "low"
+          }
+        ]
+      },
+      "suggestions": [
+        "Reorder critical items",
+        "View specific product",
+        "Update stock levels"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:16.391925",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Complex & Multi-intent Queries"
+    },
+    {
+      "query": "check bluetooth headphones and tell me if we need more",
+      "description": "Complex inquiry",
+      "success": true,
+      "response_time_ms": 2103.16,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Heads up! We're running low on **Bluetooth Headphones** 🔔\n\n📦 Available: 8 Each\n🔒 Reserved: 0 Each\n📍 Location: A1-03\n⚠️ Reorder level: 15 Each\n\n💡 **Suggestion**: Might want to reorder soon!",
+      "entities": {
+        "product_name": "Bluetooth Headphones And Tell Me If We Need More"
+      },
+      "data": {
+        "product": "Bluetooth Headphones",
+        "sku": "HEAD001",
+        "available": 8,
+        "reserved": 0,
+        "total": 8,
+        "status": "low",
+        "reorder_level": 15
+      },
+      "suggestions": [
+        "Reorder this product soon",
+        "Check usage patterns",
+        "Adjust reorder levels",
+        "Review supplier lead times"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:18.601155",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Complex & Multi-intent Queries"
+    },
+    {
+      "query": "what items are low and how can I fix it?",
+      "description": "Problem + solution query",
+      "success": true,
+      "response_time_ms": 2109.38,
+      "intent": "alerts_monitoring",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Here's what needs attention in our warehouse! 🔔\n\n⚠️ **LOW STOCK:**\n• **Bluetooth Headphones** - 8 Each left\n• **Office Chair** - 3 Each left\n\n💡 **Action needed**: Consider reordering 2 items",
+      "entities": {},
+      "data": {
+        "low_stock_count": 2,
+        "critical_count": 0,
+        "low_count": 2,
+        "items": [
+          {
+            "name": "Bluetooth Headphones",
+            "sku": "HEAD001",
+            "available": 8,
+            "status": "low"
+          },
+          {
+            "name": "Office Chair",
+            "sku": "CHAIR001",
+            "available": 3,
+            "status": "low"
+          }
+        ]
+      },
+      "suggestions": [
+        "Reorder critical items",
+        "View specific product",
+        "Update stock levels"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:20.813754",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Complex & Multi-intent Queries"
+    },
+    {
+      "query": "show warehouse status and highlight problems",
+      "description": "Status + analysis",
+      "success": true,
+      "response_time_ms": 2114.93,
+      "intent": "reporting_analytics",
+      "confidence": 0.9,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hey there! Here's how things are looking in our warehouse!\n\n📦 **Inventory Overview:**\n• Total Products: 5\n• Total Value: $29,598.44\n• Low Stock Items: 2\n\n🚛 **Operations:**\n• Pending Inbound: 0 shipments\n• Pending Outbound: 0 orders\n• Recent Activity: 0 movements (7 days)\n\n👍 **Status**: Operations looking good!",
+      "entities": {},
+      "data": {
+        "inventory": {
+          "inventory": [
+            {
+              "product_id": 1,
+              "sku": "LAPTOP001",
+              "name": "Laptop",
+              "category": "Electronics",
+              "location": "A1-01",
+              "quantity": 25,
+              "reserved_quantity": 0,
+              "available_quantity": 25,
+              "reorder_level": 10,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            },
+            {
+              "product_id": 2,
+              "sku": "MOUSE001",
+              "name": "Wireless Mouse",
+              "category": "Electronics",
+              "location": "A1-02",
+              "quantity": 45,
+              "reserved_quantity": 0,
+              "available_quantity": 45,
+              "reorder_level": 25,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            },
+            {
+              "product_id": 3,
+              "sku": "HEAD001",
+              "name": "Bluetooth Headphones",
+              "category": "Electronics",
+              "location": "A1-03",
+              "quantity": 8,
+              "reserved_quantity": 0,
+              "available_quantity": 8,
+              "reorder_level": 15,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 4,
+              "sku": "CHAIR001",
+              "name": "Office Chair",
+              "category": "Furniture",
+              "location": "B1-01",
+              "quantity": 3,
+              "reserved_quantity": 0,
+              "available_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 5,
+              "sku": "WIDGET001",
+              "name": "Blue Widget",
+              "category": "Widgets",
+              "location": "C1-01",
+              "quantity": 75,
+              "reserved_quantity": 0,
+              "available_quantity": 75,
+              "reorder_level": 50,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": false
+            }
+          ],
+          "low_stock_alerts": [
+            {
+              "product_id": 3,
+              "sku": "HEAD001",
+              "name": "Bluetooth Headphones",
+              "category": "Electronics",
+              "location": "A1-03",
+              "quantity": 8,
+              "reserved_quantity": 0,
+              "available_quantity": 8,
+              "reorder_level": 15,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            },
+            {
+              "product_id": 4,
+              "sku": "CHAIR001",
+              "name": "Office Chair",
+              "category": "Furniture",
+              "location": "B1-01",
+              "quantity": 3,
+              "reserved_quantity": 0,
+              "available_quantity": 3,
+              "reorder_level": 5,
+              "last_updated": "2025-07-20T07:37:37.602544",
+              "needs_reorder": true
+            }
+          ],
+          "total_products": 5,
+          "low_stock_count": 2
+        },
+        "operations": {
+          "pending_inbound": 0,
+          "pending_outbound": 0,
+          "recent_movements": 0
+        },
+        "total_value": 29598.44
+      },
+      "suggestions": [
+        "Check low stock",
+        "View detailed reports",
+        "Check operations"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:23.029208",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Complex & Multi-intent Queries"
+    },
+    {
+      "query": "find all electronics and check their stock levels",
+      "description": "Category + analysis",
+      "success": true,
+      "response_time_ms": 2094.02,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "Hmm, I couldn't find anything for 'Their' 🤔\n\n💡 **Try these instead:**\n• Use the exact product name\n• Try a SKU code (like PROD001)\n• Check for typos\n• Ask me to 'show all products'",
+      "entities": {
+        "product_name": "Their"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:25.232933",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Complex & Multi-intent Queries"
+    },
+    {
+      "query": "tell me about inventory and suggest improvements",
+      "description": "Info + recommendation",
+      "success": true,
+      "response_time_ms": 2083.93,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "**INVENTORY QUERY** - Additional information required\n\nPlease provide:\n• Product name or SKU code\n• Specific product identifier\n\nFormat examples:\n• 'Check stock SKU: PROD001'\n• 'Inventory status for Product Name'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:27.426258",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Complex & Multi-intent Queries"
+    },
+    {
+      "query": "check all products that need attention today",
+      "description": "Time-bound complex query",
+      "success": true,
+      "response_time_ms": 2062.1,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": false,
+      "enhanced_mode": true,
+      "message": "Hmm, I couldn't find anything for 'All Products That Need Attention Today' 🤔\n\n💡 **Try these instead:**\n• Use the exact product name\n• Try a SKU code (like PROD001)\n• Check for typos\n• Ask me to 'show all products'",
+      "entities": {
+        "product_name": "All Products That Need Attention Today",
+        "time_reference": "today"
+      },
+      "data": null,
+      "suggestions": [
+        "Try different search terms",
+        "View all products",
+        "Check product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:29.586763",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Complex & Multi-intent Queries"
+    },
+    {
+      "query": "show me everything that's wrong with our inventory",
+      "description": "Comprehensive problem query",
+      "success": true,
+      "response_time_ms": 2111.19,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "Hello. **INVENTORY QUERY** - Additional information required\n\nPlease provide:\n• Product name or SKU code\n• Specific product identifier\n\nFormat examples:\n• 'Check stock SKU: PROD001'\n• 'Inventory status for Product Name'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:31.790896",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Complex & Multi-intent Queries"
+    },
+    {
+      "query": "analyze our stock and tell me what to do",
+      "description": "Analysis + action request",
+      "success": true,
+      "response_time_ms": 2070.76,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:33.974594",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Complex & Multi-intent Queries"
+    },
+    {
+      "query": "give me a complete picture of warehouse operations",
+      "description": "Comprehensive overview",
+      "success": true,
+      "response_time_ms": 2119.97,
+      "intent": "inventory_check",
+      "confidence": 0.8,
+      "success_status": true,
+      "enhanced_mode": true,
+      "message": "I'd love to help you check stock! 😊\n\nCould you tell me which product you're asking about?\n\n💡 **You can say things like:**\n• 'Check stock for blue widgets'\n• 'Do we have any PROD001?'\n• 'How much inventory for laptops?'\n• 'Show me SKU WIDGET001'",
+      "entities": {},
+      "data": null,
+      "suggestions": [
+        "Specify product name",
+        "Use SKU code",
+        "Browse product catalog"
+      ],
+      "actions": [],
+      "timestamp": "2025-07-20T08:55:36.195343",
+      "expected_intent": null,
+      "intent_match": true,
+      "category": "Complex & Multi-intent Queries"
+    }
+  ]
+}
