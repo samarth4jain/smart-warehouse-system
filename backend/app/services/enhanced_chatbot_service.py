@@ -10,7 +10,7 @@ from datetime import datetime
 
 from ..models.database_models import ChatMessage, Product, Inventory
 from .enhanced_smart_llm_service import EnhancedSmartLLMService
-from .rag_service import WarehouseRAGService
+from .enhanced_rag_service import EnhancedWarehouseRAGService
 from .inventory_service import InventoryService
 from .inbound_service import InboundService
 from .outbound_service import OutboundService
@@ -57,13 +57,13 @@ class EnhancedChatbotService:
         )
     
     def _initialize_services(self):
-        """Initialize LLM and RAG services"""
+        """Initialize LLM and Enhanced RAG services"""
         try:
             self.llm_service = EnhancedSmartLLMService()
-            self.rag_service = WarehouseRAGService(self.db)
-            logger.info("Enhanced chatbot services initialized")
+            self.rag_service = EnhancedWarehouseRAGService(self.db)
+            logger.info("Enhanced chatbot services with advanced RAG initialized")
         except Exception as e:
-            logger.error(f"Failed to initialize chatbot services: {str(e)}")
+            logger.error(f"Failed to initialize enhanced chatbot services: {str(e)}")
             # Fall back to rule-based system if needed
             self.llm_service = None
             self.rag_service = None
@@ -145,31 +145,48 @@ Process this operation and provide a clear response:""",
         )
     
     def process_message(self, user_message: str, session_id: str = "default", user_id: str = "anonymous") -> Dict:
-        """Process user message using LLM with RAG"""
+        """Process user message using Enhanced RAG with Natural Language Operations"""
         try:
-            # First, try to detect if this is a specific warehouse operation
-            operation_result = self._try_warehouse_operation(user_message)
-            
-            if operation_result:
-                # If operation was performed, use LLM to generate a natural response
-                response = self._generate_operation_response(user_message, operation_result)
+            # Use enhanced RAG service for all natural language processing
+            if self.rag_service:
+                # Extract user_id as integer if possible
+                user_id_int = None
+                try:
+                    if user_id and user_id != "anonymous":
+                        user_id_int = int(user_id) if user_id.isdigit() else None
+                except:
+                    user_id_int = None
+                
+                # Process query with enhanced RAG
+                rag_result = self.rag_service.process_natural_language_query(user_message, user_id_int)
+                
+                # Format response based on RAG result
+                if rag_result.get("success", False):
+                    response = self._format_rag_response(rag_result, user_message)
+                else:
+                    response = self._format_error_response(rag_result, user_message)
             else:
-                # Use RAG + LLM for general queries
-                response = self._generate_rag_response(user_message)
+                # Fallback to basic processing
+                response = self._fallback_response(user_message)
             
-            # Save chat message (temporarily skip database save to avoid schema issues)
-            # TODO: Fix database schema alignment
-            # chat_message = ChatMessage(
-            #     user_message=user_message,
-            #     bot_response=response["message"],
-            #     intent=response.get("intent", "llm_response"),
-            #     action_taken=response.get("action_taken", "llm_generation"),
-            #     success=response.get("success", True),
-            #     session_id=session_id,
-            #     user_id=user_id
-            # )
-            # self.db.add(chat_message)
-            # self.db.commit()
+            # Save chat message to database
+            try:
+                chat_message = ChatMessage(
+                    user_message=user_message,
+                    bot_response=response["message"],
+                    intent=response.get("intent", "general"),
+                    action_taken=response.get("action_taken", "response_generation"),
+                    success=response.get("success", True),
+                    confidence_score=response.get("confidence", 0.8),
+                    processing_time=response.get("processing_time", 0.1),
+                    enhanced_mode=True,
+                    session_id=1,  # Default session for now
+                    user_id=1      # Default user for now
+                )
+                self.db.add(chat_message)
+                self.db.commit()
+            except Exception as e:
+                logger.warning(f"Could not save chat message: {str(e)}")
             
             # Update conversation memory
             self.memory.save_context(
@@ -182,6 +199,173 @@ Process this operation and provide a clear response:""",
         except Exception as e:
             logger.error(f"Error processing message: {str(e)}")
             return self._fallback_response(user_message)
+    
+    def _format_rag_response(self, rag_result: Dict, user_message: str) -> Dict:
+        """Format enhanced RAG response for user"""
+        
+        intent = rag_result.get("intent", "general")
+        action = rag_result.get("action", "response")
+        data = rag_result.get("data", {})
+        
+        # Format message based on intent and action
+        if intent == "stock_check":
+            if action == "query" and isinstance(data, list):
+                if len(data) == 0:
+                    message = "No products found matching your criteria."
+                elif len(data) == 1:
+                    item = data[0]
+                    alert_text = f" ⚠️ {rag_result.get('alert', '')}" if rag_result.get('alert') else ""
+                    message = f"📦 **{item['sku']} - {item['name']}**\n\n" \
+                             f"Available: **{item['available']} units**\n" \
+                             f"Total Stock: {item['total']} units\n" \
+                             f"Reserved: {item['reserved']} units\n" \
+                             f"Location: {item['location']}\n" \
+                             f"Reorder Level: {item['reorder_level']}{alert_text}"
+                else:
+                    message = f"📊 **Stock Levels ({len(data)} products)**\n\n"
+                    for item in data[:5]:  # Show first 5
+                        status = "⚠️ LOW" if item['available'] <= item['reorder_level'] else "✅ OK"
+                        message += f"• **{item['sku']}**: {item['available']} units {status}\n"
+                    if len(data) > 5:
+                        message += f"\n... and {len(data) - 5} more products"
+            else:
+                message = rag_result.get("message", "Stock information retrieved")
+                if isinstance(data, dict):
+                    alert_text = f" ⚠️ {rag_result.get('alert', '')}" if rag_result.get('alert') else ""
+                    message = f"📦 **{data['sku']} - {data['name']}**\n\n" \
+                             f"Available: **{data['available']} units**\n" \
+                             f"Total Stock: {data['total']} units\n" \
+                             f"Reserved: {data['reserved']} units\n" \
+                             f"Location: {data['location']}\n" \
+                             f"Price: ${data.get('unit_price', 0):.2f}\n" \
+                             f"Category: {data.get('category', 'N/A')}{alert_text}"
+        
+        elif intent == "add_stock":
+            if action == "insert":
+                message = f"✅ **Stock Added Successfully**\n\n" \
+                         f"Product: **{data['sku']} - {data['name']}**\n" \
+                         f"Added: +{data['added_quantity']} units\n" \
+                         f"New Total: {data['new_total']} units\n" \
+                         f"Available: {data['new_available']} units\n\n" \
+                         f"Stock movement recorded in system."
+            else:
+                message = rag_result.get("message", "Stock addition processed")
+        
+        elif intent == "remove_stock":
+            if action == "update":
+                alert_text = f"\n⚠️ {rag_result.get('alert', '')}" if rag_result.get('alert') else ""
+                message = f"✅ **Stock Removed Successfully**\n\n" \
+                         f"Product: **{data['sku']} - {data['name']}**\n" \
+                         f"Removed: -{data['removed_quantity']} units\n" \
+                         f"New Total: {data['new_total']} units\n" \
+                         f"Available: {data['new_available']} units{alert_text}"
+            elif action == "insufficient_stock":
+                message = f"❌ **Insufficient Stock**\n\n" \
+                         f"Product: **{data['sku']}**\n" \
+                         f"Available: {data['available']} units\n" \
+                         f"Requested: {data['requested']} units\n\n" \
+                         f"Cannot remove more than available stock."
+            else:
+                message = rag_result.get("message", "Stock removal processed")
+        
+        elif intent == "set_stock":
+            if action == "update":
+                message = f"✅ **Stock Level Updated**\n\n" \
+                         f"Product: **{data['sku']} - {data['name']}**\n" \
+                         f"Previous: {data['old_quantity']} units\n" \
+                         f"New Total: {data['new_quantity']} units\n" \
+                         f"Available: {data['available']} units\n" \
+                         f"Change: {'+' if data['change'] >= 0 else ''}{data['change']} units"
+            else:
+                message = rag_result.get("message", "Stock level updated")
+        
+        elif intent == "delete_product":
+            if action == "delete":
+                message = f"🗑️ **Product Deleted**\n\n" \
+                         f"SKU: **{data['sku']}**\n" \
+                         f"Name: {data['name']}\n" \
+                         f"Category: {data['category']}\n\n" \
+                         f"Product has been permanently removed from the system."
+            elif action == "warning":
+                message = f"⚠️ **Cannot Delete Product**\n\n" \
+                         f"Product: **{data['sku']} - {data['name']}**\n" \
+                         f"Current Stock: {data['current_stock']} units\n\n" \
+                         f"Please deplete stock to zero before deletion.\n" \
+                         f"Suggestion: {data['suggestion']}"
+            else:
+                message = rag_result.get("message", "Product deletion processed")
+        
+        elif intent == "low_stock":
+            if isinstance(data, list) and len(data) > 0:
+                message = f"⚠️ **Low Stock Alert ({len(data)} products)**\n\n"
+                for item in data[:5]:
+                    urgency_emoji = "🔴" if item['urgency'] == "CRITICAL" else "🟡"
+                    message += f"{urgency_emoji} **{item['sku']}**: {item['current_stock']}/{item['reorder_level']} units\n"
+                    message += f"   📍 {item['location']} | Suggested: {item['suggested_reorder']} units\n\n"
+                if len(data) > 5:
+                    message += f"... and {len(data) - 5} more products need attention"
+            else:
+                message = rag_result.get("message", "✅ No low stock issues found")
+        
+        elif intent == "demand_forecast":
+            if isinstance(data, list) and len(data) > 0:
+                message = f"📈 **Demand Forecast ({len(data)} products)**\n\n"
+                for item in data[:5]:
+                    message += f"• **{item['sku']}**: {item['predicted_demand']} units\n"
+                    message += f"  Confidence: {item['confidence']} | Period: {item['forecast_type']}\n\n"
+            else:
+                message = rag_result.get("message", "Demand forecasting data not available")
+        
+        elif intent == "alerts":
+            if isinstance(data, list) and len(data) > 0:
+                message = f"🚨 **Active Alerts ({len(data)} items)**\n\n"
+                for alert in data[:5]:
+                    severity_emoji = {"critical": "🔴", "high": "🟠", "medium": "🟡", "low": "🟢"}.get(alert['severity'], "⚪")
+                    message += f"{severity_emoji} **{alert['sku']}** - {alert['alert_type'].title()}\n"
+                    message += f"   {alert['message'][:80]}...\n\n"
+            else:
+                message = rag_result.get("message", "No active alerts")
+        
+        else:
+            # General query or other intents
+            message = rag_result.get("message", "Query processed")
+            if rag_result.get("context"):
+                # Include context for general RAG responses
+                message += f"\n\n📚 **Related Information:**\n{rag_result['context'][:300]}..."
+        
+        return {
+            "message": message,
+            "intent": intent,
+            "action_taken": action,
+            "success": True,
+            "confidence": 0.9,
+            "processing_time": 0.2,
+            "data": data,
+            "suggestions": rag_result.get("suggestions", [])
+        }
+    
+    def _format_error_response(self, rag_result: Dict, user_message: str) -> Dict:
+        """Format error response from RAG"""
+        
+        error_message = rag_result.get("error", "An error occurred")
+        suggestions = rag_result.get("suggestions", [])
+        
+        message = f"❌ **Error:** {error_message}"
+        
+        if suggestions:
+            message += f"\n\n💡 **Did you mean:**\n"
+            for suggestion in suggestions[:3]:
+                message += f"• {suggestion.get('sku', 'N/A')} - {suggestion.get('name', 'N/A')}\n"
+        
+        return {
+            "message": message,
+            "intent": rag_result.get("intent", "error"),
+            "action_taken": "error_handling",
+            "success": False,
+            "confidence": 0.1,
+            "processing_time": 0.1,
+            "error": error_message
+        }
     
     def _try_warehouse_operation(self, message: str) -> Optional[Dict]:
         """Try to perform specific warehouse operations"""
