@@ -4,9 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from datetime import datetime
 from ..database import get_db
-from ..services.conversational_chatbot_service import ConversationalChatbotService
-from ..services.enhanced_chatbot_service import EnhancedChatbotService
-from ..services.chatbot_service import ChatbotService  # Keep as fallback
+from ..services.chatbot_service import ChatbotService
 
 router = APIRouter()
 
@@ -37,9 +35,9 @@ async def process_chat_message(chat_message: ChatMessage, db: Session = Depends(
     """Process a chat message and return bot response with enhanced natural language understanding"""
     
     try:
-        # Try conversational service first (our new enhanced NLP service)
-        conversational_service = ConversationalChatbotService(db)
-        response = conversational_service.process_message(
+        # Use the consolidated chatbot service
+        chatbot_service = ChatbotService(db)
+        response = chatbot_service.process_message(
             user_message=chat_message.message,
             session_id=chat_message.session_id,
             user_id=chat_message.user_id
@@ -58,70 +56,28 @@ async def process_chat_message(chat_message: ChatMessage, db: Session = Depends(
             enhanced_mode=True
         )
         
-    except Exception as conv_error:
-        try:
-            # Fallback to enhanced service
-            enhanced_service = EnhancedChatbotService(db)
-            
-            if enhanced_service.is_enhanced_mode_available():
-                response = enhanced_service.process_message(
-                    user_message=chat_message.message,
-                    session_id=chat_message.session_id,
-                    user_id=chat_message.user_id
-                )
-                
-                return ChatResponse(
-                    message=response["message"],
-                    intent=response["intent"],
-                    data=response.get("data"),
-                    actions=response.get("actions", []),
-                    success=response["success"],
-                    timestamp=datetime.utcnow(),
-                    enhanced_mode=True
-                )
-            
-            else:
-                # Fallback to original rule-based service
-                service = ChatbotService(db)
-                response = service.process_message(
-                    user_message=chat_message.message,
-                    session_id=chat_message.session_id,
-                    user_id=chat_message.user_id
-                )
-                
-                return ChatResponse(
-                    message=response["message"],
-                    intent=response["intent"],
-                    data=response.get("data"),
-                    actions=response.get("actions", []),
-                    success=response["success"],
-                    timestamp=datetime.utcnow(),
-                    enhanced_mode=False
-                )
-                
-        except Exception as fallback_error:
-            # Ultimate fallback
-            return ChatResponse(
-                message="I apologize, but I'm experiencing technical difficulties. Please try again or contact support.",
-                intent="error",
-                data=None,
-                actions=[],
-                success=False,
-                timestamp=datetime.utcnow(),
-                enhanced_mode=False
-            )
+    except Exception as e:
+        # Error fallback
+        return ChatResponse(
+            message="I apologize, but I'm experiencing technical difficulties. Please try again or contact support.",
+            intent="error",
+            data=None,
+            actions=[],
+            success=False,
+            timestamp=datetime.utcnow(),
+            enhanced_mode=False
+        )
 
 @router.get("/status", response_model=SystemStatus)
 async def get_system_status(db: Session = Depends(get_db)):
     """Get chatbot system status"""
     try:
-        enhanced_service = EnhancedChatbotService(db)
-        status = enhanced_service.get_system_status()
-        
+        chatbot_service = ChatbotService(db)
+        # Simple status check - service is available if we can instantiate it
         return SystemStatus(
-            llm_service=status["llm_service"],
-            rag_service=status["rag_service"],
-            enhanced_mode=status["enhanced_mode"]
+            llm_service=False,  # No LLM service in consolidated version
+            rag_service=False,  # No RAG service in consolidated version
+            enhanced_mode=True  # Enhanced NLP processing is available
         )
     except Exception as e:
         return SystemStatus(

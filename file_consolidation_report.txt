@@ -1,0 +1,20 @@
+File Consolidation Report - 2025-07-20T14:00:55.850675
+============================================================
+
+Total changes made: 15
+
+- Renamed conversational_chatbot_service.py to chatbot_service.py
+- Removed duplicate: enhanced_chatbot_service.py
+- Removed duplicate LLM service: llm_service.py
+- Removed duplicate LLM service: smart_llm_service.py
+- Removed duplicate LLM service: hf_inference_service.py
+- Removed duplicate LLM service: ollama_service.py
+- Removed duplicate LLM service: openai_compatible_service.py
+- Removed duplicate: ultra_enhanced_analytics_service.py
+- Removed duplicate: simple_forecasting_service.py
+- Removed duplicate: simple_space_optimization_service.py
+- Removed duplicate: natural_language_processor.py
+- Removed duplicate router: commercial_features_backup.py
+- Removed duplicate router: commercial_features_fixed.py
+- Removed duplicate: enhanced_dashboard.py
+- Updated imports in main.py

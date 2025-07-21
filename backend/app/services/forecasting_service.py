@@ -10,7 +10,7 @@ from ..models.database_models import (
     Product, SalesHistory, DemandForecast, StockAlert, 
     ProductVelocity, Inventory
 )
-from .openai_compatible_service import OpenAICompatibleService
+from .enhanced_smart_llm_service import EnhancedSmartLLMService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class ForecastingService:
     """
     
     def __init__(self):
-        self.llm_service = OpenAICompatibleService()
+        self.llm_service = EnhancedSmartLLMService()
         
     def ingest_sales_data(self, db: Session, sales_data: List[Dict]) -> Dict:
         """

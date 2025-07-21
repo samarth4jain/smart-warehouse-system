@@ -10,7 +10,7 @@ from ..models.database_models import (
     Product, Inventory, SalesHistory, StockMovement, InboundShipment, 
     OutboundOrder, ChatMessage, DemandForecast, ProductVelocity, StockAlert
 )
-from .openai_compatible_service import OpenAICompatibleService
+from .enhanced_smart_llm_service import EnhancedSmartLLMService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class EnhancedAnalyticsService:
     """
     
     def __init__(self):
-        self.llm_service = OpenAICompatibleService()
+        self.llm_service = EnhancedSmartLLMService()
         
     def generate_executive_summary(self, db: Session) -> Dict:
         """

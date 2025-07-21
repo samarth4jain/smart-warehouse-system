@@ -6,9 +6,9 @@ from datetime import datetime
 import pandas as pd
 import json
 from ..database import get_db
-from ..services.simple_forecasting_service import SimpleForecastingService
-from ..services.simple_space_optimization_service import SimpleSpaceOptimizationService
-from ..services.ultra_enhanced_analytics_service import UltraEnhancedAnalyticsService
+from ..services.forecasting_service import ForecastingService
+from ..services.space_optimization_service import SpaceOptimizationService
+from ..services.enhanced_analytics_service import EnhancedAnalyticsService
 
 router = APIRouter()
 
@@ -74,9 +74,9 @@ class PredictiveAnalyticsResponse(BaseModel):
     business_impact: dict
 
 # Initialize services
-forecasting_service = SimpleForecastingService()
-space_service = SimpleSpaceOptimizationService()
-ultra_analytics_service = UltraEnhancedAnalyticsService()
+forecasting_service = ForecastingService()
+space_service = SpaceOptimizationService()
+ultra_analytics_service = EnhancedAnalyticsService()
 
 # Forecasting endpoints
 @router.post("/forecast/ingest-sales", summary="Ingest Sales Data")
@@ -522,12 +522,12 @@ async def phase3_health_check():
         space_optimization_available = True
         
         try:
-            forecasting_service = SimpleForecastingService()
+            forecasting_service = ForecastingService()
         except Exception:
             forecasting_available = False
         
         try:
-            space_service = SimpleSpaceOptimizationService()
+            space_service = SpaceOptimizationService()
         except Exception:
             space_optimization_available = False
         

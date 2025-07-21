@@ -4,7 +4,7 @@ from typing import List, Optional
 from pydantic import BaseModel
 from datetime import datetime
 from ..database import get_db
-from ..services.ultra_enhanced_analytics_service import UltraEnhancedAnalyticsService
+from ..services.enhanced_analytics_service import EnhancedAnalyticsService
 
 router = APIRouter(prefix="/analytics/ultra", tags=["Ultra Analytics"])
 
@@ -43,7 +43,7 @@ class StrategicDashboardResponse(BaseModel):
     generated_at: str
 
 # Initialize service
-ultra_analytics_service = UltraEnhancedAnalyticsService()
+ultra_analytics_service = EnhancedAnalyticsService()
 
 @router.get("/multi-dimensional", response_model=UltraAnalyticsResponse, 
            summary="Multi-Dimensional Business Intelligence")
