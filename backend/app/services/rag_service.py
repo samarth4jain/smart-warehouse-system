@@ -2,8 +2,8 @@ import os
 import logging
 from typing import List, Dict, Any, Optional
 from sqlalchemy.orm import Session
-from langchain.vectorstores import Chroma
-from langchain.embeddings import SentenceTransformerEmbeddings
+from langchain_community.vectorstores import Chroma
+from langchain_community.embeddings import SentenceTransformerEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.docstore.document import Document
 from langchain.schema import BaseRetriever

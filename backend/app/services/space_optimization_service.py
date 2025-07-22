@@ -8,7 +8,7 @@ from ..models.database_models import (
     Product, Inventory, SalesHistory, WarehouseLayout, 
     SpaceOptimization, ProductVelocity, DemandForecast
 )
-from .openai_compatible_service import OpenAICompatibleService
+from .enhanced_smart_llm_service import EnhancedSmartLLMService
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class SpaceOptimizationService:
     """
     
     def __init__(self):
-        self.llm_service = OpenAICompatibleService()
+        self.llm_service = EnhancedSmartLLMService()
         
     def analyze_product_velocity(self, db: Session) -> Dict:
         """

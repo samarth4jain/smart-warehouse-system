@@ -9,7 +9,7 @@ import asyncio
 from datetime import datetime
 from functools import lru_cache
 from .database import engine, Base
-from .routers import inventory, inbound, outbound, chatbot, dashboard, forecasting, enhanced_dashboard, ultra_analytics, commercial_features
+from .routers import inventory, inbound, outbound, chatbot, dashboard, forecasting, commercial_features, ultra_analytics
 from datetime import datetime
 
 # Create database tables
@@ -42,7 +42,6 @@ app.include_router(outbound.router, prefix="/api/outbound", tags=["Outbound"])
 app.include_router(chatbot.router, prefix="/api/chat", tags=["Chatbot"])
 app.include_router(dashboard.router, prefix="/api/dashboard", tags=["Dashboard"])
 app.include_router(forecasting.router, prefix="/api/phase3", tags=["Phase 3: Forecasting & Space Planning"])
-app.include_router(enhanced_dashboard.router, prefix="/api/enhanced-dashboard", tags=["Enhanced Analytics"])
 app.include_router(ultra_analytics.router, prefix="/api", tags=["Ultra Analytics"])
 app.include_router(commercial_features.router, prefix="/api", tags=["Commercial Features"])
 
@@ -55,60 +54,72 @@ async def read_root():
     """Serve the main dashboard page"""
     html_file = os.path.join(frontend_path, "index.html")
     try:
-        with open(html_file, "r") as f:
+        with open(html_file, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         return HTMLResponse(content="<h1>Welcome to Smart Warehousing System</h1><p>Frontend not found</p>")
+    except UnicodeDecodeError:
+        return HTMLResponse(content="<h1>Welcome to Smart Warehousing System</h1><p>Error reading file - encoding issue</p>")
 
 @app.get("/chatbot", response_class=HTMLResponse)
 async def chatbot_page():
     """Serve the chatbot interface page"""
     html_file = os.path.join(frontend_path, "chatbot.html")
     try:
-        with open(html_file, "r") as f:
+        with open(html_file, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         return HTMLResponse(content="<h1>Chatbot Interface</h1><p>Frontend not found</p>")
+    except UnicodeDecodeError:
+        return HTMLResponse(content="<h1>Chatbot Interface</h1><p>Error reading file - encoding issue</p>")
 
 @app.get("/advanced-dashboard", response_class=HTMLResponse)
 async def advanced_dashboard():
-    """Serve the Phase 4 advanced analytics dashboard"""
-    html_file = os.path.join(frontend_path, "advanced_dashboard.html")
+    """Redirect to enterprise dashboard (consolidated)"""
+    html_file = os.path.join(frontend_path, "enterprise_dashboard.html")
     try:
-        with open(html_file, "r") as f:
+        with open(html_file, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
-        return HTMLResponse(content="<h1>Advanced Dashboard Not Found</h1><p>Please run create_advanced_dashboard.py first.</p>")
+        return HTMLResponse(content="<h1>Advanced Analytics</h1><p>Please use the enterprise dashboard for advanced features.</p>")
+    except UnicodeDecodeError:
+        return HTMLResponse(content="<h1>Advanced Dashboard</h1><p>Error reading file - encoding issue</p>")
 
 @app.get("/enterprise-dashboard", response_class=HTMLResponse)
 async def enterprise_dashboard():
     """Serve the enterprise-grade analytics dashboard"""
     html_file = os.path.join(frontend_path, "enterprise_dashboard.html")
     try:
-        with open(html_file, "r") as f:
+        with open(html_file, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         return HTMLResponse(content="<h1>Enterprise Dashboard Not Found</h1><p>Please ensure the enterprise dashboard file exists.</p>")
+    except UnicodeDecodeError:
+        return HTMLResponse(content="<h1>Enterprise Dashboard</h1><p>Error reading file - encoding issue</p>")
 
 @app.get("/enterprise-analytics", response_class=HTMLResponse)
 async def enterprise_analytics_dashboard():
     """Serve the enhanced enterprise analytics dashboard"""
     html_file = os.path.join(frontend_path, "enterprise_analytics_dashboard.html")
     try:
-        with open(html_file, "r") as f:
+        with open(html_file, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         return HTMLResponse(content="<h1>Enterprise Analytics Dashboard Not Found</h1><p>Please ensure the enhanced dashboard file exists.</p>")
+    except UnicodeDecodeError:
+        return HTMLResponse(content="<h1>Enterprise Analytics Dashboard</h1><p>Error reading file - encoding issue</p>")
 
 @app.get("/commercial-intelligence", response_class=HTMLResponse)
 async def commercial_intelligence_dashboard():
     """Serve the commercial intelligence dashboard"""
     html_file = os.path.join(frontend_path, "commercial_intelligence_dashboard.html")
     try:
-        with open(html_file, "r") as f:
+        with open(html_file, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
         return HTMLResponse(content="<h1>Commercial Intelligence Dashboard Not Found</h1><p>Please ensure the commercial dashboard file exists.</p>")
+    except UnicodeDecodeError:
+        return HTMLResponse(content="<h1>Commercial Intelligence Dashboard</h1><p>Error reading file - encoding issue</p>")
 
 @app.get("/health")
 async def health_check():
