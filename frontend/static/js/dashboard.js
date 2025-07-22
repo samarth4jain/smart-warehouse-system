@@ -2,7 +2,7 @@
 class DashboardManager {
     constructor() {
         this.currentSection = 'dashboard';
-        this.apiBaseUrl = '/api';  // Use relative URL when served from same server
+        this.apiBaseUrl = '';  // Use relative URL when served from same server
         this.init();
     }
 
