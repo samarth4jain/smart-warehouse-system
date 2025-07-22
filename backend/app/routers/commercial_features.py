@@ -92,11 +92,11 @@ class ExecutiveDashboardService:
         }
 
 class QRCodeService:
-    """QR Code management service"""
+    """QR Code management service - DISABLED"""
     
     @staticmethod
     def generate_qr_data(product_id: int, sku: str, location: str, additional_data: dict):
-        """Generate QR code data structure"""
+        """Generate QR code data structure - DISABLED"""
         return {
             "qr_id": f"QR_{product_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
             "product_id": product_id,
@@ -104,7 +104,9 @@ class QRCodeService:
             "location": location,
             "created_at": datetime.now().isoformat(),
             "additional_data": additional_data,
-            "verification_code": f"VF{random.randint(100000, 999999)}"
+            "verification_code": f"VF{random.randint(100000, 999999)}",
+            "status": "disabled",
+            "message": "QR code functionality disabled for deployment simplicity"
         }
 
 # === HEALTH CHECK ENDPOINT ===
@@ -120,12 +122,14 @@ async def commercial_health_check():
             "Executive Dashboard",
             "Financial Metrics",
             "Analytics Suite",
-            "QR Code Management",
+            "QR Code Management (DISABLED)",
             "Layout Optimization",
             "Automation Analysis",
             "Real-time KPIs",
             "Compliance Reporting"
         ],
+        "disabled_features": ["QR Code Generation"],
+        "reason": "Simplified for deployment",
         "timestamp": datetime.now().isoformat()
     }
 
@@ -296,7 +300,7 @@ async def generate_qr_code(
     additional_data: dict = None,
     db: Session = Depends(get_db)
 ):
-    """Generate QR code for product/location tracking"""
+    """Generate QR code for product/location tracking - DISABLED"""
     try:
         if additional_data is None:
             additional_data = {}
@@ -305,9 +309,10 @@ async def generate_qr_code(
         
         return {
             "qr_code": qr_data,
-            "status": "generated",
+            "status": "disabled",
             "url": f"/qr/{qr_data['qr_id']}",
-            "printable_url": f"/qr/{qr_data['qr_id']}/print"
+            "printable_url": f"/qr/{qr_data['qr_id']}/print",
+            "message": "QR code functionality disabled for deployment simplicity"
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"QR code generation error: {str(e)}")

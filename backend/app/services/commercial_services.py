@@ -1,9 +1,9 @@
 """
 Commercial Services for Advanced Warehouse Features
-Enterprise-grade services for commercial deployment
+Enterprise-grade services for commercial deployment (No QR Code functionality)
 """
 
-import qrcode
+# import qrcode  # REMOVED - No longer using QR codes
 import io
 import base64
 from typing import List, Dict, Any, Optional
@@ -13,41 +13,34 @@ import json
 import uuid
 
 class QRCodeService:
-    """Service for generating and processing QR codes"""
+    """Service for generating and processing QR codes - DISABLED"""
     
     def __init__(self):
         self.qr_cache = {}
     
     def generate_qr_code(self, data: Dict[str, Any]) -> str:
-        """Generate QR code for product data"""
-        qr = qrcode.QRCode(
-            version=1,
-            error_correction=qrcode.constants.ERROR_CORRECT_L,
-            box_size=10,
-            border=4,
-        )
-        
-        qr_data = json.dumps(data)
-        qr.add_data(qr_data)
-        qr.make(fit=True)
-        
-        img = qr.make_image(fill_color="black", back_color="white")
-        
-        # Convert to base64 for web display
-        buffer = io.BytesIO()
-        img.save(buffer, format='PNG')
-        img_str = base64.b64encode(buffer.getvalue()).decode()
-        
-        return f"data:image/png;base64,{img_str}"
+        """Generate QR code for product data - DISABLED"""
+        # QR Code functionality removed for deployment simplicity
+        return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+    
+    @staticmethod
+    def generate_qr_data(product_id: int, sku: str, location: str, additional_data: dict):
+        """Generate QR code data structure - DISABLED"""
+        return {
+            "qr_id": f"QR_{product_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
+            "product_id": product_id,
+            "sku": sku,
+            "location": location,
+            "created_at": datetime.now().isoformat(),
+            "additional_data": additional_data,
+            "verification_code": f"VF{uuid.uuid4().hex[:6]}",
+            "status": "disabled",
+            "message": "QR code functionality disabled for deployment"
+        }
     
     def validate_qr_code(self, qr_data: str) -> bool:
-        """Validate QR code data"""
-        try:
-            data = json.loads(qr_data)
-            required_fields = ["product_id", "sku"]
-            return all(field in data for field in required_fields)
-        except:
-            return False
+        """Validate QR code data - DISABLED"""
+        return False  # Always return false since QR codes are disabled
 
 class LocationOptimizationService:
     """Advanced location optimization using AI algorithms"""

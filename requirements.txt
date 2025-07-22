@@ -1,4 +1,4 @@
-# Core FastAPI dependencies - Deployment Ready
+# Core FastAPI dependencies - Deployment Ready (No Barcode)
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 sqlalchemy==2.0.23
@@ -21,13 +21,11 @@ passlib[bcrypt]==1.7.4
 python-jose[cryptography]==3.3.0
 cryptography>=41.0.0
 
-# Commercial Dependencies (deployment-safe versions)
-qrcode[pil]==7.4.2
+# Commercial Dependencies (no barcode)
 Pillow>=10.0.0
 openpyxl==3.1.2
 plotly==5.17.0
 reportlab==4.0.7
-python-barcode>=1.3.0  # More flexible version
 
 # Basic Analytics
 matplotlib==3.8.2
