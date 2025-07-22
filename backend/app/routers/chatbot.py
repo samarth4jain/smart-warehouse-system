@@ -73,11 +73,10 @@ async def get_system_status(db: Session = Depends(get_db)):
     """Get chatbot system status"""
     try:
         chatbot_service = ChatbotService(db)
-        # Check if RAG service is available
-        rag_available = hasattr(chatbot_service, 'rag_enabled') and chatbot_service.rag_enabled
+        # Simple status check - service is available if we can instantiate it
         return SystemStatus(
-            llm_service=False,  # No external LLM service 
-            rag_service=rag_available,  # RAG service availability
+            llm_service=False,  # No LLM service in consolidated version
+            rag_service=False,  # No RAG service in consolidated version
             enhanced_mode=True  # Enhanced NLP processing is available
         )
     except Exception as e:

@@ -11,7 +11,6 @@ from .inventory_service import InventoryService
 from .inbound_service import InboundService
 from .outbound_service import OutboundService
 from .enhanced_nlp_processor import EnhancedNLPProcessor
-from .enhanced_rag_service import EnhancedWarehouseRAGService
 
 class ChatbotService:
     """Enhanced chatbot service with natural language understanding for layman queries"""
@@ -22,16 +21,6 @@ class ChatbotService:
         self.inbound_service = InboundService(db)
         self.outbound_service = OutboundService(db)
         self.enhanced_nlp = EnhancedNLPProcessor()  # Enhanced NLP processor
-        
-        # Initialize RAG service
-        try:
-            self.rag_service = EnhancedWarehouseRAGService(db)
-            self.rag_enabled = True
-            print("RAG service initialized successfully")
-        except Exception as e:
-            print(f"Warning: RAG service initialization failed: {e}")
-            self.rag_service = None
-            self.rag_enabled = False
         
         # Phase 3 services (if available)
         try:
@@ -66,29 +55,6 @@ class ChatbotService:
         processed_message = self._preprocess_message(original_message)
         
         try:
-            # Try RAG service first if available and for complex queries
-            if self.rag_enabled and self.rag_service:
-                try:
-                    rag_result = self.rag_service.process_natural_language_query(processed_message)
-                    if rag_result and rag_result.get("success", False):
-                        # RAG provided a good response
-                        return {
-                            "message": rag_result["message"],
-                            "intent": rag_result.get("intent", "rag_query"),
-                            "confidence": rag_result.get("confidence", 0.9),
-                            "entities": rag_result.get("entities", {}),
-                            "context": rag_result.get("context", {}),
-                            "data": rag_result.get("data"),
-                            "actions": rag_result.get("actions", []),
-                            "suggestions": rag_result.get("suggestions", []),
-                            "success": True,
-                            "enhanced_mode": True,
-                            "rag_used": True,
-                            "response_time": datetime.now().isoformat()
-                        }
-                except Exception as rag_error:
-                    print(f"RAG processing failed, falling back to enhanced NLP: {rag_error}")
-            
             # Use enhanced NLP for better layman language understanding
             nlp_result = self.enhanced_nlp.process_layman_query(processed_message)
             
@@ -98,7 +64,7 @@ class ChatbotService:
             context = nlp_result["context"]
             response_style = nlp_result["response_style"]
             
-            # Fallback to basic pattern matching if confidence is low
+            # Fallback to original NLP if confidence is low or enhanced NLP fails
             if confidence < 0.4:
                 try:
                     intent, confidence, entities = self.nlp.classify_intent_enhanced(processed_message)
@@ -166,7 +132,6 @@ class ChatbotService:
             "suggestions": response_data.get("suggestions", []),
             "success": response_data.get("success", True),
             "enhanced_mode": True,
-            "rag_used": False,  # This path uses enhanced NLP, not RAG
             "response_time": datetime.now().isoformat()
         }
 
@@ -454,30 +419,6 @@ What would you like me to help you with?""",
                 "action_taken": "error_occurred",
                 "suggestions": self._get_error_suggestions(response_style)
             }
-
-    def _get_error_message(self, error: str, response_style: str = "friendly") -> str:
-        """Generate user-friendly error message"""
-        if response_style == "professional":
-            return f"System error occurred while processing your request. Please try again or contact support."
-        else:
-            return f"Oops! Something went wrong while processing your request. Please try again! 🤔"
-    
-    def _get_error_suggestions(self, response_style: str = "friendly") -> List[str]:
-        """Generate error recovery suggestions"""
-        if response_style == "professional":
-            return [
-                "Retry your request",
-                "Check system status",
-                "Contact technical support",
-                "Review documentation"
-            ]
-        else:
-            return [
-                "Try asking again",
-                "Check inventory",
-                "Get help",
-                "Ask about something else"
-            ]
 
     def _handle_layman_inventory_check(self, message: str, entities: Dict, context: Dict, response_style: str) -> Dict:
         """Enhanced inventory check handler for layman language"""
@@ -947,13 +888,3 @@ What specific area of warehouse management can I help you with?""",
                 "actions": ["check_inventory", "view_alerts", "show_help"],
                 "action_taken": "general_guidance_provided"
             }
-
-    def _enhance_response_with_personality(self, response_data: Dict, context: Dict, response_style: str) -> Dict:
-        """Add personality and conversational elements to the response"""
-        try:
-            # Simple enhancement - just return the response as-is for now
-            # Can be expanded later for more personality features
-            return response_data
-        except Exception as e:
-            print(f"Warning: Could not enhance response with personality: {e}")
-            return response_data

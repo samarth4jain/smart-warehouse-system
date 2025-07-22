@@ -122,6 +122,38 @@ async def enterprise_analytics_dashboard():
         with open(html_file, "r", encoding="utf-8") as f:
             return HTMLResponse(content=f.read())
     except FileNotFoundError:
+        return HTMLResponse(content="<h1>Enterprise Analytics Not Found</h1><p>Please ensure the analytics dashboard file exists.</p>")
+    except UnicodeDecodeError:
+        return HTMLResponse(content="<h1>Enterprise Analytics</h1><p>Error reading file - encoding issue</p>")
+
+@app.get("/analytics", response_class=HTMLResponse)
+async def analytics_page():
+    """Serve the analytics dashboard page"""
+    html_file = os.path.join(frontend_path, "enterprise_dashboard.html")
+    try:
+        with open(html_file, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Analytics Dashboard</h1><p>Analytics dashboard not found</p>")
+    except UnicodeDecodeError:
+        return HTMLResponse(content="<h1>Analytics Dashboard</h1><p>Error reading file - encoding issue</p>")
+
+@app.get("/docs", response_class=HTMLResponse)
+async def docs_page():
+    """Serve the documentation page"""
+    docs_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "docs")
+    html_file = os.path.join(docs_path, "index.html")
+    try:
+        with open(html_file, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Documentation</h1><p>Documentation not found. Please check the docs folder.</p>")
+    except UnicodeDecodeError:
+        return HTMLResponse(content="<h1>Documentation</h1><p>Error reading file - encoding issue</p>")
+    try:
+        with open(html_file, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
         return HTMLResponse(content="<h1>Enterprise Analytics Dashboard Not Found</h1><p>Please ensure the enhanced dashboard file exists.</p>")
     except UnicodeDecodeError:
         return HTMLResponse(content="<h1>Enterprise Analytics Dashboard</h1><p>Error reading file - encoding issue</p>")

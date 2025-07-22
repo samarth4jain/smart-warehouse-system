@@ -201,37 +201,6 @@
             padding: 1rem 1.5rem;
             border-radius: 18px;
             border: 1px solid rgba(255, 107, 53, 0.1);
-            line-height: 1.6;
-        }
-
-        .message-content ul {
-            margin: 0.5rem 0;
-            padding: 0;
-        }
-
-        .message-content li {
-            margin: 0.3rem 0;
-            list-style: none;
-            position: relative;
-            padding-left: 1.2rem;
-        }
-
-        .message-content li span {
-            position: absolute;
-            left: 0;
-            color: var(--accent-orange);
-        }
-
-        .message-content strong {
-            color: var(--accent-orange);
-            font-weight: 600;
-        }
-
-        .message-content .section-header {
-            color: var(--accent-orange);
-            font-weight: 600;
-            margin: 1rem 0 0.5rem 0;
-            font-size: 1.05rem;
         }
 
         .message.user .message-content {
@@ -628,22 +597,21 @@
             contentDiv.className = 'message-content';
             
             if (sender === 'bot' && typeof content === 'object') {
-                // Format bot response with proper markdown parsing
-                let html = formatBotMessage(content.message);
+                // Format bot response with suggestions
+                let html = `<p>${content.message}</p>`;
                 
                 if (content.suggestions && content.suggestions.length > 0) {
-                    html += '<div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid rgba(255, 107, 53, 0.2);">';
-                    html += '<div style="color: var(--accent-orange); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem;">💡 Quick Actions:</div>';
-                    html += '<div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">';
+                    html += '<div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 107, 53, 0.2);">';
+                    html += '<strong style="color: var(--accent-orange); font-size: 0.9rem;">Suggestions:</strong><br>';
                     content.suggestions.forEach(suggestion => {
-                        html += `<button style="background: rgba(255, 107, 53, 0.1); color: var(--accent-orange); border: 1px solid rgba(255, 107, 53, 0.3); padding: 0.4rem 0.8rem; border-radius: 8px; font-size: 0.8rem; cursor: pointer; transition: all 0.3s ease;" onclick="sendQuickMessage('${suggestion}')" onmouseover="this.style.background='var(--accent-orange)'; this.style.color='#000';" onmouseout="this.style.background='rgba(255, 107, 53, 0.1)'; this.style.color='var(--accent-orange)';">${suggestion}</button>`;
+                        html += `<span style="display: inline-block; background: rgba(255, 107, 53, 0.1); color: var(--accent-orange); padding: 0.2rem 0.5rem; margin: 0.2rem 0.2rem 0 0; border-radius: 5px; font-size: 0.8rem; cursor: pointer;" onclick="sendQuickMessage('${suggestion}')">${suggestion}</span>`;
                     });
-                    html += '</div></div>';
+                    html += '</div>';
                 }
                 
                 contentDiv.innerHTML = html;
             } else {
-                contentDiv.innerHTML = `<div>${escapeHtml(content)}</div>`;
+                contentDiv.innerHTML = `<p>${content}</p>`;
             }
             
             messageDiv.appendChild(avatarDiv);
@@ -651,44 +619,6 @@
             
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function formatBotMessage(message) {
-            if (!message) return '';
-            
-            // Convert markdown-style formatting to HTML
-            let formatted = message
-                // Convert **bold** to <strong>
-                .replace(/\*\*(.*?)\*\*/g, '<strong style="color: var(--accent-orange);">$1</strong>')
-                // Convert bullet points to proper list items
-                .replace(/^• (.*?)$/gm, '<li style="margin: 0.3rem 0; list-style: none; position: relative; padding-left: 1.2rem;"><span style="position: absolute; left: 0; color: var(--accent-orange);">•</span>$1</li>')
-                // Convert line breaks to proper spacing
-                .replace(/\n\n/g, '</div><div style="margin: 1rem 0;">')
-                .replace(/\n/g, '<br>');
-
-            // Wrap in container and process sections
-            formatted = '<div>' + formatted + '</div>';
-            
-            // Process sections with headers (like **🔍 You can search by:**)
-            formatted = formatted.replace(/<strong style="color: var\(--accent-orange\);">(.*?[📦🔍💬].*?)<\/strong>/g, 
-                '<div style="color: var(--accent-orange); font-weight: 600; margin: 1rem 0 0.5rem 0; font-size: 1.05rem;">$1</div>');
-            
-            // Group consecutive list items
-            formatted = formatted.replace(/(<li[^>]*>.*?<\/li>(?:\s*<br>\s*<li[^>]*>.*?<\/li>)*)/g, '<ul style="margin: 0.5rem 0; padding: 0;">$1</ul>');
-            
-            // Clean up extra breaks after lists
-            formatted = formatted.replace(/<\/ul>\s*<br>/g, '</ul>');
-            
-            // Add spacing for sections
-            formatted = formatted.replace(/(<div style="color: var\(--accent-orange\)[^>]*>.*?<\/div>)/g, '<div style="margin-top: 1.2rem;">$1</div>');
-            
-            return formatted;
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
         }
 
         function showTypingIndicator() {

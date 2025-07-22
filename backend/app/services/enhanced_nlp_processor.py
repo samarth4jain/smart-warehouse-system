@@ -68,7 +68,7 @@ class EnhancedNLPProcessor:
                     r"what\s+about\s+(.+?)(?:\s+stock|\s+inventory|\?|$)",
                     r"(.+?)\s+(?:available|in\s+stock|inventory)\?",
                     r"can\s+you\s+(?:help\s+me\s+)?check\s+(?:stock|inventory)(?:\s+for\s+(.+?))?",
-                    r"help\s+me\s+(?:find|check|get)\s+(?:stock|inventory|product)(?:\s+for\s+(.+?))?",
+                    r"help\s+me\s+check\s+(?:stock|inventory)(?:\s+for\s+(.+?))?",
                     r"check\s+(?:the\s+)?stock(?:\s+for\s+(.+?))?",
                     r"check\s+(?:the\s+)?inventory(?:\s+for\s+(.+?))?",
                     r"show\s+(?:me\s+)?(?:all\s+)?(?:the\s+)?(.+?)(?:\s+we\s+have|\s+in\s+stock|\?|$)",
@@ -78,7 +78,7 @@ class EnhancedNLPProcessor:
                     r"show\s+me\s+(?:the\s+)?(.+?)(?:\s+(?:product|item|stock|inventory|info|details)|\s+SKU|\s+PROD|$)",
                     r"(.+?)\s+inventory",
                     r"(.+?)\s+stock",
-                    # Removed the overly broad pattern that was catching "help"
+                    r"^([A-Za-z0-9\s\-_]+?)(?:\s+available|\s+status|\?|$)",  # Simple product names
                 ],
                 "formal_patterns": [
                     r"check\s+stock\s+(?:for\s+)?(.+)",
@@ -169,54 +169,6 @@ class EnhancedNLPProcessor:
                     r"dashboard\s+(?:overview|summary)",
                     r"analytics\s+(?:report|overview)",
                     r"performance\s+(?:report|metrics)",
-                ]
-            },
-            
-            "help_general": {
-                "casual_patterns": [
-                    r"^help$",
-                    r"^help\s*me$",
-                    r"^help\s*\?$",
-                    r"what\s+can\s+you\s+do",
-                    r"what\s+can\s+you\s+help\s+(?:me\s+)?with",
-                    r"what\s+are\s+you\s+capable\s+of",
-                    r"what\s+are\s+your\s+(?:features|capabilities|abilities)",
-                    r"how\s+(?:do\s+)?(?:i\s+use|can\s+i\s+use)\s+(?:this|you)",
-                    r"what\s+(?:are\s+)?(?:your\s+)?(?:features|capabilities|commands|functions)",
-                    r"show\s+me\s+what\s+you\s+can\s+do",
-                    r"(?:i\s+need\s+)?(?:assistance|guidance|support)",
-                    r"can\s+you\s+help\s*(?:\?|$)",
-                    r"(?:show\s+me\s+)?(?:how\s+to|instructions|tutorial|guide)",
-                    r"what\s+(?:should\s+i|can\s+i)\s+(?:ask|say)",
-                    r"examples?",
-                    r"(?:getting\s+)?started",
-                    r"tell\s+me\s+about\s+(?:your\s+)?(?:features|capabilities)",
-                    r"what\s+do\s+you\s+do",
-                    r"how\s+do\s+you\s+work",
-                ],
-                "formal_patterns": [
-                    r"help\s+(?:menu|system|interface)",
-                    r"user\s+(?:guide|manual|instructions)",
-                    r"system\s+(?:help|documentation|guide)",
-                    r"available\s+(?:commands|features|options)",
-                    r"(?:show\s+)?(?:command\s+)?(?:list|menu|options)",
-                ]
-            },
-            
-            "general_query": {
-                "casual_patterns": [
-                    r"^(?:hi|hello|hey)(?:\s+there)?(?:\s*\!)?$",
-                    r"^good\s+(?:morning|afternoon|evening)(?:\s*\!)?$",
-                    r"^(?:thanks?|thank\s+you)(?:\s+very\s+much)?(?:\s*\!)?$",
-                    r"^(?:bye|goodbye|see\s+you)(?:\s+later)?(?:\s*\!)?$",
-                    r"^(?:ok|okay)(?:\s*\!)?$",
-                    r"how\s+are\s+you",
-                    r"what's\s+up",
-                    r"how\s+(?:are\s+)?things",
-                ],
-                "formal_patterns": [
-                    r"greetings?",
-                    r"salutations?",
                 ]
             }
         }
