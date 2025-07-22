@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Warehouse - Enterprise Command Center</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Anka Space Inspired Design System */
+        :root {
+            --primary-bg: #0a0a0a;
+            --secondary-bg: #1a1a1a;
+            --card-bg: #242424;
+            --accent-orange: #ff6b35;
+            --accent-orange-light: #ff8561;
+            --accent-blue: #4a9eff;
+            --accent-green: #00d084;
+            --accent-red: #ff4757;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #808080;
+            --gradient-primary: linear-gradient(135deg, #ff6b35 0%, #ff8561 100%);
+            --gradient-secondary: linear-gradient(135deg, #4a9eff 0%, #6bb6ff 100%);
+            --gradient-success: linear-gradient(135deg, #00d084 0%, #00ff9f 100%);
+            --gradient-danger: linear-gradient(135deg, #ff4757 0%, #ff6b7a 100%);
+            --gradient-dark: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            --border-color: rgba(255, 107, 53, 0.2);
+            --hover-bg: rgba(255, 107, 53, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ANKA SPACE DESIGN INDICATOR - Visible confirmation of new design */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+            z-index: 10000;
+            animation: dashboardIndicator 5s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.7);
+        }
+
+        @keyframes dashboardIndicator {
+            0%, 100% { 
+                opacity: 0.9; 
+                transform: scaleX(1);
+                box-shadow: 0 0 20px rgba(255, 107, 53, 0.7);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scaleX(1.02);
+                box-shadow: 0 0 40px rgba(255, 107, 53, 1);
+            }
+        }
+
+        /* Layout Structure */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--gradient-dark);
+            border-right: 1px solid var(--border-color);
+            padding: 2rem 0;
+            position: fixed;
+            width: 280px;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-right: 3px solid transparent;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--accent-orange);
+            background: var(--hover-bg);
+            border-right-color: var(--accent-orange);
+        }
+
+        .nav-divider {
+            padding: 1rem 2rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            background: var(--secondary-bg);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .dashboard-header {
+            background: var(--gradient-dark);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--gradient-dark);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-orange);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.2);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: white;
+        }
+
+        .stat-icon.orange { background: var(--gradient-primary); }
+        .stat-icon.blue { background: var(--gradient-secondary); }
+        .stat-icon.green { background: var(--gradient-success); }
+        .stat-icon.red { background: var(--gradient-danger); }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .stat-change.positive { color: var(--accent-green); }
+        .stat-change.negative { color: var(--accent-red); }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--gradient-dark);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .chart-card:hover {
+            border-color: var(--accent-orange);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        /* Tables */
+        .table-card {
+            background: var(--gradient-dark);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+        }
+
+        .table-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: transparent;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.1);
+        }
+
+        .data-table th {
+            background: rgba(255, 107, 53, 0.1);
+            color: var(--accent-orange);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .data-table td {
+            color: var(--text-secondary);
+        }
+
+        .data-table tr:hover td {
+            background: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-success {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .status-warning {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .status-danger {
+            background: var(--gradient-danger);
+            color: white;
+        }
+
+        .status-info {
+            background: var(--gradient-secondary);
+            color: white;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 53, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid var(--accent-orange);
+            color: var(--accent-orange);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-orange);
+            color: white;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 107, 53, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-orange);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 107, 53, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-industry"></i>
+                Smart Warehouse
+            </div>
+        </div>
+        
+        <nav>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-home"></i>
+                        Overview
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link active">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Enterprise Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="chatbot.html" class="nav-link">
+                        <i class="fas fa-robot"></i>
+                        AI Assistant
+                    </a>
+                </li>
+                <div class="nav-divider">Operations</div>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('inventory')">
+                        <i class="fas fa-boxes"></i>
+                        Inventory Management
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('inbound')">
+                        <i class="fas fa-truck-loading"></i>
+                        Inbound Operations
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('outbound')">
+                        <i class="fas fa-shipping-fast"></i>
+                        Outbound Operations
+                    </a>
+                </li>
+                <div class="nav-divider">Analytics</div>
+                <li class="nav-item">
+                    <a href="advanced_dashboard.html" class="nav-link">
+                        <i class="fas fa-chart-line"></i>
+                        Advanced Analytics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" onclick="showSection('forecasting')">
+                        <i class="fas fa-brain"></i>
+                        Demand Forecasting
+                    </a>
+                </li>
+                <div class="nav-divider">System</div>
+                <li class="nav-item">
+                    <a href="docs/index.html" class="nav-link">
+                        <i class="fas fa-book"></i>
+                        Documentation
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <h1 class="header-title">Enterprise Command Center</h1>
+            <p class="header-subtitle">
+                Real-time warehouse operations monitoring with AI-powered insights and predictive analytics
+            </p>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="totalInventory">15,847</div>
+                <div class="stat-label">Total Inventory Items</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+12.5% from last month</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="dailyShipments">324</div>
+                <div class="stat-label">Daily Shipments</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+8.3% from yesterday</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon green">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="efficiency">98.2%</div>
+                <div class="stat-label">Operational Efficiency</div>
+                <div class="stat-change positive">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+2.1% optimization</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon red">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                </div>
+                <div class="stat-value" id="alerts">7</div>
+                <div class="stat-label">Active Alerts</div>
+                <div class="stat-change negative">
+                    <i class="fas fa-arrow-down"></i>
+                    <span>-3 resolved today</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-chart-line"></i>
+                    Inventory Levels Trend
+                </div>
+                <div class="chart-container">
+                    <canvas id="inventoryChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-chart-pie"></i>
+                    Category Distribution
+                </div>
+                <div class="chart-container">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Daily Operations
+                </div>
+                <div class="chart-container">
+                    <canvas id="operationsChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-title">
+                    <i class="fas fa-brain"></i>
+                    AI Predictions
+                </div>
+                <div class="chart-container">
+                    <canvas id="predictionsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity Table -->
+        <div class="table-card">
+            <div class="table-title">
+                <i class="fas fa-history"></i>
+                Recent Activity
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Action</th>
+                        <th>Item</th>
+                        <th>Quantity</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>09:42 AM</td>
+                        <td>Inventory Update</td>
+                        <td>Electronics - SKU-E001</td>
+                        <td>+150</td>
+                        <td>Warehouse A-12</td>
+                        <td><span class="status-badge status-success">Completed</span></td>
+                    </tr>
+                    <tr>
+                        <td>09:35 AM</td>
+                        <td>Shipment Dispatch</td>
+                        <td>Office Supplies - Bulk Order</td>
+                        <td>-75</td>
+                        <td>Loading Dock 3</td>
+                        <td><span class="status-badge status-success">Shipped</span></td>
+                    </tr>
+                    <tr>
+                        <td>09:28 AM</td>
+                        <td>Quality Check</td>
+                        <td>Automotive Parts - SKU-A045</td>
+                        <td>200</td>
+                        <td>QC Station 1</td>
+                        <td><span class="status-badge status-warning">In Progress</span></td>
+                    </tr>
+                    <tr>
+                        <td>09:15 AM</td>
+                        <td>Stock Alert</td>
+                        <td>Medical Supplies - SKU-M022</td>
+                        <td>12</td>
+                        <td>Warehouse B-05</td>
+                        <td><span class="status-badge status-danger">Low Stock</span></td>
+                    </tr>
+                    <tr>
+                        <td>09:03 AM</td>
+                        <td>Incoming Delivery</td>
+                        <td>Industrial Equipment</td>
+                        <td>+25</td>
+                        <td>Receiving Bay 2</td>
+                        <td><span class="status-badge status-info">Scheduled</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Floating Action Button -->
+    <a href="chatbot.html" class="fab" title="AI Assistant">
+        <i class="fas fa-robot"></i>
+    </a>
+
+    <script>
+        // Chart.js Configuration with Anka Space Theme
+        Chart.defaults.color = '#b3b3b3';
+        Chart.defaults.borderColor = 'rgba(255, 107, 53, 0.2)';
+        Chart.defaults.backgroundColor = 'rgba(255, 107, 53, 0.1)';
+
+        // Inventory Levels Chart
+        const inventoryCtx = document.getElementById('inventoryChart').getContext('2d');
+        new Chart(inventoryCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Inventory Levels',
+                    data: [12000, 13500, 14200, 15000, 15400, 15800, 15847],
+                    borderColor: '#ff6b35',
+                    backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 107, 53, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 107, 53, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Category Distribution Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Electronics', 'Automotive', 'Medical', 'Office', 'Industrial'],
+                datasets: [{
+                    data: [30, 25, 20, 15, 10],
+                    backgroundColor: [
+                        '#ff6b35',
+                        '#4a9eff',
+                        '#00d084',
+                        '#ff4757',
+                        '#ffa726'
+                    ],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // Daily Operations Chart
+        const operationsCtx = document.getElementById('operationsChart').getContext('2d');
+        new Chart(operationsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Inbound',
+                    data: [120, 145, 160, 180, 200, 95, 75],
+                    backgroundColor: '#4a9eff'
+                }, {
+                    label: 'Outbound',
+                    data: [100, 130, 145, 165, 190, 80, 60],
+                    backgroundColor: '#ff6b35'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 107, 53, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 107, 53, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // AI Predictions Chart
+        const predictionsCtx = document.getElementById('predictionsChart').getContext('2d');
+        new Chart(predictionsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Predicted Demand',
+                    data: [85, 92, 78, 95],
+                    borderColor: '#00d084',
+                    backgroundColor: 'rgba(0, 208, 132, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }, {
+                    label: 'Actual Demand',
+                    data: [82, 89, 75, null],
+                    borderColor: '#ff6b35',
+                    backgroundColor: 'rgba(255, 107, 53, 0.1)',
+                    borderWidth: 3,
+                    fill: false,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    }
+                },
+                scales: {
+                    y: {
+                        grid: {
+                            color: 'rgba(255, 107, 53, 0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            color: 'rgba(255, 107, 53, 0.1)'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Real-time updates simulation
+        function updateStats() {
+            const totalInventory = document.getElementById('totalInventory');
+            const dailyShipments = document.getElementById('dailyShipments');
+            const efficiency = document.getElementById('efficiency');
+            const alerts = document.getElementById('alerts');
+
+            // Simulate real-time updates
+            setInterval(() => {
+                const currentInventory = parseInt(totalInventory.textContent.replace(',', ''));
+                const newInventory = currentInventory + Math.floor(Math.random() * 10) - 5;
+                totalInventory.textContent = newInventory.toLocaleString();
+
+                const currentShipments = parseInt(dailyShipments.textContent);
+                const newShipments = Math.max(0, currentShipments + Math.floor(Math.random() * 6) - 3);
+                dailyShipments.textContent = newShipments;
+
+                const currentEfficiency = parseFloat(efficiency.textContent.replace('%', ''));
+                const newEfficiency = Math.max(90, Math.min(100, currentEfficiency + (Math.random() * 0.4) - 0.2));
+                efficiency.textContent = newEfficiency.toFixed(1) + '%';
+            }, 5000);
+        }
+
+        // Initialize real-time updates
+        updateStats();
+
+        // Section navigation
+        function showSection(sectionName) {
+            // This would typically navigate to different views
+            console.log('Navigating to:', sectionName);
+            // For demo purposes, just show an alert
+            alert(`Navigating to ${sectionName} section`);
+        }
+
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('mobile-open');
+        }
+
+        // Add mobile menu button for smaller screens
+        if (window.innerWidth <= 1024) {
+            const header = document.querySelector('.dashboard-header');
+            const menuButton = document.createElement('button');
+            menuButton.innerHTML = '<i class="fas fa-bars"></i>';
+            menuButton.className = 'btn';
+            menuButton.onclick = toggleSidebar;
+            header.appendChild(menuButton);
+        }
+    </script>
+</body>
+</html>
