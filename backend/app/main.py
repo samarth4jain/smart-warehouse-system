@@ -73,6 +73,11 @@ async def chatbot_page():
     except UnicodeDecodeError:
         return HTMLResponse(content="<h1>Chatbot Interface</h1><p>Error reading file - encoding issue</p>")
 
+@app.get("/chatbot.html", response_class=HTMLResponse)
+async def chatbot_html():
+    """Alternative route for chatbot.html"""
+    return await chatbot_page()
+
 @app.get("/dashboard", response_class=HTMLResponse)
 async def dashboard_page():
     """Serve the main dashboard page"""
