@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Warehouse System - Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2C3E50 0%, #34495E 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .demo-notice {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ffeaa7;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .metric-card {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2C3E50;
+            margin-bottom: 10px;
+        }
+
+        .metric-label {
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+
+        .features-section {
+            margin-top: 40px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #667eea;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            margin: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .github-section {
+            background: #f8f9fa;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #2C3E50;
+        }
+
+        .setup-steps {
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .setup-steps li {
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-warehouse"></i> Smart Warehouse System</h1>
+            <div class="subtitle">Enterprise-Grade Warehouse Management Dashboard</div>
+        </div>
+
+        <div class="demo-notice">
+            <strong>📌 Demo Version:</strong> This is a static demo. For the full interactive dashboard with live data, follow the setup instructions below.
+        </div>
+
+        <div class="content">
+            <h2 class="section-title">Dashboard Overview (Demo Data)</h2>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">1,247</div>
+                    <div class="metric-label">Total Products</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">23</div>
+                    <div class="metric-label">Low Stock Items</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$892,456</div>
+                    <div class="metric-label">Total Inventory Value</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">15</div>
+                    <div class="metric-label">Pending Inbound</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">8</div>
+                    <div class="metric-label">Pending Outbound</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">142</div>
+                    <div class="metric-label">Recent Movements</div>
+                </div>
+            </div>
+
+            <div class="features-section">
+                <h2 class="section-title">Key Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Real-time Analytics</h3>
+                        <p>Live dashboard with real-time inventory tracking, alerts, and performance metrics.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                        <h3>AI-Powered Insights</h3>
+                        <p>Intelligent chatbot assistant for inventory queries and predictive analytics.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+                        <h3>Mobile Responsive</h3>
+                        <p>Fully responsive design that works seamlessly across all devices and screen sizes.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>Enterprise Security</h3>
+                        <p>Bank-level security with role-based access control and audit trails.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="github-section">
+                <h2 class="section-title">🚀 Get Started</h2>
+                <p>Clone the repository and run the full application locally with live data and backend functionality.</p>
+                
+                <div class="setup-steps">
+                    <h3>Quick Setup:</h3>
+                    <ol>
+                        <li><strong>Clone Repository:</strong>
+                            <div class="code-block">git clone https://github.com/samarth4jain/smart-warehouse-system.git</div>
+                        </li>
+                        <li><strong>Install Dependencies:</strong>
+                            <div class="code-block">cd smart-warehouse-system<br>pip3 install fastapi uvicorn sqlalchemy python-multipart python-dotenv jinja2 aiofiles</div>
+                        </li>
+                        <li><strong>Initialize Database:</strong>
+                            <div class="code-block">python3 create_minimal_db.py</div>
+                        </li>
+                        <li><strong>Start Backend Server:</strong>
+                            <div class="code-block">uvicorn backend.app.main:app --host 0.0.0.0 --port 8001</div>
+                        </li>
+                        <li><strong>Access Dashboard:</strong>
+                            <div class="code-block">http://localhost:8001/dashboard</div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <a href="https://github.com/samarth4jain/smart-warehouse-system" class="btn">
+                        <i class="fab fa-github"></i> View on GitHub
+                    </a>
+                    <a href="https://github.com/samarth4jain/smart-warehouse-system/blob/main/DASHBOARD_STATUS.md" class="btn">
+                        <i class="fas fa-book"></i> Setup Documentation
+                    </a>
+                </div>
+            </div>
+
+            <div class="features-section">
+                <h2 class="section-title">Dashboard Screenshots</h2>
+                <div style="text-align: center; color: #6c757d; padding: 40px;">
+                    <i class="fas fa-image" style="font-size: 4em; margin-bottom: 20px;"></i>
+                    <p>Screenshots of the live dashboard will be displayed here.<br>
+                    Run the application locally to see the interactive interface.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive elements to the demo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate metric values
+            const metricValues = document.querySelectorAll('.metric-value');
+            metricValues.forEach(metric => {
+                metric.style.opacity = '0';
+                metric.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    metric.style.transition = 'all 0.6s ease';
+                    metric.style.opacity = '1';
+                    metric.style.transform = 'translateY(0)';
+                }, Math.random() * 500);
+            });
+
+            // Add hover effects
+            const cards = document.querySelectorAll('.metric-card, .feature-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
