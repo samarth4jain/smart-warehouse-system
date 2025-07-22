@@ -4,8 +4,8 @@ import logging
 from typing import List, Dict, Any, Optional, Tuple
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_, or_
-from langchain.vectorstores import Chroma
-from langchain.embeddings import SentenceTransformerEmbeddings
+from langchain_chroma import Chroma
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.docstore.document import Document
 from langchain.schema import BaseRetriever
@@ -33,32 +33,13 @@ class EnhancedWarehouseRAGService:
         
         # Intent patterns for natural language processing
         self.intent_patterns = {
-            # Query operations
-            'stock_check': [
-                r'(?:what|show|check|display).*?(?:stock|inventory).*?(?:level|quantity)?.*?(?:of|for)\s+(\w+)',
-                r'(?:how many|current stock).*?(\w+)',
-                r'stock\s+(?:level|of)\s+(\w+)',
-                r'(\w+)\s+(?:stock|inventory)',
-                r'(?:check|show)\s+(\w+)',
-                r'stock\s+(\w+)'
+            # Stock modification operations - must be checked before stock_check
+            'set_stock': [
+                r'(?:set|update|change)\s+(\w+)\s+stock\s+to\s+(\d+)',
+                r'(?:set|update|change).*?(\w+).*?(?:stock|inventory).*?(?:to|at)\s+(\d+)',
+                r'update.*?(\w+).*?stock.*?(\d+)',
+                r'set.*?(\w+).*?(\d+)'
             ],
-            'low_stock': [
-                r'(?:show|list|find|what).*?(?:low|running low).*?stock',
-                r'(?:products|items).*?(?:low|below|need).*?(?:stock|reorder)',
-                r'(?:alert|warning).*?stock',
-                r'low\s+stock',
-                r'stock\s+alerts?',
-                r'reorder\s+(?:alerts?|list)'
-            ],
-            'category_search': [
-                r'(?:show|list|find).*?(?:products|items).*?(?:in|from).*?(?:category\s+)?(\w+)',
-                r'(?:all|list).*?(\w+).*?(?:products|items)',
-                r'products.*?category.*?(\w+)',
-                r'(\w+)\s+(?:category|products)',
-                r'list.*?(\w+)'
-            ],
-            
-            # Data modification operations
             'add_stock': [
                 r'add\s+(\d+).*?(?:units?|pieces?|pcs?).*?(?:to|of)\s+(\w+)',
                 r'increase.*?(\w+).*?(?:by|to)\s+(\d+)',
@@ -75,6 +56,33 @@ class EnhancedWarehouseRAGService:
                 r'(\w+)\s+(?:\-|remove)\s+(\d+)',
                 r'stock\s+(\w+)\s+(?:\-|remove)\s+(\d+)'
             ],
+            
+            # Query operations
+            'stock_check': [
+                r'(?:what|show|check|display).*?(?:stock|inventory).*?(?:level|quantity)?.*?(?:of|for)\s+([A-Z]{2,4}\d{3,4})',
+                r'(?:how many|current stock).*?([A-Z]{2,4}\d{3,4})',
+                r'stock\s+(?:level|of)\s+([A-Z]{2,4}\d{3,4})',
+                r'([A-Z]{2,4}\d{3,4})\s+(?:stock|inventory)',
+                r'(?:check|show)\s+([A-Z]{2,4}\d{3,4})',
+                r'stock\s+([A-Z]{2,4}\d{3,4})'
+            ],
+            'low_stock': [
+                r'(?:show|list|find|what).*?(?:low|running low).*?stock',
+                r'(?:products|items).*?(?:low|below|need).*?(?:stock|reorder)',
+                r'(?:alert|warning).*?stock',
+                r'low\s+stock',
+                r'stock\s+alerts?',
+                r'reorder\s+(?:alerts?|list)',
+                r'what.*?(?:low|need).*?(?:stock|reorder)',
+                r'(?:show|display).*?alerts?'
+            ],
+            'category_search': [
+                r'(?:show|list|find).*?(?:products|items).*?(?:in|from).*?(?:category\s+)?(Electronics|Tools|Components|Office\s+Supplies)',
+                r'(?:all|list).*?(Electronics|Tools|Components|Office).*?(?:products|items)',
+                r'products.*?category.*?(Electronics|Tools|Components|Office)',
+                r'(?:show|list).*?all.*?(electronics|tools|components|office)',
+                r'(?:stock\s+levels?\s+for\s+all\s+)(electronics|tools|components|office)'
+            ],
             'set_stock': [
                 r'set.*?(\w+).*?(?:stock|to)\s+(\d+)',
                 r'update.*?(\w+).*?(?:stock|to)\s+(\d+)',
@@ -85,16 +93,16 @@ class EnhancedWarehouseRAGService:
             
             # Product management
             'add_product': [
-                r'(?:add|create).*?(?:new\s+)?product.*?(?:sku|code)?\s+(\w+)',
-                r'new.*?product.*?(\w+)',
-                r'create.*?(\w+)',
-                r'add.*?(\w+)'
+                r'(?:add|create).*?(?:new\s+)?product.*?(?:sku|code)\s+([A-Z]{2,4}\d{3,4})',
+                r'new.*?product.*?(?:sku|code)\s+([A-Z]{2,4}\d{3,4})',
+                r'create.*?product.*?([A-Z]{2,4}\d{3,4})',
+                r'add.*?product.*?([A-Z]{2,4}\d{3,4})'
             ],
             'delete_product': [
-                r'(?:delete|remove).*?product.*?(\w+)',
-                r'discontinue.*?(\w+)',
-                r'remove.*?(\w+)',
-                r'delete.*?(\w+)'
+                r'(?:delete|remove).*?product.*?([A-Z]{2,4}\d{3,4})',
+                r'discontinue.*?([A-Z]{2,4}\d{3,4})',
+                r'remove.*?product.*?([A-Z]{2,4}\d{3,4})',
+                r'delete.*?([A-Z]{2,4}\d{3,4})'
             ],
             
             # Advanced operations
@@ -123,7 +131,7 @@ class EnhancedWarehouseRAGService:
         try:
             # Initialize embeddings
             embedding_model = os.getenv("EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2")
-            self.embeddings = SentenceTransformerEmbeddings(model_name=embedding_model)
+            self.embeddings = HuggingFaceEmbeddings(model_name=embedding_model)
             
             # Initialize vector store
             vector_db_path = os.getenv("VECTOR_DB_PATH", "./data/chroma_db")
@@ -186,6 +194,12 @@ class EnhancedWarehouseRAGService:
                 return self._handle_space_optimization()
             elif intent == 'alerts':
                 return self._handle_alerts_query()
+            elif intent == 'product_search':
+                return self._handle_product_search(entities, normalized_query)
+            elif intent == 'general_inventory':
+                return self._handle_general_inventory()
+            elif intent == 'help_query':
+                return self._handle_help_query(normalized_query)
             else:
                 # Use RAG for general knowledge queries
                 return self._handle_general_query(query)
@@ -203,6 +217,7 @@ class EnhancedWarehouseRAGService:
         """Classify the intent of the query and extract entities"""
         
         entities = []
+        query_lower = query.lower().strip()
         
         # Try exact pattern matching first
         for intent, patterns in self.intent_patterns.items():
@@ -212,15 +227,92 @@ class EnhancedWarehouseRAGService:
                     entities = list(match.groups())
                     return intent, entities
         
-        # Try keyword-based classification for more general queries
-        query_lower = query.lower()
+        # Enhanced keyword-based classification for more general queries
         
-        # Stock checking keywords
-        if any(word in query_lower for word in ['stock', 'inventory', 'level', 'quantity', 'how many']):
-            # Try to extract product SKU from the query
+        # Low stock and alerts - check these first as they're specific
+        low_stock_keywords = ['low stock', 'running low', 'need reorder', 'stock alert', 'low on stock']
+        alert_keywords = ['alerts', 'warnings', 'stock alerts', 'show alerts', 'notifications']
+        if any(phrase in query_lower for phrase in low_stock_keywords + alert_keywords):
+            return 'low_stock', []
+        
+        # Category searches - be more specific about product listing
+        category_keywords = ['list all', 'show all', 'all products', 'products in', 'category', 'list products', 'show products', 'show me all', 'stock levels for all']
+        if any(phrase in query_lower for phrase in category_keywords):
+            if 'electronics' in query_lower:
+                return 'category_search', ['Electronics']
+            elif 'tools' in query_lower or 'tool' in query_lower:
+                return 'category_search', ['Tools']
+            elif 'office' in query_lower:
+                return 'category_search', ['Office Supplies']
+            elif 'components' in query_lower or 'component' in query_lower:
+                return 'category_search', ['Components']
+            else:
+                return 'category_search', ['All']  # Show all products
+        
+        # Demand forecasting
+        forecast_keywords = ['forecast', 'predict', 'demand', 'prediction', 'generate forecast']
+        if any(word in query_lower for word in forecast_keywords):
+            return 'demand_forecast', []
+        
+        # Space optimization
+        space_keywords = ['optimize', 'layout', 'space', 'warehouse layout', 'optimization']
+        if any(word in query_lower for word in space_keywords):
+            return 'space_optimization', []
+        
+        # Product management - deletion (be careful about stock vs product deletion)
+        delete_keywords = ['delete product', 'remove product']
+        if any(phrase in query_lower for phrase in delete_keywords):
             sku_match = re.search(r'\b([A-Z]{2,}\d{3,}|\w+\d+)\b', query, re.IGNORECASE)
             if sku_match:
+                return 'delete_product', [sku_match.group(1)]
+        
+        # Product management - addition
+        add_product_keywords = ['new product', 'add product', 'create product']
+        if any(phrase in query_lower for phrase in add_product_keywords):
+            sku_match = re.search(r'\b([A-Z]{2,}\d{3,}|\w+\d+)\b', query, re.IGNORECASE)
+            if sku_match:
+                return 'add_product', [sku_match.group(1)]
+        
+        # Stock management - setting stock (must check before general stock checks)
+        set_stock_patterns = [r'set\s+(\w+\d+|\w+)\s+stock\s+to\s+(\d+)', r'update\s+(\w+\d+|\w+)\s+stock\s+to\s+(\d+)', r'change\s+(\w+\d+|\w+)\s+stock\s+to\s+(\d+)']
+        for pattern in set_stock_patterns:
+            match = re.search(pattern, query_lower)
+            if match:
+                return 'set_stock', [match.group(1).upper(), match.group(2)]
+        
+        # Stock management - adding stock
+        add_stock_keywords = ['add', 'increase', 'receive', '+']
+        if any(word in query_lower for word in add_stock_keywords) and any(word in query_lower for word in ['units', 'stock', 'inventory']):
+            qty_match = re.search(r'(\d+)', query)
+            sku_match = re.search(r'\b([A-Z]{2,}\d{3,}|\w+\d+)\b', query, re.IGNORECASE)
+            if qty_match and sku_match:
+                return 'add_stock', [qty_match.group(1), sku_match.group(1)]
+        
+        # Stock management - removing stock
+        remove_stock_keywords = ['remove', 'decrease', 'dispatch', 'subtract', '-']
+        if any(word in query_lower for word in remove_stock_keywords) and any(word in query_lower for word in ['units', 'stock', 'inventory']):
+            qty_match = re.search(r'(\d+)', query)
+            sku_match = re.search(r'\b([A-Z]{2,}\d{3,}|\w+\d+)\b', query, re.IGNORECASE)
+            if qty_match and sku_match:
+                return 'remove_stock', [qty_match.group(1), sku_match.group(1)]
+        
+        # Stock checking - must be after other stock operations to avoid conflicts
+        stock_check_keywords = ['stock', 'inventory', 'level', 'quantity', 'how many', 'current stock', 'available']
+        if any(word in query_lower for word in stock_check_keywords):
+            # Try to extract product SKU from the query - be more specific with pattern
+            sku_match = re.search(r'\b([A-Z]{2,4}\d{3,4})\b', query, re.IGNORECASE)
+            if sku_match:
                 return 'stock_check', [sku_match.group(1)]
+            # Try to find product names (like "wireless headphones") - extract just the product name
+            elif any(product_name in query_lower for product_name in ['wireless', 'headphones', 'bluetooth', 'circuit', 'drill', 'multimeter']):
+                # Extract product descriptive terms
+                product_terms = []
+                for term in ['wireless', 'headphones', 'bluetooth', 'circuit', 'drill', 'multimeter', 'boards', 'impact', 'digital']:
+                    if term in query_lower:
+                        product_terms.append(term)
+                search_term = ' '.join(product_terms)
+                return 'product_search', [search_term]
+            # Category-based stock checking
             elif 'electronics' in query_lower:
                 return 'category_search', ['Electronics']
             elif 'tools' in query_lower:
@@ -230,70 +322,14 @@ class EnhancedWarehouseRAGService:
             elif 'components' in query_lower:
                 return 'category_search', ['Components']
             else:
-                return 'stock_check', []
+                return 'general_inventory', []
         
-        # Low stock alerts
-        if any(phrase in query_lower for phrase in ['low stock', 'running low', 'need reorder', 'stock alert']):
-            return 'low_stock', []
+        # Help and information queries
+        help_keywords = ['how do', 'how to', 'help', 'guide', 'explain', 'what is', 'how can']
+        if any(phrase in query_lower for phrase in help_keywords):
+            return 'help_query', []
         
-        # Category searches
-        if any(word in query_lower for word in ['category', 'list', 'show all', 'all products']):
-            if 'electronics' in query_lower:
-                return 'category_search', ['Electronics']
-            elif 'tools' in query_lower:
-                return 'category_search', ['Tools']
-            elif 'office' in query_lower:
-                return 'category_search', ['Office Supplies']
-            elif 'components' in query_lower:
-                return 'category_search', ['Components']
-            else:
-                return 'category_search', []
-        
-        # Adding stock
-        if any(word in query_lower for word in ['add', 'increase', 'receive']):
-            # Try to extract quantity and SKU
-            qty_match = re.search(r'(\d+)', query)
-            sku_match = re.search(r'\b([A-Z]{2,}\d{3,}|\w+\d+)\b', query, re.IGNORECASE)
-            if qty_match and sku_match:
-                return 'add_stock', [qty_match.group(1), sku_match.group(1)]
-        
-        # Removing stock
-        if any(word in query_lower for word in ['remove', 'decrease', 'dispatch']):
-            qty_match = re.search(r'(\d+)', query)
-            sku_match = re.search(r'\b([A-Z]{2,}\d{3,}|\w+\d+)\b', query, re.IGNORECASE)
-            if qty_match and sku_match:
-                return 'remove_stock', [qty_match.group(1), sku_match.group(1)]
-        
-        # Setting stock
-        if any(phrase in query_lower for phrase in ['set', 'update', 'change']):
-            qty_match = re.search(r'(\d+)', query)
-            sku_match = re.search(r'\b([A-Z]{2,}\d{3,}|\w+\d+)\b', query, re.IGNORECASE)
-            if qty_match and sku_match:
-                return 'set_stock', [sku_match.group(1), qty_match.group(1)]
-        
-        # Forecasting
-        if any(word in query_lower for word in ['forecast', 'predict', 'demand']):
-            return 'demand_forecast', []
-        
-        # Space optimization
-        if any(word in query_lower for word in ['optimize', 'layout', 'space']):
-            return 'space_optimization', []
-        
-        # Alerts
-        if any(word in query_lower for word in ['alert', 'warning', 'notification']):
-            return 'alerts', []
-        
-        # Product management
-        if 'delete' in query_lower or 'remove' in query_lower:
-            sku_match = re.search(r'\b([A-Z]{2,}\d{3,}|\w+\d+)\b', query, re.IGNORECASE)
-            if sku_match:
-                return 'delete_product', [sku_match.group(1)]
-        
-        if any(phrase in query_lower for phrase in ['new product', 'add product', 'create product']):
-            sku_match = re.search(r'\b([A-Z]{2,}\d{3,}|\w+\d+)\b', query, re.IGNORECASE)
-            if sku_match:
-                return 'add_product', [sku_match.group(1)]
-        
+        # Default to general query
         return 'general_query', []
     
     def _handle_stock_check(self, entities: List[str], query: str) -> Dict[str, Any]:
@@ -1033,18 +1069,37 @@ class EnhancedWarehouseRAGService:
     def _handle_category_search(self, entities: List[str]) -> Dict[str, Any]:
         """Handle category-based product searches"""
         
-        if not entities:
-            # Show all categories
-            categories = self.db.query(Product.category).distinct().all()
-            category_list = [cat[0] for cat in categories if cat[0]]
+        if not entities or (entities and entities[0].lower() == 'all'):
+            # Show all products
+            products = self.db.query(Product).all()
+            
+            product_data = []
+            for product in products:
+                inventory = self.db.query(Inventory).filter(Inventory.product_id == product.id).first()
+                product_data.append({
+                    "sku": product.sku,
+                    "name": product.name,
+                    "category": product.category,
+                    "stock": inventory.available_quantity if inventory else 0,
+                    "location": product.location,
+                    "price": product.unit_price
+                })
+            
+            if not product_data:
+                return {
+                    "success": False,
+                    "intent": "category_search",
+                    "action": "not_found",
+                    "error": "No products found in the warehouse"
+                }
             
             return {
                 "success": True,
                 "intent": "category_search",
-                "action": "list_categories",
-                "data": category_list,
-                "message": f"Available categories: {', '.join(category_list)}",
-                "summary": f"Found {len(category_list)} product categories"
+                "action": "query",
+                "data": product_data,
+                "message": f"Found {len(product_data)} total products in warehouse",
+                "summary": f"All products: {len(product_data)} items"
             }
         
         category = entities[0].title()
@@ -1345,3 +1400,164 @@ class EnhancedWarehouseRAGService:
                 "action": "error",
                 "error": f"Failed to create product: {str(e)}"
             }
+    
+    def _handle_product_search(self, entities: List[str], query: str) -> Dict[str, Any]:
+        """Handle product searches by name or description"""
+        
+        search_term = entities[0] if entities else query
+        
+        # Search products by name or description
+        products = self.db.query(Product).filter(
+            or_(
+                Product.name.ilike(f"%{search_term}%"),
+                Product.description.ilike(f"%{search_term}%"),
+                Product.sku.ilike(f"%{search_term}%")
+            )
+        ).all()
+        
+        if not products:
+            # Try to find similar products for suggestions
+            suggestions = self._get_product_suggestions(search_term)
+            return {
+                "success": False,
+                "intent": "product_search",
+                "action": "suggestion",
+                "error": f"Product '{search_term.upper()}' not found",
+                "suggestions": suggestions
+            }
+        
+        product_data = []
+        for product in products:
+            inventory = self.db.query(Inventory).filter(Inventory.product_id == product.id).first()
+            product_data.append({
+                "sku": product.sku,
+                "name": product.name,
+                "category": product.category,
+                "stock": inventory.available_quantity if inventory else 0,
+                "total_stock": inventory.quantity if inventory else 0,
+                "reserved": inventory.reserved_quantity if inventory else 0,
+                "location": product.location,
+                "price": product.unit_price
+            })
+        
+        return {
+            "success": True,
+            "intent": "product_search",
+            "action": "query",
+            "data": product_data,
+            "message": f"Found {len(product_data)} matching products",
+            "summary": f"Search '{search_term}': {len(product_data)} results"
+        }
+    
+    def _handle_general_inventory(self) -> Dict[str, Any]:
+        """Handle general inventory overview requests"""
+        
+        # Get total counts
+        total_products = self.db.query(Product).count()
+        total_inventory = self.db.query(func.sum(Inventory.quantity)).scalar() or 0
+        total_available = self.db.query(func.sum(Inventory.available_quantity)).scalar() or 0
+        
+        # Get low stock items
+        low_stock_items = self.db.query(Product, Inventory).join(
+            Inventory, Product.id == Inventory.product_id
+        ).filter(
+            Inventory.available_quantity <= Product.reorder_level
+        ).limit(5).all()
+        
+        # Get categories
+        categories = self.db.query(Product.category, func.count(Product.id)).group_by(
+            Product.category
+        ).all()
+        
+        low_stock_data = []
+        for product, inventory in low_stock_items:
+            low_stock_data.append({
+                "sku": product.sku,
+                "name": product.name,
+                "current_stock": inventory.available_quantity,
+                "reorder_level": product.reorder_level
+            })
+        
+        category_data = [{"category": cat, "count": count} for cat, count in categories]
+        
+        return {
+            "success": True,
+            "intent": "general_inventory",
+            "action": "overview",
+            "data": {
+                "totals": {
+                    "products": total_products,
+                    "total_stock": total_inventory,
+                    "available_stock": total_available
+                },
+                "low_stock": low_stock_data,
+                "categories": category_data
+            },
+            "message": f"Inventory Overview: {total_products} products, {total_available} units available",
+            "summary": f"Warehouse has {total_products} products with {len(low_stock_data)} items needing reorder"
+        }
+    
+    def _handle_help_query(self, query: str) -> Dict[str, Any]:
+        """Handle help and information requests"""
+        
+        help_info = {
+            "inventory_commands": [
+                "Check stock: 'What is the stock level of ELEC001?'",
+                "Add stock: 'Add 50 units to ELEC001'",
+                "Remove stock: 'Remove 10 units from COMP001'",
+                "Set stock: 'Set TOOL001 stock to 100'"
+            ],
+            "product_commands": [
+                "List products: 'Show me all electronics'",
+                "Search products: 'How many wireless headphones do we have?'",
+                "Add product: 'Add new product with SKU TEST001'",
+                "Delete product: 'Delete product COMP005'"
+            ],
+            "analytics_commands": [
+                "Low stock: 'What products are low on stock?'",
+                "Forecasting: 'Generate demand forecast'",
+                "Optimization: 'Optimize warehouse layout'",
+                "Alerts: 'Show me stock alerts'"
+            ]
+        }
+        
+        if 'inventory' in query or 'stock' in query:
+            focus = "inventory_commands"
+        elif 'product' in query:
+            focus = "product_commands"
+        elif 'analytics' in query or 'forecast' in query:
+            focus = "analytics_commands"
+        else:
+            focus = "all"
+        
+        return {
+            "success": True,
+            "intent": "help_query",
+            "action": "information",
+            "data": help_info,
+            "message": "Here are the available commands you can use:",
+            "summary": f"Help information provided for {focus}"
+        }
+    
+    def _get_product_suggestions(self, search_term: str, limit: int = 5) -> List[Dict[str, str]]:
+        """Get product suggestions based on search term"""
+        
+        # Search for similar products using fuzzy matching
+        products = self.db.query(Product).filter(
+            or_(
+                Product.name.ilike(f"%{search_term}%"),
+                Product.description.ilike(f"%{search_term}%"),
+                Product.sku.ilike(f"%{search_term}%"),
+                Product.category.ilike(f"%{search_term}%")
+            )
+        ).limit(limit).all()
+        
+        suggestions = []
+        for product in products:
+            suggestions.append({
+                "sku": product.sku,
+                "name": product.name,
+                "category": product.category
+            })
+        
+        return suggestions
