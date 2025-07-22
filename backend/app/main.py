@@ -73,6 +73,18 @@ async def chatbot_page():
     except UnicodeDecodeError:
         return HTMLResponse(content="<h1>Chatbot Interface</h1><p>Error reading file - encoding issue</p>")
 
+@app.get("/dashboard", response_class=HTMLResponse)
+async def dashboard_page():
+    """Serve the main dashboard page"""
+    html_file = os.path.join(frontend_path, "dashboard.html")
+    try:
+        with open(html_file, "r", encoding="utf-8") as f:
+            return HTMLResponse(content=f.read())
+    except FileNotFoundError:
+        return HTMLResponse(content="<h1>Dashboard Not Found</h1><p>Please ensure the dashboard file exists.</p>")
+    except UnicodeDecodeError:
+        return HTMLResponse(content="<h1>Dashboard</h1><p>Error reading file - encoding issue</p>")
+
 @app.get("/advanced-dashboard", response_class=HTMLResponse)
 async def advanced_dashboard():
     """Redirect to enterprise dashboard (consolidated)"""

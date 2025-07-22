@@ -2,6 +2,7 @@
 class DashboardManager {
     constructor() {
         this.currentSection = 'dashboard';
+        this.apiBaseUrl = '/api';  // Use relative URL when served from same server
         this.init();
     }
 
@@ -114,20 +115,33 @@ class DashboardManager {
         }
     }
 
-    // Enhanced API call with retry logic
-    async apiCallWithRetry(endpoint, maxRetries = 3) {
-        for (let i = 0; i < maxRetries; i++) {
+        async apiCallWithRetry(endpoint, maxRetries = 3) {
+        let lastError;
+        const fullUrl = `${this.apiBaseUrl}${endpoint}`;
+        
+        for (let attempt = 1; attempt <= maxRetries; attempt++) {
             try {
-                return await this.apiCall(endpoint);
-            } catch (error) {
-                console.warn(`API call attempt ${i + 1} failed for ${endpoint}:`, error.message);
+                const response = await fetch(fullUrl, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
                 
-                if (i === maxRetries - 1) {
-                    throw error;
+                if (!response.ok) {
+                    throw new Error(`API call failed: ${response.statusText}`);
                 }
                 
-                // Wait before retrying (exponential backoff)
-                await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+                return await response.json();
+            } catch (error) {
+                lastError = error;
+                console.warn(`API attempt ${attempt} failed:`, error);
+                
+                if (attempt === maxRetries) {
+                    throw lastError;
+                }
+                
+                // Wait before retry (exponential backoff)
+                await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
             }
         }
     }
@@ -415,9 +429,9 @@ class DashboardManager {
         return new Date(dateString).toLocaleString();
     }
 
-    // API helper
     async apiCall(endpoint, options = {}) {
-        const response = await fetch(endpoint, {
+        const fullUrl = `${this.apiBaseUrl}${endpoint}`;
+        const response = await fetch(fullUrl, {
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
