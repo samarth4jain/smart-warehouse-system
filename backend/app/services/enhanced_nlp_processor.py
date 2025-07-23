@@ -342,18 +342,31 @@ class EnhancedNLPProcessor:
         
         # Try to extract product name from casual patterns
         casual_product_patterns = [
-            r"do\s+we\s+have\s+(?:any\s+)?(.+?)(?:\s+left|\s+available|\s+in\s+stock|$)",
-            r"got\s+any\s+(.+?)(?:\s+left|\s+available|$)",
-            r"check\s+(?:if\s+we\s+have\s+)?(.+?)(?:\s+stock|\s+inventory|$)",
+            # Pattern for "check inventory for X", "check stock for X"
+            r"check\s+(?:inventory|stock)\s+(?:for\s+)?(.+?)(?:\?|$)",
+            r"inventory\s+(?:check\s+)?(?:for\s+)?(.+?)(?:\?|$)",
+            r"stock\s+(?:check\s+)?(?:for\s+)?(.+?)(?:\?|$)",
+            # Basic existence queries
+            r"do\s+we\s+have\s+(?:any\s+)?(.+?)(?:\s+left|\s+available|\s+in\s+stock|\?|$)",
+            r"got\s+any\s+(.+?)(?:\s+left|\s+available|\?|$)",
+            r"have\s+(?:any\s+)?(.+?)(?:\s+in\s+stock|\?|$)",
+            # Quantity queries
             r"how\s+much\s+(.+?)\s+(?:do\s+we\s+have|is\s+left)",
-            r"where\s+(?:is|are)\s+(?:the\s+)?(.+?)(?:\s+located|$)",
+            r"how\s+many\s+(.+?)\s+(?:do\s+we\s+have|are\s+left)",
+            # Location queries
+            r"where\s+(?:is|are)\s+(?:the\s+)?(.+?)(?:\s+located|\?|$)",
+            # Simple product name (fallback for single words or phrases)
+            r"^([A-Za-z][A-Za-z0-9\s]{2,})(?:\?|$)"
         ]
         
         for pattern in casual_product_patterns:
-            match = re.search(pattern, message, re.IGNORECASE)
+            match = re.search(pattern, message.strip(), re.IGNORECASE)
             if match:
                 product_name = match.group(1).strip()
-                if len(product_name) > 2:
+                # Clean up the product name
+                product_name = re.sub(r'[?!.,]', '', product_name)
+                product_name = product_name.strip()
+                if len(product_name) > 2 and not product_name.lower() in ['stock', 'inventory', 'any', 'some']:
                     entities["product_name"] = product_name.title()
                     break
         

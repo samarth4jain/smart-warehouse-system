@@ -1,5 +1,4 @@
 from sqlalchemy import create_engine, MetaData
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import os
 from dotenv import load_dotenv
@@ -21,8 +20,8 @@ else:
 # Create SessionLocal class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Create Base class
-Base = declarative_base()
+# Import Base from models - this ensures we use the same Base everywhere
+from .models.database_models import Base
 
 # Metadata
 metadata = MetaData()

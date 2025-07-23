@@ -57,7 +57,10 @@ async def process_chat_message(chat_message: ChatMessage, db: Session = Depends(
         )
         
     except Exception as e:
-        # Error fallback
+        # Error fallback with debug info
+        print(f"Chatbot error: {str(e)}")
+        import traceback
+        traceback.print_exc()
         return ChatResponse(
             message="I apologize, but I'm experiencing technical difficulties. Please try again or contact support.",
             intent="error",

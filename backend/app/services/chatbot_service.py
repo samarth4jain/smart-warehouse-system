@@ -1,4 +1,5 @@
 import re
+import os
 from typing import Dict, List, Tuple, Optional, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import func
@@ -67,8 +68,9 @@ class ChatbotService:
             # Fallback to original NLP if confidence is low or enhanced NLP fails
             if confidence < 0.4:
                 try:
-                    intent, confidence, entities = self.nlp.classify_intent_enhanced(processed_message)
-                    context = self.nlp.extract_conversational_context(processed_message)
+                    intent, confidence = self.enhanced_nlp.classify_intent_enhanced(processed_message)
+                    entities = self.enhanced_nlp.extract_entities_enhanced(processed_message, intent)
+                    context = self.enhanced_nlp.extract_context(processed_message)
                     response_style = "casual" if context.get("formality") != "formal" else "formal"
                     
                     # Boost confidence if we found good entities
@@ -94,7 +96,11 @@ class ChatbotService:
         )
         
         # Add conversational elements based on context
-        response_data = self._enhance_response_with_personality(response_data, context, response_style)
+        try:
+            response_data = self._enhance_response_with_personality(response_data, context, response_style)
+        except AttributeError as e:
+            print(f"Warning: Personality enhancement failed: {e}")
+            # Continue without personality enhancement
         
         # Enhanced response validation
         if not response_data or not response_data.get("message"):
@@ -429,6 +435,7 @@ What would you like me to help you with?""",
         sku = entities.get("sku")
         product_type = entities.get("product_type")
         product_keyword = entities.get("product_keyword")
+        product_name = entities.get("product_name")
         
         try:
             if sku:
@@ -438,17 +445,23 @@ What would you like me to help you with?""",
                 if products:
                     product = products[0]  # Take first match
             
-            elif product_type or product_keyword:
-                # Search by product type or keyword
-                search_term = product_type or product_keyword
+            elif product_type or product_keyword or product_name:
+                # Clean search term by removing punctuation
+                search_term = product_type or product_keyword or product_name
+                search_term = search_term.strip('?!.,;:"\'').strip()
+                print(f"Debug: Searching for '{search_term}'")
+                
                 products = self.db.query(Product).filter(
                     Product.name.ilike(f"%{search_term}%") | 
                     Product.description.ilike(f"%{search_term}%") |
-                    Product.category.ilike(f"%{search_term}%")
+                    Product.category.ilike(f"%{search_term}%") |
+                    Product.sku.ilike(f"%{search_term}%")
                 ).all()
+                print(f"Debug: Found {len(products)} products")
                 
                 if products:
                     product = products[0]  # Take first match for now
+                    print(f"Debug: Selected product: {product.name}")
             
             if product:
                 return self._generate_inventory_response(product, search_term, products if len(products) > 1 else None)
@@ -487,15 +500,20 @@ What would you like me to help you with?""",
     def _generate_inventory_response(self, product: Product, search_term: str, additional_products: List = None) -> Dict:
         """Generate detailed inventory response"""
         try:
+            print(f"Debug: Generating response for product: {product.name} (ID: {product.id})")
             # Get inventory information
             inventory = self.db.query(Inventory).filter(Inventory.product_id == product.id).first()
+            print(f"Debug: Inventory found: {inventory is not None}")
             
             if inventory:
+                print(f"Debug: Processing inventory data...")
                 quantity = inventory.quantity
-                location = inventory.location or "Not specified"
+                location = product.location or "Not specified"
+                print(f"Debug: Quantity: {quantity}, Location: {location}")
                 
                 # Determine stock status
                 reorder_level = product.reorder_level or 10
+                print(f"Debug: Reorder level: {reorder_level}")
                 if quantity <= 0:
                     status = "🔴 OUT OF STOCK"
                     status_color = "critical"
@@ -505,7 +523,9 @@ What would you like me to help you with?""",
                 else:
                     status = "🟢 IN STOCK"
                     status_color = "good"
+                print(f"Debug: Status: {status}")
                 
+                print(f"Debug: Building message...")
                 message = f"""✅ Found **{product.name}** (SKU: {product.sku})
 
 📦 **Stock Information:**
@@ -518,6 +538,7 @@ What would you like me to help you with?""",
 • **Category:** {product.category or 'Uncategorized'}
 • **Unit Price:** ${product.unit_price or 'N/A'}
 • **Description:** {product.description or 'No description available'}"""
+                print(f"Debug: Message built successfully")
 
                 # Add suggestions based on stock status
                 suggestions = []
@@ -537,7 +558,7 @@ What would you like me to help you with?""",
                 if additional_products and len(additional_products) > 1:
                     message += f"\n\n💡 **Found {len(additional_products)} products matching '{search_term}'. Use more specific terms or SKU for exact matches.**"
                 
-                return {
+                response = {
                     "message": message,
                     "success": True,
                     "data": {
@@ -555,6 +576,8 @@ What would you like me to help you with?""",
                     "actions": actions,
                     "action_taken": "inventory_checked"
                 }
+                print(f"Debug: Returning successful response: {response['success']}")
+                return response
             else:
                 return {
                     "message": f"Found product **{product.name}** (SKU: {product.sku}) but no inventory data available. This might be a new product not yet stocked.",
@@ -888,3 +911,96 @@ What specific area of warehouse management can I help you with?""",
                 "actions": ["check_inventory", "view_alerts", "show_help"],
                 "action_taken": "general_guidance_provided"
             }
+    
+    def _enhance_response_with_personality(self, response_data: Dict, context: Dict, response_style: str) -> Dict:
+        """Enhance response with personality and context-appropriate style"""
+        if not response_data or not response_data.get("message"):
+            return response_data
+            
+        # Add personality elements based on response style
+        if response_style == "casual":
+            # Add friendly elements for casual responses
+            message = response_data["message"]
+            if not any(greeting in message.lower() for greeting in ["hi", "hello", "hey"]):
+                # Add casual greeting if appropriate
+                if context.get("is_greeting", False):
+                    message = "Hi there! " + message
+            response_data["message"] = message
+            
+        elif response_style == "formal":
+            # Ensure formal tone
+            message = response_data["message"]
+            if message and not message.endswith((".", "!", "?")):
+                message += "."
+            response_data["message"] = message
+            
+        # Add contextual elements
+        if context.get("urgency") == "high":
+            if "suggestions" in response_data:
+                response_data["suggestions"].insert(0, "Contact supervisor immediately")
+                
+        return response_data
+    
+    def _get_error_message(self, error: str, response_style: str) -> str:
+        """Get appropriate error message based on response style"""
+        if response_style == "formal":
+            return f"I encountered an error while processing your request: {error}"
+        else:
+            return f"Oops! I ran into an issue: {error}"
+    
+    def _get_error_suggestions(self, response_style: str) -> List[str]:
+        """Get error suggestions based on response style"""
+        if response_style == "formal":
+            return ["Please try again", "Contact system administrator", "Check system status"]
+        else:
+            return ["Try again", "Contact support", "Check if everything's working"]
+    
+    def _handle_layman_inbound(self, message: str, entities: Dict, context: Dict, response_style: str) -> Dict:
+        """Handle inbound operations queries"""
+        return {
+            "message": "Inbound operations feature coming soon! I can help with inventory checks in the meantime.",
+            "success": True,
+            "suggestions": ["Check inventory", "View stock levels"],
+            "actions": ["check_inventory"],
+            "action_taken": "feature_unavailable"
+        }
+    
+    def _handle_layman_outbound(self, message: str, entities: Dict, context: Dict, response_style: str) -> Dict:
+        """Handle outbound operations queries"""
+        return {
+            "message": "Outbound operations feature coming soon! I can help with inventory checks in the meantime.",
+            "success": True,
+            "suggestions": ["Check inventory", "View stock levels"],
+            "actions": ["check_inventory"],
+            "action_taken": "feature_unavailable"
+        }
+    
+    def _handle_layman_stock_update(self, message: str, entities: Dict, context: Dict, response_style: str) -> Dict:
+        """Handle stock update queries"""
+        return {
+            "message": "Stock update feature coming soon! I can help with checking current stock levels.",
+            "success": True,
+            "suggestions": ["Check current stock", "View inventory"],
+            "actions": ["check_inventory"],
+            "action_taken": "feature_unavailable"
+        }
+    
+    def _handle_layman_order_status(self, message: str, entities: Dict, context: Dict, response_style: str) -> Dict:
+        """Handle order status queries"""
+        return {
+            "message": "Order status feature coming soon! I can help with inventory information.",
+            "success": True,
+            "suggestions": ["Check inventory", "View stock levels"],
+            "actions": ["check_inventory"],
+            "action_taken": "feature_unavailable"
+        }
+    
+    def _handle_layman_reporting(self, message: str, entities: Dict, context: Dict, response_style: str) -> Dict:
+        """Handle reporting and analytics queries"""
+        return {
+            "message": "Advanced reporting feature coming soon! I can provide basic inventory information.",
+            "success": True,
+            "suggestions": ["Check inventory", "View alerts"],
+            "actions": ["check_inventory", "view_alerts"],
+            "action_taken": "feature_unavailable"
+        }
