@@ -870,9 +870,9 @@
 I'm currently having trouble connecting to the warehouse database. Here's what I can help with offline:
 
 � **For Inventory Queries**: Try "Check stock SKU: PROD001"
-📦 **For Stock Updates**: Try "Add 50 units SKU: PROD001" 
-🚛 **For Orders**: Try "Check order status ORD001"
-📊 **For Reports**: Try "Show warehouse efficiency report"
+For Stock Updates: Try "Add 50 units SKU: PROD001" 
+🚛 For Orders: Try "Check order status ORD001"
+For Reports: Try "Show warehouse efficiency report"
 
 � **Tip**: Make sure the backend server is running on localhost:8000
 Please try your request again in a moment.`;
@@ -880,21 +880,21 @@ Please try your request again in a moment.`;
 
             // Enhanced pattern matching for better offline experience
             if (lowerMessage.includes('sku') || lowerMessage.includes('product') || lowerMessage.includes('item')) {
-                return `📦 **Inventory Query Format**
+                return `Inventory Query Format
                 
 To check specific products, use:
 • "Check stock SKU: PROD001"
 • "How much inventory for SKU: ABC123"
 • "Show product details LAPTOP001"
 
-📋 **Available Commands:**
+Available Commands:
 • Inventory checks with SKU
 • Stock updates with quantities
 • Order status lookups
 • Shipment tracking
 • Performance reports
 
-💡 **Example**: "Check stock SKU: LAPTOP001" or "Add 25 units SKU: PHONE123"`;
+Example: "Check stock SKU: LAPTOP001" or "Add 25 units SKU: PHONE123"`;
             }
 
             if (lowerMessage.includes('add') || lowerMessage.includes('update') || lowerMessage.includes('stock')) {
@@ -910,15 +910,15 @@ To update inventory, use:
 • "Update stock SKU: TABLET001 quantity 75"
 • "Received 200 units SKU: HEADSET001"
 
-💡 **Note**: Always include SKU and quantity for accurate processing.`;
+Note: Always include SKU and quantity for accurate processing.`;
             }
 
             // Default enhanced help
-            return `🤖 **Smart Warehouse AI Assistant**
+            return `Smart Warehouse AI Assistant
             
 I can help you with:
 
-📦 **Inventory Management**
+Inventory Management
 • "Check stock SKU: PROD001"
 • "Show inventory summary"
 • "What items are low on stock?"
@@ -932,11 +932,11 @@ I can help you with:
 • "Gate in shipment SH001"
 • "Dispatch order ORD001"
 
-📊 **Analytics**
+Analytics
 • "Show warehouse efficiency"
 • "Generate performance report"
 
-💡 **Tip**: Always include specific SKUs, order numbers, or shipment IDs for best results!`;
+Tip: Always include specific SKUs, order numbers, or shipment IDs for best results!`;
         }
 
         // Simple working AI response generator
@@ -948,39 +948,39 @@ I can help you with:
                 const sku = userMessage.match(/sku:?\s*([A-Z0-9-]+)/i)?.[1] || 'UNKNOWN';
                 const stock = Math.floor(Math.random() * 200) + 50;
                 
-                return `📦 **Stock Report for ${sku}**
+                return `Stock Report for ${sku}
 
 • Available: ${stock} units
 • Location: Warehouse A, Bay ${Math.floor(Math.random() * 20) + 1}
-• Status: ${stock > 50 ? '✅ In Stock' : '⚠️ Low Stock'}
+• Status: ${stock > 50 ? 'In Stock' : 'Low Stock'}
 • Last Updated: ${new Date().toLocaleDateString()}
 
-💡 Demo data - connect to live system for real inventory.`;
+Demo data - connect to live system for real inventory.`;
             }
             
             // Low stock alerts
             if (lower.includes('low') && lower.includes('stock')) {
-                return `⚠️ **Low Stock Alerts**
+                return `Low Stock Alerts
 
 Critical Items:
 • LAPTOP001 - 8 units (Reorder: 25)
 • PHONE123 - 15 units (Reorder: 30)
 • TABLET456 - 22 units (Reorder: 25)
 
-💡 Demo alerts - live system provides real-time monitoring.`;
+Demo alerts - live system provides real-time monitoring.`;
             }
             
             // Order tracking
             if (lower.includes('order') && (lower.includes('ord') || lower.includes('check'))) {
                 const orderId = userMessage.match(/ord\w*:?\s*([A-Z0-9-]+)/i)?.[1] || 'ORD001';
-                return `📋 **Order Status: ${orderId}**
+                return `Order Status: ${orderId}
 
 • Status: In Transit
 • Items: ${Math.floor(Math.random() * 5) + 1} products
 • Value: $${(Math.random() * 500 + 100).toFixed(2)}
 • Expected: ${new Date(Date.now() + 2*24*60*60*1000).toLocaleDateString()}
 
-💡 Demo tracking - connect for live order updates.`;
+Demo tracking - connect for live order updates.`;
             }
             
             // Performance reports
@@ -993,14 +993,14 @@ Today's Metrics:
 • Efficiency Score: 94/100
 • Revenue: $89,450
 
-Trending: ↗️ All metrics improving!
+Trending: All metrics improving!
 
-💡 Demo dashboard - live system provides real-time analytics.`;
+Demo dashboard - live system provides real-time analytics.`;
             }
             
             // Inventory summary
             if (lower.includes('inventory') && lower.includes('summary')) {
-                return `📊 **Inventory Overview**
+                return `Inventory Overview
 
 • Total SKUs: 1,247
 • Total Value: $2.3M
@@ -1012,19 +1012,19 @@ Today's Activity:
 • Shipped: 289 units
 • Adjustments: 8
 
-💡 Demo overview - connect for live inventory data.`;
+Demo overview - connect for live inventory data.`;
             }
             
             // Help system
             if (lower.includes('help') || lower.includes('commands')) {
-                return `🤖 **Smart Warehouse AI Commands**
+                return `Smart Warehouse AI Commands
 
-**📦 Inventory:**
+Inventory:
 • "Check stock SKU: LAPTOP001"
 • "What items are low on stock?"
 • "Show inventory summary"
 
-**📋 Orders:**
+Orders:
 • "Check order ORD123"
 • "Today's orders"
 
@@ -1032,22 +1032,22 @@ Today's Activity:
 • "Show warehouse performance"
 • "Generate efficiency report"
 
-**💡 Just ask naturally:**
+Just ask naturally:
 • "How many laptops do we have?"
 • "What needs attention today?"
 • "Show me today's numbers"
 
-Try any of these commands! 🚀`;
+Try any of these commands!`;
             }
             
             // Greetings
             if (lower.includes('hello') || lower.includes('hi ') || lower.includes('hey')) {
-                return `👋 **Hello! I'm Smart Warehouse AI**
+                return `Hello! I'm Smart Warehouse AI
 
 I can help you with:
-• 📦 Inventory management
-• 📋 Order tracking  
-• 📊 Performance analytics
+• Inventory management
+• Order tracking  
+• Performance analytics
 • 🚛 Shipment monitoring
 
 **Quick Start:**
@@ -1055,7 +1055,7 @@ I can help you with:
 • "Show warehouse performance"
 • "What items are low on stock?"
 
-What would you like to know? 🚀`;
+What would you like to know?`;
             }
             
             // Stock updates
@@ -1063,18 +1063,18 @@ What would you like to know? 🚀`;
                 const sku = userMessage.match(/sku:?\s*([A-Z0-9-]+)/i)?.[1] || 'UNKNOWN';
                 const qty = userMessage.match(/(\d+)\s*units?/i)?.[1] || '0';
                 
-                return `✅ **Stock Update Processed**
+                return `Stock Update Processed
 
 • SKU: ${sku}
 • Added: ${qty} units
 • New Total: ${Math.floor(Math.random() * 200) + parseInt(qty)} units
 • Updated: ${new Date().toLocaleString()}
 
-💡 Demo transaction - live system would update all platforms.`;
+Demo transaction - live system would update all platforms.`;
             }
             
             // Default response
-            return `🤖 **I'm here to help with warehouse operations!**
+            return `I'm here to help with warehouse operations!
 
 You asked: "${userMessage.substring(0, 60)}${userMessage.length > 60 ? '...' : ''}"
 
@@ -1084,7 +1084,7 @@ You asked: "${userMessage.substring(0, 60)}${userMessage.length > 60 ? '...' : '
 • "What items are low on stock?"
 • "Help" - for full command list
 
-I understand natural language, so just ask! 🚀`;
+I understand natural language, so just ask!`;
         }
 
         // Clear chat function
