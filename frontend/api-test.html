@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Connection Test</h1>
+    <div id="results"></div>
+    
+    <script>
+    async function testAPIs() {
+        const results = document.getElementById('results');
+        
+        // Test backend health
+        try {
+            console.log('Testing backend health...');
+            const healthResponse = await fetch('http://localhost:8001/health');
+            const healthData = await healthResponse.json();
+            results.innerHTML += '<p>✅ Backend Health: ' + JSON.stringify(healthData) + '</p>';
+        } catch (error) {
+            results.innerHTML += '<p>❌ Backend Health Error: ' + error.message + '</p>';
+        }
+        
+        // Test dashboard API
+        try {
+            console.log('Testing dashboard API...');
+            const dashResponse = await fetch('http://localhost:8001/api/dashboard/overview');
+            const dashData = await dashResponse.json();
+            results.innerHTML += '<p>✅ Dashboard API: ' + JSON.stringify(dashData) + '</p>';
+        } catch (error) {
+            results.innerHTML += '<p>❌ Dashboard API Error: ' + error.message + '</p>';
+        }
+        
+        // Test chatbot API
+        try {
+            console.log('Testing chatbot API...');
+            const chatResponse = await fetch('http://localhost:8001/api/chat/message', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: 'test',
+                    session_id: 'test123',
+                    user_id: 'web_user'
+                })
+            });
+            const chatData = await chatResponse.json();
+            results.innerHTML += '<p>✅ Chatbot API: Message sent successfully</p>';
+        } catch (error) {
+            results.innerHTML += '<p>❌ Chatbot API Error: ' + error.message + '</p>';
+        }
+    }
+    
+    // Run tests when page loads
+    testAPIs();
+    </script>
+</body>
+</html>

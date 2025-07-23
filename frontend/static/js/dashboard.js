@@ -1,14 +1,25 @@
 // Dashboard JavaScript
+const API_BASE_URL = 'http://localhost:8001';
+
 class DashboardManager {
     constructor() {
+        console.log('🏗️ DashboardManager constructor called');
         this.currentSection = 'dashboard';
         this.init();
     }
 
     init() {
+        console.log('⚙️ DashboardManager initializing...');
         this.setupEventListeners();
-        this.loadDashboardData();
         this.updateWelcomeTime();
+        
+        // Add a small delay to ensure DOM is fully ready
+        setTimeout(() => {
+            console.log('🚀 Starting dashboard data load after DOM ready...');
+            this.loadDashboardData();
+        }, 100);
+        
+        console.log('✅ DashboardManager initialization complete');
     }
 
     setupEventListeners() {
@@ -75,6 +86,7 @@ class DashboardManager {
     }
 
     async loadDashboardData() {
+        console.log('🔄 Starting dashboard data load...');
         this.showLoading();
         
         try {
@@ -83,6 +95,7 @@ class DashboardManager {
                 setTimeout(() => reject(new Error('Request timeout')), 15000)
             );
             
+            console.log('📡 Making API calls to:', API_BASE_URL);
             const apiCalls = Promise.all([
                 this.apiCallWithRetry('/api/dashboard/overview'),
                 this.apiCallWithRetry('/api/dashboard/inventory-alerts'),
@@ -90,6 +103,7 @@ class DashboardManager {
             ]);
 
             const [overview, alerts, activity] = await Promise.race([apiCalls, timeoutPromise]);
+            console.log('✅ API calls successful:', { overview, alerts, activity });
 
             this.updateMetrics(overview);
             this.updateAlerts(alerts);
@@ -100,7 +114,7 @@ class DashboardManager {
             
         } catch (error) {
             // Enhanced error handling with fallback data
-            console.error('Dashboard load error:', error);
+            console.error('❌ Dashboard load error:', error);
             
             // Try to load fallback/cached data
             const fallbackData = this.getFallbackDashboardData();
@@ -138,10 +152,16 @@ class DashboardManager {
         
         return {
             overview: {
-                total_products: "N/A (Offline)",
-                total_inventory_value: "N/A (Offline)",
-                low_stock_items: "N/A (Offline)",
-                pending_orders: "N/A (Offline)",
+                inventory: {
+                    total_products: 0,
+                    low_stock_items: 0,
+                    total_value: 0
+                },
+                operations: {
+                    pending_inbound: 0,
+                    pending_outbound: 0,
+                    recent_movements: 0
+                },
                 system_status: "Offline Mode",
                 last_updated: currentTime
             },
@@ -216,10 +236,55 @@ class DashboardManager {
     }
 
     updateMetrics(data) {
-        document.getElementById('total-products').textContent = data.inventory.total_products || 0;
-        document.getElementById('low-stock-items').textContent = data.inventory.low_stock_items || 0;
-        document.getElementById('pending-inbound').textContent = data.operations.pending_inbound || 0;
-        document.getElementById('pending-outbound').textContent = data.operations.pending_outbound || 0;
+        console.log('📊 Updating metrics with data:', data);
+        
+        // Ensure DOM is ready
+        if (document.readyState === 'loading') {
+            console.log('⏳ DOM still loading, waiting...');
+            document.addEventListener('DOMContentLoaded', () => this.updateMetrics(data));
+            return;
+        }
+        
+        try {
+            const totalProductsEl = document.getElementById('total-products');
+            const lowStockEl = document.getElementById('low-stock-items');
+            const pendingInboundEl = document.getElementById('pending-inbound');
+            const pendingOutboundEl = document.getElementById('pending-outbound');
+            
+            console.log('🎯 DOM elements found:', {
+                totalProductsEl: !!totalProductsEl,
+                lowStockEl: !!lowStockEl,
+                pendingInboundEl: !!pendingInboundEl,
+                pendingOutboundEl: !!pendingOutboundEl
+            });
+            
+            if (totalProductsEl) {
+                totalProductsEl.textContent = data.inventory.total_products || 0;
+                console.log('✅ Updated total-products:', data.inventory.total_products);
+            } else {
+                console.error('❌ total-products element not found');
+            }
+            if (lowStockEl) {
+                lowStockEl.textContent = data.inventory.low_stock_items || 0;
+                console.log('✅ Updated low-stock-items:', data.inventory.low_stock_items);
+            } else {
+                console.error('❌ low-stock-items element not found');
+            }
+            if (pendingInboundEl) {
+                pendingInboundEl.textContent = data.operations.pending_inbound || 0;
+                console.log('✅ Updated pending-inbound:', data.operations.pending_inbound);
+            } else {
+                console.error('❌ pending-inbound element not found');
+            }
+            if (pendingOutboundEl) {
+                pendingOutboundEl.textContent = data.operations.pending_outbound || 0;
+                console.log('✅ Updated pending-outbound:', data.operations.pending_outbound);
+            } else {
+                console.error('❌ pending-outbound element not found');
+            }
+        } catch (error) {
+            console.error('❌ Error updating metrics:', error);
+        }
     }
 
     updateAlerts(data) {
@@ -417,7 +482,10 @@ class DashboardManager {
 
     // API helper
     async apiCall(endpoint, options = {}) {
-        const response = await fetch(endpoint, {
+        const url = endpoint.startsWith('http') ? endpoint : `${API_BASE_URL}${endpoint}`;
+        console.log('🌐 Making API call to:', url);
+        
+        const response = await fetch(url, {
             headers: {
                 'Content-Type': 'application/json',
                 ...options.headers
@@ -425,11 +493,15 @@ class DashboardManager {
             ...options
         });
 
+        console.log('📥 API response status:', response.status, response.statusText);
+
         if (!response.ok) {
             throw new Error(`API call failed: ${response.statusText}`);
         }
 
-        return response.json();
+        const data = await response.json();
+        console.log('📋 API response data:', data);
+        return data;
     }
 
     // UI helpers
@@ -590,5 +662,35 @@ function showCreateOrderModal() {
 // Initialize dashboard when DOM is loaded
 let dashboard;
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 DOM loaded, initializing dashboard...');
     dashboard = new DashboardManager();
+    console.log('📱 Dashboard initialized:', dashboard);
+    
+    // Add global test function for debugging
+    window.testDashboardUpdate = function() {
+        console.log('🧪 Testing dashboard update with mock data...');
+        const testData = {
+            inventory: { total_products: 99, low_stock_items: 5, total_value: 50000 },
+            operations: { pending_inbound: 3, pending_outbound: 7, recent_movements: 12 }
+        };
+        if (dashboard) {
+            dashboard.updateMetrics(testData);
+        } else {
+            console.error('❌ Dashboard not initialized');
+        }
+    };
+    
+    window.testAPICall = async function() {
+        console.log('🧪 Testing direct API call...');
+        try {
+            const response = await fetch('http://localhost:8001/api/dashboard/overview');
+            const data = await response.json();
+            console.log('📡 API Response:', data);
+            if (dashboard) {
+                dashboard.updateMetrics(data);
+            }
+        } catch (error) {
+            console.error('❌ API test failed:', error);
+        }
+    };
 });

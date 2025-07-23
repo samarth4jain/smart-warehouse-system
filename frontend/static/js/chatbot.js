@@ -1,4 +1,6 @@
 // Chatbot JavaScript
+const API_BASE_URL = 'http://localhost:8001';
+
 class ChatbotManager {
     constructor() {
         this.sessionId = this.generateSessionId();
@@ -71,23 +73,15 @@ class ChatbotManager {
         }
     }
 
-    async sendMessage() {
-        const chatInput = document.getElementById('chat-input');
-        const message = chatInput.value.trim();
+    async sendMessage(message) {
+        if (!message.trim()) return;
 
-        if (!message || this.isTyping) return;
-
-        // Clear input and disable send button
-        chatInput.value = '';
-        this.updateSendButton();
-
-        // Add user message to chat
-        this.addUserMessage(message);
-
-        // Show typing indicator
+        this.addMessage(message, 'user');
+        this.clearInput();
         this.showTyping();
 
         try {
+            console.log('🤖 Sending message to chatbot API:', message);
             // Enhanced API call with try-catch error handling
             // Send message to API with retry logic
             let response;
@@ -100,9 +94,10 @@ class ChatbotManager {
                         user_id: 'web_user'
                     })
                 });
+                console.log('✅ Chatbot API response:', response);
             } catch (apiError) {
                 // Fallback to local intelligent response
-                console.warn('API unavailable, using local intelligence:', apiError.message);
+                console.warn('❌ API unavailable, using local intelligence:', apiError.message);
                 response = this.generateIntelligentFallbackResponse(message);
             }
 
@@ -319,6 +314,7 @@ I'll be back online shortly. Thank you for your patience!`,
     async apiCall(endpoint, options = {}) {
         const API_BASE_URL = this.getApiBaseUrl();
         const fullUrl = `${API_BASE_URL}${endpoint}`;
+        console.log('🌐 Chatbot API call to:', fullUrl);
         
         const defaultOptions = {
             headers: {
@@ -331,6 +327,7 @@ I'll be back online shortly. Thank you for your patience!`,
 
         try {
             const response = await fetch(fullUrl, defaultOptions);
+            console.log('📥 Chatbot API response status:', response.status, response.statusText);
             
             if (!response.ok) {
                 // More specific error handling
@@ -346,6 +343,8 @@ I'll be back online shortly. Thank you for your patience!`,
             }
 
             const data = await response.json();
+            console.log('📋 Chatbot API response data:', data);
+            return data;
             return data;
         } catch (error) {
             // Enhanced error logging
@@ -368,7 +367,7 @@ I'll be back online shortly. Thank you for your patience!`,
         
         // For local development
         if (hostname === 'localhost' || hostname === '127.0.0.1') {
-            return `${protocol}//${hostname}:8000`;
+            return `${protocol}//${hostname}:8001`;
         }
         
         // For production (GitHub Pages)

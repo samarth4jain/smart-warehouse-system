@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Debug</title>
+</head>
+<body>
+    <h1>Dashboard Debug Test</h1>
+    
+    <!-- Simplified metric elements -->
+    <div>
+        <h3>Total Products: <span id="total-products">-</span></h3>
+        <h3>Low Stock: <span id="low-stock-items">-</span></h3>
+        <h3>Pending Inbound: <span id="pending-inbound">-</span></h3>
+        <h3>Pending Outbound: <span id="pending-outbound">-</span></h3>
+    </div>
+    
+    <button onclick="testUpdate()">Test Update Metrics</button>
+    <button onclick="testAPI()">Test API Call</button>
+    
+    <script>
+    const API_BASE_URL = 'http://localhost:8001';
+    
+    function testUpdate() {
+        console.log('Testing updateMetrics with mock data...');
+        const testData = {
+            inventory: { total_products: 99, low_stock_items: 5 },
+            operations: { pending_inbound: 3, pending_outbound: 7 }
+        };
+        updateMetrics(testData);
+    }
+    
+    function updateMetrics(data) {
+        console.log('📊 Updating metrics with data:', data);
+        document.getElementById('total-products').textContent = data.inventory.total_products || 0;
+        document.getElementById('low-stock-items').textContent = data.inventory.low_stock_items || 0;
+        document.getElementById('pending-inbound').textContent = data.operations.pending_inbound || 0;
+        document.getElementById('pending-outbound').textContent = data.operations.pending_outbound || 0;
+        console.log('✅ Metrics updated successfully');
+    }
+    
+    async function testAPI() {
+        console.log('Testing API call...');
+        try {
+            const response = await fetch(API_BASE_URL + '/api/dashboard/overview');
+            const data = await response.json();
+            console.log('📡 API response:', data);
+            updateMetrics(data);
+        } catch (error) {
+            console.error('❌ API error:', error);
+        }
+    }
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Activity Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .activity-item { display: flex; align-items: center; gap: 12px; padding: 12px; border: 1px solid #ddd; margin: 8px 0; border-radius: 8px; }
+        .activity-icon { width: 40px; height: 40px; background: #f0f0f0; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .activity-content { flex: 1; }
+        .activity-description { margin: 0; font-weight: 500; }
+        .activity-time { font-size: 12px; color: #666; }
+        .inbound .activity-icon { background-color: #d4edda; color: #155724; }
+        .outbound .activity-icon { background-color: #fff3cd; color: #856404; }
+    </style>
+</head>
+<body>
+    <h1>Recent Activity Test</h1>
+    <div id="activity-container">Loading...</div>
+    
+    <script>
+        async function loadActivity() {
+            try {
+                console.log('🔄 Loading activity...');
+                const response = await fetch('http://localhost:8001/api/dashboard/recent-activity');
+                const data = await response.json();
+                console.log('✅ Activity data:', data);
+                
+                const container = document.getElementById('activity-container');
+                
+                if (!data.activities || data.activities.length === 0) {
+                    container.innerHTML = '<p>No recent activity</p>';
+                    return;
+                }
+                
+                const activityHTML = data.activities.map(activity => {
+                    const time = new Date(activity.timestamp).toLocaleString();
+                    const typeClass = activity.details?.movement_type || activity.type;
+                    const icon = activity.details?.movement_type === 'inbound' ? '📦' : 
+                                activity.details?.movement_type === 'outbound' ? '🚚' : '📋';
+                    
+                    return `
+                        <div class="activity-item ${typeClass}">
+                            <div class="activity-icon">${icon}</div>
+                            <div class="activity-content">
+                                <p class="activity-description">${activity.description}</p>
+                                <span class="activity-time">${time}</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                
+                container.innerHTML = activityHTML;
+                console.log(`✅ Displayed ${data.activities.length} activities`);
+                
+            } catch (error) {
+                console.error('❌ Error:', error);
+                document.getElementById('activity-container').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadActivity);
+    </script>
+</body>
+</html>

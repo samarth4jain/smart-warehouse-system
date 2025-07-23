@@ -7,6 +7,24 @@
     <link rel="stylesheet" href="static/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .status-bar {
+            padding: 10px 20px;
+            margin: 0;
+            font-size: 14px;
+            text-align: center;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .status-bar.success { background-color: #d4edda; color: #155724; }
+        .status-bar.error { background-color: #f8d7da; color: #721c24; }
+        
+        /* Activity Type Colors */
+        .activity-item.inbound .activity-icon { background-color: #d4edda; color: #155724; }
+        .activity-item.outbound .activity-icon { background-color: #fff3cd; color: #856404; }
+        .activity-description { font-weight: 500; margin: 0; }
+        .no-activity { text-align: center; color: #6c757d; padding: 20px; font-style: italic; }
+    </style>
 </head>
 <body>
     <div class="dashboard-container">
@@ -81,7 +99,7 @@
                 </div>
                 <div class="header-right">
                     <div class="header-actions">
-                        <button class="btn btn-primary" onclick="refreshData()">
+                        <button class="btn btn-primary" onclick="window.reloadDashboard()">
                             <i class="fas fa-sync-alt"></i> Refresh
                         </button>
                         <button class="btn btn-secondary" onclick="window.location.href='chatbot.html'">
@@ -90,6 +108,9 @@
                     </div>
                 </div>
             </header>
+
+            <!-- Status Bar -->
+            <div id="dashboard-status" class="status-bar"></div>
 
             <!-- Dashboard Overview Section -->
             <section id="dashboard-section" class="content-section active">
@@ -319,6 +340,6 @@
         </div>
     </div>
     
-    <script src="static/js/dashboard.js"></script>
+    <script src="static/js/simple_dashboard.js"></script>
 </body>
 </html>

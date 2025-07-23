@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Dashboard Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .metric { padding: 10px; margin: 10px; border: 1px solid #ccc; }
+        .metric h3 { margin: 0; font-size: 24px; color: #333; }
+        .metric p { margin: 5px 0 0 0; color: #666; }
+        #status { padding: 10px; margin: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Simple Dashboard Test</h1>
+    
+    <div id="status">Loading...</div>
+    
+    <div class="metric">
+        <h3 id="total-products">-</h3>
+        <p>Total Products</p>
+    </div>
+    
+    <div class="metric">
+        <h3 id="low-stock-items">-</h3>
+        <p>Low Stock Items</p>
+    </div>
+    
+    <div class="metric">
+        <h3 id="pending-inbound">-</h3>
+        <p>Pending Inbound</p>
+    </div>
+    
+    <div class="metric">
+        <h3 id="pending-outbound">-</h3>
+        <p>Pending Outbound</p>
+    </div>
+    
+    <button onclick="loadData()">Reload Data</button>
+    
+    <script>
+        const API_BASE_URL = 'http://localhost:8001';
+        
+        async function loadData() {
+            const statusDiv = document.getElementById('status');
+            statusDiv.textContent = 'Loading data...';
+            statusDiv.className = '';
+            
+            try {
+                console.log('🚀 Fetching data from:', `${API_BASE_URL}/api/dashboard/overview`);
+                
+                const response = await fetch(`${API_BASE_URL}/api/dashboard/overview`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                
+                console.log('📥 Response:', response);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('📊 Data received:', data);
+                
+                // Update UI
+                document.getElementById('total-products').textContent = data.inventory.total_products;
+                document.getElementById('low-stock-items').textContent = data.inventory.low_stock_items;
+                document.getElementById('pending-inbound').textContent = data.operations.pending_inbound;
+                document.getElementById('pending-outbound').textContent = data.operations.pending_outbound;
+                
+                statusDiv.textContent = `✅ Data loaded successfully at ${new Date().toLocaleTimeString()}`;
+                statusDiv.className = 'success';
+                
+            } catch (error) {
+                console.error('❌ Error loading data:', error);
+                statusDiv.textContent = `❌ Error: ${error.message}`;
+                statusDiv.className = 'error';
+            }
+        }
+        
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

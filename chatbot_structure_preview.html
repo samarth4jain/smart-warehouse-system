@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot Response Structure Preview</title>
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #000; color: #fff; padding: 20px; }
+        .preview-container { max-width: 600px; margin: 0 auto; }
+        .response-preview { background: #111; padding: 20px; border-radius: 12px; margin: 20px 0; }
+        h2 { color: #ff6b35; }
+        .data-item { display: flex; justify-content: space-between; background: rgba(0,0,0,0.5); padding: 8px; margin: 4px 0; border-radius: 6px; }
+        .suggestion-btn { background: rgba(255,107,53,0.1); color: #ff6b35; border: 1px solid rgba(255,107,53,0.3); padding: 6px 12px; margin: 4px; border-radius: 20px; display: inline-block; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="preview-container">
+        <h1>📱 Structured Chatbot Response Preview</h1>
+        
+        <div class="response-preview">
+            <h2>🤖 Inventory Query Response</h2>
+            <p><strong>Message:</strong> "Here's what we've got in the warehouse! Quick Summary: 6 total products..."</p>
+            
+            <div style="background: rgba(255,107,53,0.1); border: 1px solid rgba(255,107,53,0.2); border-radius: 8px; padding: 12px; margin: 8px 0;">
+                <div style="color: #ff6b35; font-weight: 600; margin-bottom: 8px;">📊 Quick Stats</div>
+                <div class="data-item"><span>Total Products:</span><span style="color: #ff6b35; font-weight: 600;">6</span></div>
+                <div class="data-item"><span>In Stock Count:</span><span style="color: #ff6b35; font-weight: 600;">6</span></div>
+                <div class="data-item"><span>Low Stock Count:</span><span style="color: #ff6b35; font-weight: 600;">0</span></div>
+                <div class="data-item"><span>Out Of Stock Count:</span><span style="color: #ff6b35; font-weight: 600;">0</span></div>
+            </div>
+            
+            <div style="display: flex; gap: 8px; margin: 8px 0;">
+                <span style="background: rgba(74,158,255,0.2); color: #4a9eff; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">inventory check</span>
+                <span style="background: rgba(0,208,132,0.2); color: #00d084; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">80% confident</span>
+            </div>
+            
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,107,53,0.2);">
+                <div style="color: #ff6b35; font-weight: 600; margin-bottom: 8px;">💡 Try these:</div>
+                <a href="#" class="suggestion-btn">Check specific product</a>
+                <a href="#" class="suggestion-btn">View detailed inventory</a>
+                <a href="#" class="suggestion-btn">Get analytics</a>
+            </div>
+            
+            <div style="font-size: 0.7rem; color: #666; margin-top: 8px; opacity: 0.7;">
+                7:00:27 AM
+            </div>
+        </div>
+        
+        <div class="response-preview">
+            <h2>🔍 Search Query Response</h2>
+            <p><strong>Message:</strong> "I'd love to help you check inventory! Could you tell me which product you're looking for?"</p>
+            
+            <div style="display: flex; gap: 8px; margin: 8px 0;">
+                <span style="background: rgba(74,158,255,0.2); color: #4a9eff; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">inventory check</span>
+                <span style="background: rgba(0,208,132,0.2); color: #00d084; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem;">80% confident</span>
+            </div>
+            
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,107,53,0.2);">
+                <div style="color: #ff6b35; font-weight: 600; margin-bottom: 8px;">💡 Try these:</div>
+                <a href="#" class="suggestion-btn">Specify product name</a>
+                <a href="#" class="suggestion-btn">Use SKU code</a>
+                <a href="#" class="suggestion-btn">Browse categories</a>
+                <a href="#" class="suggestion-btn">Show all products</a>
+            </div>
+        </div>
+        
+        <h3>✨ New Features:</h3>
+        <ul style="line-height: 1.8;">
+            <li>📊 <strong>Data Cards:</strong> Structured display of inventory statistics</li>
+            <li>🏷️ <strong>Intent Badges:</strong> Shows what type of query was detected</li>
+            <li>🎯 <strong>Confidence Scores:</strong> AI confidence level indicator</li>
+            <li>💡 <strong>Interactive Suggestions:</strong> Clickable action buttons</li>
+            <li>🕐 <strong>Timestamps:</strong> Message timing information</li>
+            <li>🎨 <strong>Visual Hierarchy:</strong> Better organized content layout</li>
+        </ul>
+    </div>
+</body>
+</html>
