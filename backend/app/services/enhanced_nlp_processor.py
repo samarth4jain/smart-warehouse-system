@@ -215,12 +215,12 @@ class EnhancedNLPProcessor:
             "inventory_low": {
                 "casual": "Heads up! We're running low on {product} - only {quantity} left. Might want to reorder soon.",
                 "formal": "Low Stock Alert: {product}\nCurrent Stock: {quantity}\nRecommendation: Reorder required",
-                "urgent": "🚨 CRITICAL: {product} critically low ({quantity} remaining)!"
+                "urgent": "CRITICAL: {product} critically low ({quantity} remaining)!"
             },
             "inventory_empty": {
                 "casual": "Uh oh! We're completely out of {product}. Time to reorder!",
                 "formal": "Stock Status: Out of Stock\nProduct: {product}\nAction Required: Immediate reorder",
-                "urgent": "🚨 OUT OF STOCK: {product} - Zero inventory!"
+                "urgent": "OUT OF STOCK: {product} - Zero inventory!"
             },
             "need_more_info": {
                 "casual": "I'd love to help! Could you tell me which product you're asking about?",
@@ -354,6 +354,25 @@ class EnhancedNLPProcessor:
         """Extract entities for inventory queries with enhanced pattern matching"""
         entities = {}
         
+        # Check for general inventory queries first - if found, don't extract specific product entities
+        general_query_patterns = [
+            r"what\s+(?:products?|items?|stock)\s+(?:do\s+we\s+have|are\s+available)",
+            r"show\s+(?:me\s+)?(?:all\s+)?(?:products?|inventory|stock|available\s+products?)",
+            r"list\s+(?:all\s+)?(?:products?|inventory|stock|available\s+(?:products?|items?))",
+            r"all\s+(?:available\s+)?(?:products?|items?)",
+            r"show\s+(?:me\s+)?(?:everything|all)",
+            r"what\s+(?:all\s+)?(?:do\s+we\s+have|products?\s+do\s+we\s+have)",
+            r"give\s+me\s+(?:a\s+)?(?:list|overview)\s+of\s+(?:all\s+)?(?:products?|inventory)",
+            r"inventory\s+(?:overview|list|summary)",
+            r"product\s+(?:list|catalog|overview)",
+        ]
+        
+        message_lower = message.lower()
+        for pattern in general_query_patterns:
+            if re.search(pattern, message_lower):
+                # This is a general query, return empty entities to let general handler take over
+                return entities
+        
         # Enhanced product extraction patterns for complex queries
         enhanced_product_patterns = [
             # Handle "inventory for X", "inventory of X" patterns
@@ -369,8 +388,6 @@ class EnhancedNLPProcessor:
             
             # Pattern for "check inventory for X", "check stock for X"
             r"check\s+(?:inventory|stock)\s+(?:for\s+)?(.+?)(?:\?|$)",
-            r"inventory\s+(?:check\s+)?(?:for\s+)?(.+?)(?:\?|$)",
-            r"stock\s+(?:check\s+)?(?:for\s+)?(.+?)(?:\?|$)",
             
             # Basic existence queries
             r"do\s+we\s+have\s+(?:any\s+)?(.+?)(?:\s+left|\s+available|\s+in\s+stock|\?|$)",
@@ -385,6 +402,13 @@ class EnhancedNLPProcessor:
             r"^([A-Za-z][A-Za-z0-9\s]{2,})(?:\?|$)"
         ]
         
+        # Common terms that should NOT be considered product names
+        excluded_terms = [
+            'stock', 'inventory', 'products', 'items', 'available', 'in stock', 
+            'all', 'everything', 'any', 'some', 'the', 'a', 'an', 'we have', 
+            'do we have', 'show me', 'tell me', 'what', 'how', 'where', 'when'
+        ]
+        
         for pattern in enhanced_product_patterns:
             match = re.search(pattern, message.strip(), re.IGNORECASE)
             if match:
@@ -392,7 +416,11 @@ class EnhancedNLPProcessor:
                 # Clean up the product name
                 product_name = re.sub(r'[?!.,]', '', product_name)
                 product_name = product_name.strip()
-                if len(product_name) > 2 and not product_name.lower() in ['stock', 'inventory', 'any', 'some']:
+                
+                # Skip if it's an excluded term or too short
+                if (len(product_name) > 2 and 
+                    product_name.lower() not in excluded_terms and
+                    not any(excluded in product_name.lower() for excluded in ['stock', 'inventory', 'products', 'items'])):
                     entities["product_name"] = product_name.title()
                     break
         

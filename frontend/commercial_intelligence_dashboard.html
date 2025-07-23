@@ -1343,7 +1343,7 @@
 
         // Commercial Feature Functions
         async function optimizeLayout() {
-            showNotification('🎯 Layout Optimization Started', 'Layout optimization process has been initiated. Expected completion: 2 hours.', 'success');
+            showNotification('Layout Optimization Started', 'Layout optimization process has been initiated. Expected completion: 2 hours.', 'success');
             
             try {
                 const response = await fetch(`${API_BASE_URL}/commercial/optimization/implement-layout`, {
@@ -1357,7 +1357,7 @@
         }
 
         async function generatePredictions() {
-            showNotification('🔮 Generating Predictions', 'AI models are analyzing data to generate predictive insights.', 'success');
+            showNotification('Generating Predictions', 'AI models are analyzing data to generate predictive insights.', 'success');
             
             try {
                 const response = await fetch(`${API_BASE_URL}/commercial/analytics/predictive-insights`);
@@ -1369,13 +1369,13 @@
         }
 
         async function launchAMRControl() {
-            showNotification('🤖 AMR Fleet Control', 'Launching Autonomous Mobile Robot fleet control interface.', 'success');
+            showNotification('AMR Fleet Control', 'Launching Autonomous Mobile Robot fleet control interface.', 'success');
             
             try {
                 const response = await fetch(`${API_BASE_URL}/commercial/features/amr-fleet`);
                 const fleetStatus = await response.json();
                 
-                const message = `🤖 AMR Fleet Status:
+                const message = `AMR Fleet Status:
                 
 Active Robots: ${fleetStatus.fleet_status.active_robots}/${fleetStatus.fleet_status.total_robots}
 Fleet Efficiency: ${fleetStatus.fleet_status.fleet_efficiency}%
@@ -1385,20 +1385,20 @@ Annual Savings: ${fleetStatus.roi_metrics.annual_savings}
 
 Fleet operating at peak efficiency!`;
                 
-                showNotification('🤖 AMR Fleet Status', message, 'success');
+                showNotification('AMR Fleet Status', message, 'success');
             } catch (error) {
                 console.error('AMR control error:', error);
             }
         }
 
         async function enableVisionQC() {
-            showNotification('👁️ Computer Vision QC', 'Enabling AI-powered computer vision quality control system.', 'success');
+            showNotification('Computer Vision QC', 'Enabling AI-powered computer vision quality control system.', 'success');
             
             try {
                 const response = await fetch(`${API_BASE_URL}/commercial/features/computer-vision`);
                 const cvStatus = await response.json();
                 
-                const message = `👁️ Computer Vision QC Status:
+                const message = `Computer Vision QC Status:
                 
 Active Cameras: ${cvStatus.cv_systems.active_cameras}
 Detection Rate: ${cvStatus.cv_systems.defect_detection_rate}
@@ -1408,14 +1408,14 @@ Model Accuracy: ${cvStatus.ai_performance.model_accuracy}
 
 Quality control system fully operational!`;
                 
-                showNotification('👁️ Vision QC Status', message, 'success');
+                showNotification('Vision QC Status', message, 'success');
             } catch (error) {
                 console.error('Computer vision error:', error);
             }
         }
 
         async function runABCAnalysis() {
-            showNotification('📊 ABC Analysis', 'Running comprehensive ABC analysis for inventory optimization.', 'success');
+            showNotification('ABC Analysis', 'Running comprehensive ABC analysis for inventory optimization.', 'success');
             
             try {
                 const response = await fetch(`${API_BASE_URL}/commercial/analytics/abc-analysis`);
@@ -1427,7 +1427,7 @@ Quality control system fully operational!`;
         }
 
         async function analyzeVelocity() {
-            showNotification('🚀 Velocity Analysis', 'Analyzing product velocity patterns and seasonal trends.', 'success');
+            showNotification('Velocity Analysis', 'Analyzing product velocity patterns and seasonal trends.', 'success');
             
             try {
                 const response = await fetch(`${API_BASE_URL}/commercial/analytics/velocity-analysis`);
@@ -1469,12 +1469,12 @@ Quality control system fully operational!`;
                 
             } catch (error) {
                 console.error('ROI calculation error:', error);
-                showNotification('❌ ROI Calculation Failed', 'Unable to calculate ROI. Please try again.', 'error');
+                showNotification('ROI Calculation Failed', 'Unable to calculate ROI. Please try again.', 'error');
             }
         }
 
         async function generateProductQR() {
-            showNotification('📱 QR Generation', 'Generating QR codes for all products...', 'success');
+            showNotification('QR Generation', 'Generating QR codes for all products...', 'success');
             
             try {
                 const response = await fetch(`${API_BASE_URL}/commercial/qr/bulk-generate`, {
@@ -1509,11 +1509,11 @@ Quality control system fully operational!`;
                 });
                 
                 displayArea.style.display = 'block';
-                showNotification('✅ QR Codes Generated', `${result.total_generated || 3} QR codes generated successfully!`, 'success');
+                showNotification('QR Codes Generated', `${result.total_generated || 3} QR codes generated successfully!`, 'success');
                 
             } catch (error) {
                 console.error('QR generation error:', error);
-                showNotification('❌ QR Generation Failed', 'Unable to generate QR codes. Please try again.', 'error');
+                showNotification('QR Generation Failed', 'Unable to generate QR codes. Please try again.', 'error');
             }
         }
 
@@ -1521,12 +1521,12 @@ Quality control system fully operational!`;
             showNotification('📍 Location QR Generation', 'Generating QR codes for all warehouse locations...', 'success');
             
             setTimeout(() => {
-                showNotification('✅ Location QR Codes Generated', '45 location QR codes generated successfully!', 'success');
+                showNotification('Location QR Codes Generated', '45 location QR codes generated successfully!', 'success');
             }, 2000);
         }
 
         function viewAMRFleet() {
-            showNotification('🤖 AMR Fleet Monitor', 'Launching real-time AMR fleet monitoring dashboard...', 'success');
+            showNotification('AMR Fleet Monitor', 'Launching real-time AMR fleet monitoring dashboard...', 'success');
         }
 
         function viewIoTStatus() {

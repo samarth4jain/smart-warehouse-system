@@ -325,13 +325,13 @@ class ChatbotService:
                 
 Could you tell me which product you're asking about?
 
-💡 **You can say things like:**
+You can say things like:
 • 'Check stock for blue widgets'
 • 'Do we have any PROD001?'
 • 'How much inventory for laptops?'
 • 'Show me SKU WIDGET001'
 
-🔍 **Or try these formats:**
+Or try these formats:
 • Product name: "Check laptop inventory"
 • SKU code: "Show me PROD001"
 • Category: "Check electronics stock"
@@ -348,13 +348,13 @@ I'll give you detailed inventory information right away!""",
             return {
                 "message": """I can help you check what needs attention in your warehouse!
 
-📊 **Here's what I can monitor:**
+Here's what I can monitor:
 • Low stock alerts
 • Items needing reorder
 • Critical inventory levels
 • System warnings
 
-🚨 **Try asking:**
+Try asking:
 • "What items are running low?"
 • "Show me critical alerts"
 • "Any problems today?"
@@ -372,19 +372,19 @@ I'll analyze your warehouse status and highlight anything important!""",
             return {
                 "message": f"""I understand you're asking about warehouse operations! 
 
-**🏭 I can help you with:**
-• **Inventory** - Stock levels, product search, availability
-• **Alerts** - Low stock, critical items, system warnings  
-• **Orders** - Shipment tracking, delivery status
-• **Analytics** - Reports, trends, performance metrics
+I can help you with:
+• Inventory - Stock levels, product search, availability
+• Alerts - Low stock, critical items, system warnings  
+• Orders - Shipment tracking, delivery status
+• Analytics - Reports, trends, performance metrics
 
-**💬 Natural Language Examples:**
+Natural Language Examples:
 • "Show me what's running low"
 • "Check if we have laptops in stock"
 • "Any problems I should know about?"
 • "How are operations today?"
 
-**🎯 Quick Commands:**
+Quick Commands:
 • Use product names: "laptop", "mouse", "headphones"
 • Use SKU codes: "PROD001", "WIDGET123"
 • Ask conversationally - I understand natural language!
@@ -428,6 +428,10 @@ What would you like me to help you with?""",
 
     def _handle_layman_inventory_check(self, message: str, entities: Dict, context: Dict, response_style: str) -> Dict:
         """Enhanced inventory check handler for layman language"""
+        
+        # First check if this is a general inventory query (before trying specific product search)
+        if self._is_general_inventory_query(message):
+            return self._handle_general_inventory_query(message, response_style)
         
         # Check if we have specific product identification
         product = None
@@ -477,11 +481,7 @@ What would you like me to help you with?""",
             elif search_term:
                 return self._generate_product_not_found_response(search_term, message)
             else:
-                # Check if this is a general inventory query
-                if self._is_general_inventory_query(message):
-                    return self._handle_general_inventory_query(message, response_style)
-                else:
-                    return self._generate_need_product_info_response(message)
+                return self._generate_need_product_info_response(message)
                 
         except Exception as e:
             return self._generate_inventory_error_response(str(e))
@@ -497,6 +497,18 @@ What would you like me to help you with?""",
             product_names = [p.name for p in products[:5]]  # Show first 5
             print(f"Debug: Available products: {product_names}")
         
+        # Product synonyms for better matching
+        product_synonyms = {
+            'laptop': ['gaming laptop', 'computer', 'notebook'],
+            'phone': ['smartphone', 'mobile', 'cell phone'],
+            'phones': ['smartphone', 'mobile', 'cell phone'],
+            'mouse': ['wireless mouse', 'optical mouse'],
+            'headphones': ['wireless headphones', 'headset'],
+            'shirt': ['t-shirt', 'cotton t-shirt'],
+            'pants': ['jeans', 'denim jeans'],
+            'shoes': ['sneakers', 'running sneakers'],
+        }
+        
         # 1. Exact match (case insensitive)
         for product in products:
             if product.name.lower() == product_name_clean.lower():
@@ -511,14 +523,25 @@ What would you like me to help you with?""",
                     print(f"Debug: Singular match found: {product.name}")
                     return product
         
-        # 3. Partial match (either direction)
+        # 3. Check synonyms
+        search_terms = [product_name_clean.lower()]
+        if product_name_clean.lower() in product_synonyms:
+            search_terms.extend(product_synonyms[product_name_clean.lower()])
+        
+        for search_term in search_terms:
+            for product in products:
+                if search_term.lower() in product.name.lower():
+                    print(f"Debug: Synonym match found: {product.name} (searched for: {search_term})")
+                    return product
+        
+        # 4. Partial match (either direction)
         for product in products:
             if (product_name_clean.lower() in product.name.lower() or 
                 product.name.lower() in product_name_clean.lower()):
                 print(f"Debug: Partial match found: {product.name}")
                 return product
         
-        # 4. Word-based fuzzy matching
+        # 5. Word-based fuzzy matching
         product_words = set(product_name_clean.lower().split())
         best_match = None
         best_score = 0
@@ -605,13 +628,19 @@ What would you like me to help you with?""",
         """Check if this is a general inventory query (not asking for specific product)"""
         general_patterns = [
             r"what\s+(?:products?|items?|stock)\s+(?:do\s+we\s+have|are\s+available)",
-            r"show\s+(?:me\s+)?(?:all\s+)?(?:products?|inventory|stock)",
-            r"list\s+(?:all\s+)?(?:products?|inventory|stock)",
+            r"show\s+(?:me\s+)?(?:all\s+)?(?:products?|inventory|stock|available\s+products?)",
+            r"list\s+(?:all\s+)?(?:products?|inventory|stock|available\s+(?:products?|items?))",
             r"what\s+(?:is\s+)?(?:in\s+)?stock",
             r"(?:overall|general)\s+inventory",
             r"browse\s+(?:all\s+)?(?:products?|inventory)",
             r"what\s+(?:do\s+)?(?:we\s+)?(?:have\s+)?(?:in\s+)?(?:the\s+)?(?:warehouse|inventory)",
             r"(?:available\s+)?(?:products?|items?|stock)",
+            r"all\s+(?:available\s+)?(?:products?|items?)",
+            r"show\s+(?:me\s+)?(?:everything|all)",
+            r"what\s+(?:all\s+)?(?:do\s+we\s+have|products?\s+do\s+we\s+have)",
+            r"give\s+me\s+(?:a\s+)?(?:list|overview)\s+of\s+(?:all\s+)?(?:products?|inventory)",
+            r"inventory\s+(?:overview|list|summary)",
+            r"product\s+(?:list|catalog|overview)",
         ]
         
         message_lower = message.lower()
@@ -637,8 +666,8 @@ What would you like me to help you with?""",
             out_of_stock = []
             
             for product in products_with_inventory:
-                inventory = product.inventory
-                if inventory.quantity > inventory.reorder_level:
+                inventory = product.inventory_items[0]  # Get first inventory record
+                if inventory.quantity > product.reorder_level:
                     in_stock.append((product, inventory))
                 elif inventory.quantity > 0:
                     low_stock.append((product, inventory))
@@ -663,29 +692,29 @@ What would you like me to help you with?""",
         """Generate casual style inventory overview"""
         total_products = len(in_stock) + len(low_stock) + len(out_of_stock)
         
-        message = f"📦 **Here's what we've got in the warehouse!**\n\n"
-        message += f"**📊 Quick Summary:** {total_products} total products\n"
+        message = f"Here's what we've got in the warehouse!\n\n"
+        message += f"Quick Summary: {total_products} total products\n"
         
         if in_stock:
-            message += f"✅ **{len(in_stock)} products well-stocked**\n"
+            message += f"{len(in_stock)} products well-stocked\n"
             for product, inventory in in_stock[:3]:  # Show first 3
                 message += f"  • {product.name}: {inventory.quantity} units\n"
             if len(in_stock) > 3:
                 message += f"  • ...and {len(in_stock) - 3} more!\n"
         
         if low_stock:
-            message += f"\n⚠️ **{len(low_stock)} products running low**\n"
+            message += f"\n{len(low_stock)} products running low\n"
             for product, inventory in low_stock:
                 message += f"  • {product.name}: Only {inventory.quantity} left!\n"
         
         if out_of_stock:
-            message += f"\n❌ **{len(out_of_stock)} products out of stock**\n"
+            message += f"\n{len(out_of_stock)} products out of stock\n"
             for product, inventory in out_of_stock:
                 message += f"  • {product.name}: Need to reorder\n"
         
         suggestions = ["Check specific product", "View low stock details", "Schedule restocking"]
         if not low_stock and not out_of_stock:
-            message += "\n🎉 **Everything looks great!** All products are well-stocked."
+            message += "\nEverything looks great! All products are well-stocked."
             suggestions = ["Check specific product", "View detailed inventory", "Get analytics"]
         
         return {
@@ -760,29 +789,29 @@ What would you like me to help you with?""",
                 reorder_level = product.reorder_level or 10
                 print(f"Debug: Reorder level: {reorder_level}")
                 if quantity <= 0:
-                    status = "🔴 OUT OF STOCK"
+                    status = "OUT OF STOCK"
                     status_color = "critical"
                 elif quantity <= reorder_level:
-                    status = "🟡 LOW STOCK"
+                    status = "LOW STOCK"
                     status_color = "warning"
                 else:
-                    status = "🟢 IN STOCK"
+                    status = "IN STOCK"
                     status_color = "good"
                 print(f"Debug: Status: {status}")
                 
                 print(f"Debug: Building message...")
-                message = f"""✅ Found **{product.name}** (SKU: {product.sku})
+                message = f"""Found {product.name} (SKU: {product.sku})
 
-📦 **Stock Information:**
-• **Quantity Available:** {quantity} {product.unit or 'units'}
-• **Status:** {status}
-• **Location:** {location}
-• **Reorder Level:** {reorder_level} {product.unit or 'units'}
+Stock Information:
+• Quantity Available: {quantity} {product.unit or 'units'}
+• Status: {status}
+• Location: {location}
+• Reorder Level: {reorder_level} {product.unit or 'units'}
 
-💰 **Product Details:**
-• **Category:** {product.category or 'Uncategorized'}
-• **Unit Price:** ${product.unit_price or 'N/A'}
-• **Description:** {product.description or 'No description available'}"""
+Product Details:
+• Category: {product.category or 'Uncategorized'}
+• Unit Price: ${product.unit_price or 'N/A'}
+• Description: {product.description or 'No description available'}"""
                 print(f"Debug: Message built successfully")
 
                 # Add suggestions based on stock status
@@ -801,7 +830,7 @@ What would you like me to help you with?""",
                 
                 # Add information about additional matches if any
                 if additional_products and len(additional_products) > 1:
-                    message += f"\n\n💡 **Found {len(additional_products)} products matching '{search_term}'. Use more specific terms or SKU for exact matches.**"
+                    message += f"\n\nFound {len(additional_products)} products matching '{search_term}'. Use more specific terms or SKU for exact matches."
                 
                 response = {
                     "message": message,
@@ -825,7 +854,7 @@ What would you like me to help you with?""",
                 return response
             else:
                 return {
-                    "message": f"Found product **{product.name}** (SKU: {product.sku}) but no inventory data available. This might be a new product not yet stocked.",
+                    "message": f"Found product {product.name} (SKU: {product.sku}) but no inventory data available. This might be a new product not yet stocked.",
                     "success": True,
                     "suggestions": ["Add initial stock", "Check product setup", "Contact inventory team"],
                     "actions": ["add_stock"],
@@ -838,15 +867,15 @@ What would you like me to help you with?""",
     def _generate_product_not_found_response(self, search_term: str, original_message: str) -> Dict:
         """Generate response when product is not found"""
         return {
-            "message": f"""🔍 I couldn't find any products matching "**{search_term}**" in our inventory.
+            "message": f"""I couldn't find any products matching "{search_term}" in our inventory.
 
-**🎯 Here's what you can try:**
-• **Use exact SKU:** Try the complete product SKU (e.g., "LAPTOP001")
-• **Use different keywords:** Try "laptop", "mouse", "keyboard", etc.
-• **Check spelling:** Make sure the product name is spelled correctly
-• **Browse categories:** Ask "show me all electronics" or similar
+Here's what you can try:
+• Use exact SKU: Try the complete product SKU (e.g., "LAPTOP001")
+• Use different keywords: Try "laptop", "mouse", "keyboard", etc.
+• Check spelling: Make sure the product name is spelled correctly
+• Browse categories: Ask "show me all electronics" or similar
 
-**💡 Popular searches:**
+Popular searches:
 • "Check laptop inventory"
 • "Show me PROD001"
 • "Do we have any monitors?"
@@ -864,18 +893,18 @@ Want me to show you all available products or help you search differently?""",
         return {
             "message": """I'd love to help you check inventory! Could you tell me which product you're looking for?
 
-**🔍 You can search by:**
-• **Product name:** "laptop", "wireless mouse", "keyboard"
-• **SKU code:** "PROD001", "LAPTOP001", "MOUSE123"
-• **Category:** "electronics", "office supplies"
+You can search by:
+• Product name: "laptop", "wireless mouse", "keyboard"
+• SKU code: "PROD001", "LAPTOP001", "MOUSE123"
+• Category: "electronics", "office supplies"
 
-**💬 Try saying:**
+Try saying:
 • "Check laptop inventory"
 • "Show me SKU PROD001"  
 • "Do we have any wireless mice?"
 • "How much stock for headphones?"
 
-**📦 Or ask for:**
+Or ask for:
 • "Show me all products"
 • "What's in stock today?"
 • "List electronics inventory"
@@ -892,12 +921,12 @@ What product would you like me to check for you?""",
         return {
             "message": """I'm currently having trouble connecting to the inventory system. Here's what I can help with offline:
 
-🔍 **For Inventory Queries**: Try "Check stock SKU: PROD001"
-📦 **For Stock Updates**: Try "Add 50 units SKU: PROD001" 
-🚛 **For Orders**: Try "Check order status ORD001"
-📊 **For Reports**: Try "Show warehouse efficiency report"
+For Inventory Queries: Try "Check stock SKU: PROD001"
+For Stock Updates: Try "Add 50 units SKU: PROD001" 
+For Orders: Try "Check order status ORD001"
+For Reports: Try "Show warehouse efficiency report"
 
-🔧 **Tip**: Make sure the backend server is running on localhost:8000
+Tip: Make sure the backend server is running on localhost:8000
 
 Please try your request again in a moment.""",
             "success": False,
@@ -925,19 +954,19 @@ Please try your request again in a moment.""",
             
             if not low_stock_items and not out_of_stock_items:
                 return {
-                    "message": """🎉 **Great news! Everything looks good in your warehouse!**
+                    "message": """Great news! Everything looks good in your warehouse!
 
-✅ **Current Status:**
-• **No critical stock alerts**
-• **No items requiring immediate attention**
-• **All products above reorder levels**
+Current Status:
+• No critical stock alerts
+• No items requiring immediate attention
+• All products above reorder levels
 
-📊 **Quick Stats:**
+Quick Stats:
 • System running smoothly
 • Inventory levels healthy
 • No urgent actions needed
 
-💡 **Proactive Tips:**
+Proactive Tips:
 • Consider checking weekly trends
 • Review seasonal demand patterns  
 • Verify reorder level settings
@@ -950,13 +979,13 @@ Keep up the excellent warehouse management!""",
                 }
             
             # Build alert message
-            alert_message = "🚨 **Warehouse Alert Summary**\n\n"
+            alert_message = "Warehouse Alert Summary\n\n"
             total_issues = len(out_of_stock_items) + len(low_stock_items)
             
             if out_of_stock_items:
-                alert_message += f"🔴 **CRITICAL - {len(out_of_stock_items)} Out of Stock:**\n"
+                alert_message += f"CRITICAL - {len(out_of_stock_items)} Out of Stock:\n"
                 for product, inventory in out_of_stock_items[:5]:  # Show max 5
-                    alert_message += f"• **{product.name}** (SKU: {product.sku}) - Location: {inventory.location or 'Not specified'}\n"
+                    alert_message += f"• {product.name} (SKU: {product.sku}) - Location: {inventory.location or 'Not specified'}\n"
                 
                 if len(out_of_stock_items) > 5:
                     alert_message += f"• ... and {len(out_of_stock_items) - 5} more items\n"
@@ -965,21 +994,21 @@ Keep up the excellent warehouse management!""",
             if low_stock_items:
                 low_only = [item for item in low_stock_items if item not in out_of_stock_items]
                 if low_only:
-                    alert_message += f"🟡 **WARNING - {len(low_only)} Low Stock:**\n"
+                    alert_message += f"WARNING - {len(low_only)} Low Stock:\n"
                     for product, inventory in low_only[:5]:  # Show max 5
-                        alert_message += f"• **{product.name}** (SKU: {product.sku}) - Qty: {inventory.quantity}/{product.reorder_level}\n"
+                        alert_message += f"• {product.name} (SKU: {product.sku}) - Qty: {inventory.quantity}/{product.reorder_level}\n"
                     
                     if len(low_only) > 5:
                         alert_message += f"• ... and {len(low_only) - 5} more items\n"
                     alert_message += "\n"
             
-            alert_message += f"""📋 **Recommended Actions:**
-• **Immediate:** Reorder {len(out_of_stock_items)} out-of-stock items
-• **Soon:** Review {len(low_stock_items)} low-stock items
-• **Planning:** Check supplier lead times
-• **Analytics:** Review demand patterns
+            alert_message += f"""Recommended Actions:
+• Immediate: Reorder {len(out_of_stock_items)} out-of-stock items
+• Soon: Review {len(low_stock_items)} low-stock items
+• Planning: Check supplier lead times
+• Analytics: Review demand patterns
 
-💡 **Need help with any specific items? Just ask me about them!**"""
+Need help with any specific items? Just ask me about them!"""
 
             suggestions = ["Reorder critical items", "Check supplier status", "View detailed reports", "Set up auto-reorder"]
             actions = ["reorder_items", "contact_suppliers", "generate_report"]
@@ -1003,12 +1032,12 @@ Keep up the excellent warehouse management!""",
             return {
                 "message": f"""I'm having trouble accessing the alert system right now.
 
-**What I can help with:**
+What I can help with:
 • Manual inventory checks
 • Product information lookup
 • General warehouse questions
 
-**Try asking:**
+Try asking:
 • "Check specific product stock"
 • "Show me laptop inventory"
 • "Help with warehouse operations"
@@ -1023,44 +1052,44 @@ Error details: {str(e)}""",
     def _handle_layman_help(self, message: str, entities: Dict, context: Dict, response_style: str) -> Dict:
         """Enhanced help handler with comprehensive guidance"""
         return {
-            "message": """🤖 **Smart Warehouse AI Assistant - Help Guide**
+            "message": """Smart Warehouse AI Assistant - Help Guide
 
-**🏭 What I Can Do For You:**
+What I Can Do For You:
 
-**📦 Inventory Management:**
+Inventory Management:
 • Check stock levels: "How many laptops do we have?"
 • Find products: "Show me SKU PROD001"
 • Search by category: "List all electronics"
 
-**🚨 Alerts & Monitoring:**
+Alerts & Monitoring:
 • Check alerts: "What needs attention?"
 • Low stock: "Show me items running low"
 • System status: "How are things looking?"
 
-**📊 Reports & Analytics:**
+Reports & Analytics:
 • Warehouse status: "Show me dashboard"
 • Performance metrics: "Generate warehouse report"
 • Trends: "How are we doing this week?"
 
-**💬 Natural Language Examples:**
+Natural Language Examples:
 • "Do we have any wireless mice in stock?"
 • "What items are critically low?"
 • "I need to check our laptop inventory"
 • "Are we running out of anything?"
 • "Show me what needs reordering"
 
-**🎯 Pro Tips:**
+Pro Tips:
 • Use product names OR SKU codes
 • Ask conversational questions - I understand natural language!
 • Be specific for better results: "laptop" vs "electronic devices"
 • I can handle typos and different phrasings
 
-**🔍 Quick Commands:**
+Quick Commands:
 • "help" - Show this guide
 • "status" - System overview
 • "alerts" - Check urgent items
 
-**Need help with something specific? Just ask me in your own words!**""",
+Need help with something specific? Just ask me in your own words!""",
             "success": True,
             "suggestions": [
                 "Check inventory", 
@@ -1079,23 +1108,23 @@ Error details: {str(e)}""",
         # Greeting responses
         if any(greeting in message_lower for greeting in ["hello", "hi", "hey", "good morning", "good afternoon"]):
             return {
-                "message": """👋 **Hello! I'm your Smart Warehouse AI Assistant!**
+                "message": """Hello! I'm your Smart Warehouse AI Assistant!
 
 I'm here to help you manage your warehouse operations efficiently. 
 
-**🚀 Ready to help you with:**
-• **Inventory checks** - Stock levels, product searches
-• **Alert monitoring** - Low stock, urgent items  
-• **System status** - Overall warehouse health
-• **Reports** - Analytics and performance data
+Ready to help you with:
+• Inventory checks - Stock levels, product searches
+• Alert monitoring - Low stock, urgent items  
+• System status - Overall warehouse health
+• Reports - Analytics and performance data
 
-**💬 Just ask me naturally:**
+Just ask me naturally:
 • "What's running low in inventory?"
 • "Check if we have laptops in stock"
 • "Show me today's alerts"
 • "How are warehouse operations?"
 
-**What can I help you with today?**""",
+What can I help you with today?""",
                 "success": True,
                 "suggestions": ["Check inventory", "View alerts", "System status", "Show help"],
                 "actions": ["check_inventory", "view_alerts", "get_status"],
@@ -1105,22 +1134,22 @@ I'm here to help you manage your warehouse operations efficiently.
         # Farewell responses
         elif any(farewell in message_lower for farewell in ["bye", "goodbye", "see you", "thanks", "thank you"]):
             return {
-                "message": """👋 **Thanks for using Smart Warehouse AI!**
+                "message": """Thanks for using Smart Warehouse AI!
 
 I hope I was able to help you with your warehouse operations today.
 
-**📞 Remember, I'm always here to assist with:**
+Remember, I'm always here to assist with:
 • Inventory management
 • Stock alerts and monitoring  
 • Warehouse analytics
 • System status checks
 
-**🎯 Feel free to come back anytime you need help with:**
+Feel free to come back anytime you need help with:
 • "What's running low?"
 • "Check product inventory"
 • "Show me warehouse status"
 
-Have a great day and keep those operations running smoothly! 🏭✨""",
+Have a great day and keep those operations running smoothly!""",
                 "success": True,
                 "suggestions": ["Check back later", "Bookmark for quick access"],
                 "actions": [],
@@ -1130,22 +1159,22 @@ Have a great day and keep those operations running smoothly! 🏭✨""",
         # Default general response
         else:
             return {
-                "message": """🤖 **I'm your Smart Warehouse AI Assistant!**
+                "message": """I'm your Smart Warehouse AI Assistant!
 
 I understand you're asking about warehouse operations. Here's how I can help:
 
-**🎯 Popular Requests:**
-• **"What's running low?"** - Check alerts and low stock
-• **"Check laptop inventory"** - Specific product searches
-• **"Show me warehouse status"** - Overall system health
-• **"Help"** - Complete guide and examples
+Popular Requests:
+• "What's running low?" - Check alerts and low stock
+• "Check laptop inventory" - Specific product searches
+• "Show me warehouse status" - Overall system health
+• "Help" - Complete guide and examples
 
-**💡 Natural Language Tips:**
+Natural Language Tips:
 • Ask in your own words - I understand conversational language
 • Use product names or SKU codes
 • Be as specific or general as you'd like
 
-**🔍 Not sure what to ask?** Try:
+Not sure what to ask? Try:
 • "Show me what needs attention"
 • "Check all inventory levels"  
 • "Help with warehouse operations"
