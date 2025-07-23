@@ -791,14 +791,14 @@
             </p>
             
             <div class="cta-buttons">
-                <a href="./dashboard.html" class="btn btn-primary" target="_self">
+                <button onclick="window.location.href='dashboard.html'" class="btn btn-primary" style="cursor: pointer;">
                     <i class="fas fa-chart-bar"></i>
                     Open Dashboard
-                </a>
-                <a href="./chatbot.html" class="btn btn-secondary" target="_self">
+                </button>
+                <button onclick="window.location.href='chatbot.html'" class="btn btn-secondary" style="cursor: pointer;">
                     <i class="fas fa-robot"></i>
                     AI Assistant
-                </a>
+                </button>
             </div>
             
             <!-- Stats Section -->
@@ -996,6 +996,19 @@
 
         // Create particles occasionally
         setInterval(createParticle, 2000);
+
+        // Force dashboard link to work
+        document.addEventListener('DOMContentLoaded', function() {
+            const dashboardLinks = document.querySelectorAll('a[href*="dashboard"]');
+            dashboardLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Dashboard link clicked:', this.href);
+                    window.location.href = this.getAttribute('href');
+                }, true);
+            });
+        });
     </script>
 </body>
 </html>
