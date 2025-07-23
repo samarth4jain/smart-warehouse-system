@@ -189,6 +189,20 @@ class EnhancedNLPProcessor:
             "polite": ["please", "could you", "can you", "would you", "help me"],
             "uncertainty": ["not sure", "don't know", "confused", "maybe"],
         }
+        
+        # Product name synonyms and common variations
+        self.product_synonyms = {
+            "laptop": ["notebook", "computer", "pc", "laptop computer"],
+            "smartphone": ["phone", "mobile", "cell phone", "mobile phone"],
+            "mouse": ["computer mouse", "wireless mouse", "optical mouse"],
+            "keyboard": ["computer keyboard", "wireless keyboard"],
+            "monitor": ["screen", "display", "computer monitor"],
+            "tablet": ["ipad", "tablet computer"],
+            "headphones": ["headphone", "headset", "earphones", "earbuds"],
+            "speaker": ["speakers", "audio speaker", "computer speaker"],
+            "cable": ["cord", "wire", "usb cable", "power cable"],
+            "charger": ["power adapter", "charging cable", "power cord"]
+        }
     
     def setup_response_templates(self):
         """Setup response templates for different scenarios"""
@@ -337,15 +351,27 @@ class EnhancedNLPProcessor:
         return entities
     
     def _extract_inventory_entities(self, message: str) -> Dict[str, Any]:
-        """Extract entities for inventory queries"""
+        """Extract entities for inventory queries with enhanced pattern matching"""
         entities = {}
         
-        # Try to extract product name from casual patterns
-        casual_product_patterns = [
+        # Enhanced product extraction patterns for complex queries
+        enhanced_product_patterns = [
+            # Handle "inventory for X", "inventory of X" patterns
+            r"inventory\s+(?:for|of)\s+(.+?)(?:\s*\?|$)",
+            r"check\s+inventory\s+(?:for|of)\s+(.+?)(?:\s*\?|$)",
+            r"show\s+inventory\s+(?:for|of)\s+(.+?)(?:\s*\?|$)",
+            r"get\s+inventory\s+(?:for|of)\s+(.+?)(?:\s*\?|$)",
+            
+            # Handle "stock for X", "stock of X" patterns  
+            r"stock\s+(?:for|of)\s+(.+?)(?:\s*\?|$)",
+            r"check\s+stock\s+(?:for|of)\s+(.+?)(?:\s*\?|$)",
+            r"show\s+stock\s+(?:for|of)\s+(.+?)(?:\s*\?|$)",
+            
             # Pattern for "check inventory for X", "check stock for X"
             r"check\s+(?:inventory|stock)\s+(?:for\s+)?(.+?)(?:\?|$)",
             r"inventory\s+(?:check\s+)?(?:for\s+)?(.+?)(?:\?|$)",
             r"stock\s+(?:check\s+)?(?:for\s+)?(.+?)(?:\?|$)",
+            
             # Basic existence queries
             r"do\s+we\s+have\s+(?:any\s+)?(.+?)(?:\s+left|\s+available|\s+in\s+stock|\?|$)",
             r"got\s+any\s+(.+?)(?:\s+left|\s+available|\?|$)",
@@ -359,7 +385,7 @@ class EnhancedNLPProcessor:
             r"^([A-Za-z][A-Za-z0-9\s]{2,})(?:\?|$)"
         ]
         
-        for pattern in casual_product_patterns:
+        for pattern in enhanced_product_patterns:
             match = re.search(pattern, message.strip(), re.IGNORECASE)
             if match:
                 product_name = match.group(1).strip()

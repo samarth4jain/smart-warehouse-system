@@ -451,51 +451,296 @@ What would you like me to help you with?""",
                 search_term = search_term.strip('?!.,;:"\'').strip()
                 print(f"Debug: Searching for '{search_term}'")
                 
-                products = self.db.query(Product).filter(
-                    Product.name.ilike(f"%{search_term}%") | 
-                    Product.description.ilike(f"%{search_term}%") |
-                    Product.category.ilike(f"%{search_term}%") |
-                    Product.sku.ilike(f"%{search_term}%")
-                ).all()
-                print(f"Debug: Found {len(products)} products")
+                # First try enhanced product finding (fuzzy matching, plurals, etc.)
+                product = self._find_product_by_name(search_term)
                 
-                if products:
-                    product = products[0]  # Take first match for now
+                if product:
+                    products = [product]  # Single best match
+                    print(f"Debug: Found 1 products")
                     print(f"Debug: Selected product: {product.name}")
+                else:
+                    # Fallback to broader database search
+                    products = self.db.query(Product).filter(
+                        Product.name.ilike(f"%{search_term}%") | 
+                        Product.description.ilike(f"%{search_term}%") |
+                        Product.category.ilike(f"%{search_term}%") |
+                        Product.sku.ilike(f"%{search_term}%")
+                    ).all()
+                    print(f"Debug: Found {len(products)} products")
+                    
+                    if products:
+                        product = products[0]  # Take first match for now
+                        print(f"Debug: Selected product: {product.name}")
             
             if product:
                 return self._generate_inventory_response(product, search_term, products if len(products) > 1 else None)
             elif search_term:
                 return self._generate_product_not_found_response(search_term, message)
             else:
-                return self._generate_need_product_info_response(message)
+                # Check if this is a general inventory query
+                if self._is_general_inventory_query(message):
+                    return self._handle_general_inventory_query(message, response_style)
+                else:
+                    return self._generate_need_product_info_response(message)
                 
         except Exception as e:
             return self._generate_inventory_error_response(str(e))
     
     def _find_product_by_name(self, product_name: str) -> Optional[Product]:
-        """Find product by name with fuzzy matching for layman queries"""
-        # First try exact match
+        """Enhanced product finding with fuzzy matching, synonyms, and plural handling"""
         products = self.db.query(Product).all()
+        product_name_clean = self._clean_product_name(product_name)
         
-        # Try exact match (case insensitive)
+        print(f"Debug: Searching for '{product_name_clean}'")
+        print(f"Debug: Total products in database: {len(products)}")
+        if products:
+            product_names = [p.name for p in products[:5]]  # Show first 5
+            print(f"Debug: Available products: {product_names}")
+        
+        # 1. Exact match (case insensitive)
         for product in products:
-            if product.name.lower() == product_name.lower():
+            if product.name.lower() == product_name_clean.lower():
+                print(f"Debug: Exact match found: {product.name}")
                 return product
         
-        # Try partial match
+        # 2. Handle plurals - try singular forms
+        singular_name = self._get_singular_form(product_name_clean)
+        if singular_name != product_name_clean:
+            for product in products:
+                if product.name.lower() == singular_name.lower():
+                    print(f"Debug: Singular match found: {product.name}")
+                    return product
+        
+        # 3. Partial match (either direction)
         for product in products:
-            if product_name.lower() in product.name.lower() or product.name.lower() in product_name.lower():
+            if (product_name_clean.lower() in product.name.lower() or 
+                product.name.lower() in product_name_clean.lower()):
+                print(f"Debug: Partial match found: {product.name}")
                 return product
         
-        # Try fuzzy matching on words
-        product_words = product_name.lower().split()
-        for product in products:
-            product_name_words = product.name.lower().split()
-            if any(word in product_name_words for word in product_words):
-                return product
+        # 4. Word-based fuzzy matching
+        product_words = set(product_name_clean.lower().split())
+        best_match = None
+        best_score = 0
         
+        for product in products:
+            product_words_set = set(product.name.lower().split())
+            
+            # Calculate intersection score
+            common_words = product_words.intersection(product_words_set)
+            if common_words:
+                score = len(common_words) / max(len(product_words), len(product_words_set))
+                if score > best_score and score >= 0.5:  # At least 50% word overlap
+                    best_score = score
+                    best_match = product
+        
+        if best_match:
+            print(f"Debug: Word-based match found: {best_match.name} (score: {best_score})")
+            return best_match
+        
+        # 5. Fuzzy matching with character similarity (using difflib)
+        import difflib
+        product_names = [p.name for p in products]
+        matches = difflib.get_close_matches(product_name_clean, product_names, n=1, cutoff=0.6)
+        
+        if matches:
+            for product in products:
+                if product.name == matches[0]:
+                    print(f"Debug: Fuzzy match found: {product.name}")
+                    return product
+        
+        print(f"Debug: No match found for '{product_name_clean}'")
         return None
+    
+    def _clean_product_name(self, product_name: str) -> str:
+        """Clean and normalize product name for better matching"""
+        # Remove common filler words and punctuation
+        filler_words = {'the', 'a', 'an', 'for', 'of', 'in', 'on', 'at', 'by', 'with'}
+        
+        # Basic cleaning
+        cleaned = product_name.strip().lower()
+        cleaned = re.sub(r'[^\w\s]', ' ', cleaned)  # Remove punctuation
+        cleaned = re.sub(r'\s+', ' ', cleaned).strip()  # Normalize whitespace
+        
+        # Remove filler words but keep the core meaning
+        words = cleaned.split()
+        important_words = [w for w in words if w not in filler_words or len(words) <= 2]
+        
+        return ' '.join(important_words).title()
+    
+    def _get_singular_form(self, word: str) -> str:
+        """Convert plural forms to singular (basic rules)"""
+        word = word.lower().strip()
+        
+        # Common plural to singular conversions
+        plural_mappings = {
+            'laptops': 'laptop',
+            'computers': 'computer', 
+            'phones': 'phone',
+            'smartphones': 'smartphone',
+            'tablets': 'tablet',
+            'accessories': 'accessory',
+            'devices': 'device',
+            'products': 'product',
+            'items': 'item',
+        }
+        
+        if word in plural_mappings:
+            return plural_mappings[word]
+        
+        # Basic English plural rules
+        if word.endswith('ies') and len(word) > 3:
+            return word[:-3] + 'y'
+        elif word.endswith('es') and len(word) > 2:
+            if word.endswith(('ches', 'shes', 'xes', 'zes')):
+                return word[:-2]
+            else:
+                return word[:-1]
+        elif word.endswith('s') and len(word) > 1:
+            return word[:-1]
+        
+        return word.title()
+    
+    def _is_general_inventory_query(self, message: str) -> bool:
+        """Check if this is a general inventory query (not asking for specific product)"""
+        general_patterns = [
+            r"what\s+(?:products?|items?|stock)\s+(?:do\s+we\s+have|are\s+available)",
+            r"show\s+(?:me\s+)?(?:all\s+)?(?:products?|inventory|stock)",
+            r"list\s+(?:all\s+)?(?:products?|inventory|stock)",
+            r"what\s+(?:is\s+)?(?:in\s+)?stock",
+            r"(?:overall|general)\s+inventory",
+            r"browse\s+(?:all\s+)?(?:products?|inventory)",
+            r"what\s+(?:do\s+)?(?:we\s+)?(?:have\s+)?(?:in\s+)?(?:the\s+)?(?:warehouse|inventory)",
+            r"(?:available\s+)?(?:products?|items?|stock)",
+        ]
+        
+        message_lower = message.lower()
+        return any(re.search(pattern, message_lower) for pattern in general_patterns)
+    
+    def _handle_general_inventory_query(self, message: str, response_style: str) -> Dict:
+        """Handle general inventory queries that don't specify a particular product"""
+        try:
+            # Get all products with their inventory
+            products_with_inventory = self.db.query(Product).join(Inventory).all()
+            
+            if not products_with_inventory:
+                return {
+                    "message": "I don't see any products in our inventory system right now. The warehouse might be empty or there could be a system issue.",
+                    "success": False,
+                    "suggestions": ["Check system status", "Add products", "Contact IT support"],
+                    "action_taken": "no_products_found"
+                }
+            
+            # Organize products by status
+            in_stock = []
+            low_stock = []
+            out_of_stock = []
+            
+            for product in products_with_inventory:
+                inventory = product.inventory
+                if inventory.quantity > inventory.reorder_level:
+                    in_stock.append((product, inventory))
+                elif inventory.quantity > 0:
+                    low_stock.append((product, inventory))
+                else:
+                    out_of_stock.append((product, inventory))
+            
+            # Build response based on style
+            if response_style == "formal":
+                return self._generate_formal_inventory_overview(in_stock, low_stock, out_of_stock)
+            else:
+                return self._generate_casual_inventory_overview(in_stock, low_stock, out_of_stock)
+                
+        except Exception as e:
+            return {
+                "message": f"I encountered an issue while checking our inventory: {str(e)}. Please try again or contact support.",
+                "success": False,
+                "suggestions": ["Try again", "Check specific product", "Contact support"],
+                "action_taken": "inventory_error"
+            }
+    
+    def _generate_casual_inventory_overview(self, in_stock: List, low_stock: List, out_of_stock: List) -> Dict:
+        """Generate casual style inventory overview"""
+        total_products = len(in_stock) + len(low_stock) + len(out_of_stock)
+        
+        message = f"📦 **Here's what we've got in the warehouse!**\n\n"
+        message += f"**📊 Quick Summary:** {total_products} total products\n"
+        
+        if in_stock:
+            message += f"✅ **{len(in_stock)} products well-stocked**\n"
+            for product, inventory in in_stock[:3]:  # Show first 3
+                message += f"  • {product.name}: {inventory.quantity} units\n"
+            if len(in_stock) > 3:
+                message += f"  • ...and {len(in_stock) - 3} more!\n"
+        
+        if low_stock:
+            message += f"\n⚠️ **{len(low_stock)} products running low**\n"
+            for product, inventory in low_stock:
+                message += f"  • {product.name}: Only {inventory.quantity} left!\n"
+        
+        if out_of_stock:
+            message += f"\n❌ **{len(out_of_stock)} products out of stock**\n"
+            for product, inventory in out_of_stock:
+                message += f"  • {product.name}: Need to reorder\n"
+        
+        suggestions = ["Check specific product", "View low stock details", "Schedule restocking"]
+        if not low_stock and not out_of_stock:
+            message += "\n🎉 **Everything looks great!** All products are well-stocked."
+            suggestions = ["Check specific product", "View detailed inventory", "Get analytics"]
+        
+        return {
+            "message": message,
+            "success": True,
+            "suggestions": suggestions,
+            "action_taken": "inventory_overview_provided",
+            "data": {
+                "total_products": total_products,
+                "in_stock_count": len(in_stock),
+                "low_stock_count": len(low_stock),
+                "out_of_stock_count": len(out_of_stock)
+            }
+        }
+    
+    def _generate_formal_inventory_overview(self, in_stock: List, low_stock: List, out_of_stock: List) -> Dict:
+        """Generate formal style inventory overview"""
+        total_products = len(in_stock) + len(low_stock) + len(out_of_stock)
+        
+        message = "INVENTORY STATUS REPORT\n"
+        message += "=" * 30 + "\n\n"
+        message += f"Total Products: {total_products}\n"
+        message += f"Well Stocked: {len(in_stock)}\n"
+        message += f"Low Stock: {len(low_stock)}\n"
+        message += f"Out of Stock: {len(out_of_stock)}\n\n"
+        
+        if in_stock:
+            message += "ADEQUATE STOCK LEVELS:\n"
+            for product, inventory in in_stock:
+                message += f"• {product.name}: {inventory.quantity} units\n"
+            message += "\n"
+        
+        if low_stock:
+            message += "LOW STOCK ALERTS:\n"
+            for product, inventory in low_stock:
+                message += f"• {product.name}: {inventory.quantity} units (reorder level: {inventory.reorder_level})\n"
+            message += "\n"
+        
+        if out_of_stock:
+            message += "OUT OF STOCK:\n"
+            for product, inventory in out_of_stock:
+                message += f"• {product.name}: 0 units\n"
+        
+        return {
+            "message": message.strip(),
+            "success": True,
+            "suggestions": ["Generate detailed report", "Schedule restock", "Export data"],
+            "action_taken": "formal_inventory_report_generated",
+            "data": {
+                "total_products": total_products,
+                "in_stock_count": len(in_stock),
+                "low_stock_count": len(low_stock),
+                "out_of_stock_count": len(out_of_stock)
+            }
+        }
     
     def _generate_inventory_response(self, product: Product, search_term: str, additional_products: List = None) -> Dict:
         """Generate detailed inventory response"""
